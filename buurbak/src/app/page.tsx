@@ -1,5 +1,5 @@
-import BuurbakHighlights from "../app/Components/buurbakHighlights";
+import Highlights from "./Components/highlights";
 
 export default function Home() {
-  return <div> <BuurbakHighlights /> </div> ;
+  return <div> <Highlights /> </div> ;
 }

@@ -21,7 +21,12 @@ const config: Config = {
         secondary: {
           100: '#398D89',
         }
-      }
+      },
+          maxWidth: {
+            '4/5': '80%'
+          }
+        
+      
     },
   },
   plugins: [],
