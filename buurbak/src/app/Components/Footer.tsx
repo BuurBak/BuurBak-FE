@@ -4,13 +4,15 @@ import { ArchiveBoxXMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Logo from "../Assets/buurbakLogoBigColor.svg";
-import LogoM from "../Assets/buurbakLogoMediumColor.svg";
+import LogoBig from "../Assets/buurbakLogoBigColor.svg";
+import LogoMedium from "../Assets/buurbakLogoMediumColor.svg";
+
+type Link = { title: string; link: string };
 
 const Footer = () => {
   const currentRoute = usePathname();
 
-  const pages = [
+  const pages: Link[] = [
     { title: "Home", link: "/" },
     { title: "Aanbod", link: "/aanbod" },
     { title: "Verhuren", link: "/verhuren" },
@@ -18,7 +20,7 @@ const Footer = () => {
     { title: "Veel gestelde vragen", link: "/faq" },
     { title: "Inloggen", link: "/inloggen" },
   ];
-  const subPages = [
+  const subPages: Link[] = [
     { title: "Privacy policy", link: "/" },
     { title: "Algemene voorwaarden", link: "/" },
     { title: "©2024", link: "/" },
@@ -30,7 +32,7 @@ const Footer = () => {
         id="desktop"
         className="hidden w-dvw h-fit lg:flex flex-row justify-between border-t border-gray-100 py-12 px-24"
       >
-        <Image alt="Buurbak logo" src={Logo} className="w-fit h-52" />
+        <Image alt="Buurbak logo" src={LogoBig} className="w-fit h-52" />
         <div className="flex flex-col gap-10">
           <div className="flex justify-center">
             <ul className="flex flex-row gap-11">
@@ -121,7 +123,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <Image alt="Buurbak logo" src={LogoM} className="self-center" />
+        <Image alt="Buurbak logo" src={LogoMedium} className="self-center" />
       </div>
     </div>
   );
