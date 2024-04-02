@@ -15,18 +15,22 @@ const config: Config = {
       },
       colors: {
         primary: {
-          100: '#EE7B46',
-          200: '#EB672A',
+          100: "#EE7B46",
+          200: "#EB672A",
         },
         secondary: {
-          100: '#398D89',
-        }
+          100: "#398D89",
+        },
+        gray: {
+          100: "#777777",
+        },
+        offWhite: {
+          100: "#f1f1f1",
+        },
       },
-          maxWidth: {
-            '4/5': '80%'
-          }
-        
-      
+      maxWidth: {
+        "4/5": "80%",
+      },
     },
   },
   plugins: [],
