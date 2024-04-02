@@ -1,10 +1,10 @@
 import Footer from "./Components/Footer";
-import Highlights from "./Components/Highlights";
+// import Highlights from "./Components/Highlights";
 
 export default function Home() {
   return (
     <div>
-      <Highlights />
+      {/* <Highlights /> */}
       <Footer />
     </div>
   );
