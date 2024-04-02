@@ -1,3 +1,5 @@
+import Highlights from "./Components/Highlights";
+
 export default function Home() {
-  return <></>;
+  return <div> <Highlights /> </div> ;
 }
