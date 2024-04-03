@@ -17,7 +17,7 @@ const Footer = () => {
     { title: "Aanbod", link: "/aanbod" },
     { title: "Verhuren", link: "/verhuren" },
     { title: "Contact", link: "/contact" },
-    { title: "Veel gestelde vragen", link: "/faq" },
+    { title: "FAQ", link: "/faq" },
     { title: "Inloggen", link: "/inloggen" },
   ];
   const subPages: Link[] = [
@@ -33,9 +33,9 @@ const Footer = () => {
         src={LogoBig}
         className="w-fit h-fit hidden lg:block"
       />
-      <div>
+      <div className="lg:max-w-[50vw] lg:w-full">
         <div className="w-full">
-          <ul className="flex flex-col lg:flex-row lg:justify-center gap-3 text-center">
+          <ul className="flex flex-col lg:flex-row lg:justify-evenly gap-3 text-center">
             {pages?.map((page: any, index: number) => (
               <li key={index}>
                 <Link
