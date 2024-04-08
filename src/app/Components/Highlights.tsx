@@ -6,7 +6,7 @@ import {
 
 const Highlights = () => {
   return (
-    <div className="flex justify-around w-screen p-5 md:px-20 md:py-16 flex-col md:flex-row">
+    <div className="flex justify-around w-full p-5 md:px-20 md:py-16 flex-col md:flex-row">
       <div className="w-full mb-5 md-mb-0 md:w-1/3 flex flex-col items-center text-center">
         <div className="p-4 mb-3 border-2 border-secondary-100 rounded-full">
           <ArchiveBoxXMarkIcon className="h-8 w-8 text-secondary-100" />
