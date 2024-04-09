@@ -11,7 +11,7 @@ const Highlights = () => {
         <div className="p-4 mb-3 border-2 border-secondary-100 rounded-full">
           <ArchiveBoxXMarkIcon className="h-8 w-8 text-secondary-100" />
         </div>
-        <h2 className="text-secondary-100 font-bold">Altijd in de buurt</h2>
+        <h5 className="text-secondary-100 font-bold">Altijd in de buurt</h5>
         <p className="max-w-4/5">
           Samen met jou bouwen we aan een sterkere buurt. Door je aanhangwagen
           te delen, maak je deel uit van een gemeenschap die elkaar helpt. Het
@@ -23,7 +23,7 @@ const Highlights = () => {
         <div className="p-4 mb-3 border-2 border-primary-100 rounded-full">
           <ArrowPathRoundedSquareIcon className="h-8 w-8 text-primary-100" />
         </div>
-        <h2 className="text-primary-100 font-bold">Altijd duurzaam</h2>
+        <h5 className="text-primary-100 font-bold">Altijd duurzaam</h5>
         <p className="max-w-4/5">
           Bij ons draait het allemaal om duurzaamheid. Door samen aanhangwagens
           te delen, verminderen we de druk op het milieu. Minder nieuwe
@@ -36,7 +36,7 @@ const Highlights = () => {
         <div className="p-4 mb-3 border-2 border-secondary-100 rounded-full">
           <ShieldCheckIcon className="h-8 w-8 text-secondary-100" />
         </div>
-        <h2 className="text-secondary-100 font-bold">Altijd eenvoudig</h2>
+        <h5 className="text-secondary-100 font-bold">Altijd eenvoudig</h5>
         <p className="max-w-4/5">
           We begrijpen dat het leven al ingewikkeld genoeg is. Daarom hebben we
           het huren en verhuren van aanhangwagens super eenvoudig gemaakt. Ons
