@@ -28,6 +28,10 @@ type CardType = {
 //     });
 // }, []);
 
+//  Examples:  
+// <Card link="/" titel="Gesloten aanhanger" location="Laren" distance="2km" accesoires="Dissel slot" price="20" type="overview" img="/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp"/>
+// <Card link="/" titel="Open aanhangers" discription="Bied veelzijdigheid en eenvoudig laden." type="category" img="/img/verhuurfoto.png"/>
+
 const Card = ({ titel, type, img, location, distance, accesoires, price, discription, link, ...props }: CardType) => {
   return (
     <Link href={link}>
