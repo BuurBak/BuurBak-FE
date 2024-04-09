@@ -5,13 +5,15 @@ type ButtonType = {
   label: string,
   styling?: string,
   icon?: boolean,
-  disabled?: boolean;
+  disabled?: boolean,
+  buttonAction?: any;
 };
 
-const Button = ({ label, styling, icon, disabled, ...props }: ButtonType) => {
+const Button = ({ label, styling, icon, disabled, buttonAction, ...props }: ButtonType) => {
   return (
     <>
       <button
+        onClick={buttonAction}
         type="button"
         className={(styling !== undefined ? styling : "") + (disabled ? " bg-gray-100" : " bg-primary-100 hover:bg-primary-200") + " flex flex-row justify-center items-center px-7 h-12 font-bold rounded-sm text-white"}
       >
