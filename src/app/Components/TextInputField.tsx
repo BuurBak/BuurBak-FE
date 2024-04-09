@@ -1,7 +1,7 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ChangeEventHandler } from "react";
 
-type ButtonType = {
+type InputFieldType = {
   label: string,
   outline?: boolean,
   icon?: boolean,
@@ -11,7 +11,7 @@ type ButtonType = {
   styling?: string;
 };
 
-const TextInputField = ({ label, outline, icon, inputValue, setInputValue, filled, styling, ...props }: ButtonType) => {
+const TextInputField = ({ label, outline, icon, inputValue, setInputValue, filled, styling, ...props }: InputFieldType) => {
 
   return (
     <div className={(styling !== undefined ? styling : "") + " relative w-fit"}>
