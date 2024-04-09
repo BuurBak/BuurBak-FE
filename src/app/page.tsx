@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <div>
-      <Card/>
+      <Card type="overview"/>
       <Landing />
       <Highlights />
       <Footer />
