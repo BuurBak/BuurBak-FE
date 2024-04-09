@@ -1,3 +1,4 @@
+// als icon library is gekozen nog optie voor veschillende icons toevoegen.
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ChangeEventHandler } from "react";
 
