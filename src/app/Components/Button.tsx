@@ -1,13 +1,14 @@
 type ButtonType = {
-  label: string;
+  label: string,
+  styling?: string;
 };
 
-const Button = ({ label, ...props }: ButtonType) => {
+const Button = ({ label, styling, ...props }: ButtonType) => {
   return (
     <>
       <button
         type="button"
-        className="px-4 py-2 m5 bg-zinc-950 rounded-md text-white"
+        className={(styling !== undefined ? styling : "") + " px-7 h-12 font-bold bg-primary-100 rounded-sm text-white"}
       >
         {label}
       </button>

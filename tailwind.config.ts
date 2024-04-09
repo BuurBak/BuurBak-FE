@@ -12,6 +12,7 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "landing-background": "url('/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp')",
       },
       colors: {
         primary: {
@@ -26,6 +27,12 @@ const config: Config = {
         },
         offWhite: {
           100: "#f1f1f1",
+        },
+        succes: {
+          100: '#66CC99'
+        },
+        error: {
+          100: '#EB5C5C'
         },
       },
       maxWidth: {
