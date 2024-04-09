@@ -1,5 +1,3 @@
-"use client"
-
 import Footer from "./Components/Footer";
 import Highlights from "./Components/Highlights";
 import Landing from "./Components/Landing";
