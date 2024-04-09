@@ -13,6 +13,7 @@ export default function Landing() {
             setInputValue1(event.target.value)
         }
     }
+
     const [inputValue2, setInputValue2] = useState('');
 
     const changeInputValue2 = (event: { target: { value: any; }; }) => {
@@ -20,6 +21,7 @@ export default function Landing() {
             setInputValue2(event.target.value)
         }
     }
+    
     const [inputValue3, setInputValue3] = useState('');
 
     const changeInputValue3 = (event: { target: { value: any; }; }) => {

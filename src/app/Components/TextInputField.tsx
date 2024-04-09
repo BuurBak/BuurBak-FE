@@ -1,11 +1,12 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { ChangeEventHandler } from "react";
 
 type ButtonType = {
   label: string,
   outline?: boolean,
   icon?: boolean,
   inputValue: string,
-  setInputValue: any,
+  setInputValue?: ChangeEventHandler<HTMLInputElement>,
   filled?: boolean,
   styling?: string;
 };
@@ -20,6 +21,5 @@ const TextInputField = ({ label, outline, icon, inputValue, setInputValue, fille
     </div>
   )
 };
-
 
 export default TextInputField;
