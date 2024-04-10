@@ -35,7 +35,7 @@ type CardType = {
 const Card = ({ titel, type, img, location, distance, accesoires, price, discription, link, ...props }: CardType) => {
   return (
     <Link href={link}>
-    <div className={(type === "overview" ? "w-48 xl:w-64" : "w-96") + " rounded-md h-fit border border-offWhite-100"}>
+    <div className={(type === "overview" ? "w-48 xl:w-64" : "w-96") + " rounded-md h-fit border border-offWhite-100 bg-white"}>
       <img alt="trailer" src={img} className={(type === "overview" ? "object-center h-32 xl:h-44" : "object-top h-64") + " w-full overflow-hidden object-cover"} />
       <div className={(type === "overview" ? "flex" : "hidden") + " flex-col gap-1 p-2"}>
         <h5 className="hidden xl:flex text-primary-100">{titel}</h5>
