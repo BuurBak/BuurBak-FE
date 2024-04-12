@@ -23,6 +23,7 @@ const config: Config = {
           100: "#398D89",
         },
         gray: {
+          50: "#DDDDDD",
           100: "#777777",
         },
         offWhite: {

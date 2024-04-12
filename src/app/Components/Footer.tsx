@@ -27,7 +27,7 @@ const Footer = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row lg:justify-evenly gap-8 px-3 w-full pb-8">
+    <div className="flex flex-col lg:flex-row lg:justify-evenly gap-8 px-3 w-full pb-8 mt-16">
       <Image
         alt="Buurbak logo"
         src={LogoBig}

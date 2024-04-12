@@ -1,5 +1,6 @@
 "use client"
 
+import AanbodCatogorien from "./Components/AanbodCatogorien";
 import AanbodPreview from "./Components/AanbodPreview";
 import Footer from "./Components/Footer";
 import Highlights from "./Components/Highlights";
@@ -10,6 +11,7 @@ export default function Home() {
   return (
     <div>
       <Landing />
+      <AanbodCatogorien />
       <Highlights />
       <AanbodPreview />
       <Footer />

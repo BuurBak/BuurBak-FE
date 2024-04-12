@@ -46,7 +46,7 @@ const Card = ({ titel, type, img, location, distance, accesoires, price, discrip
       </div>
       <div className={(type === "overview" ? "hidden" : "flex") + " flex-col gap-1 p-2"}>
         <h5 className="flex text-primary-100">{titel}</h5>
-        <p className="text-gray-100 xl:text-xl">{discription}</p>
+        <p className="text-gray-100 xl:text-xl min-h-14">{discription}</p>
       </div>
     </div>
     </Link>

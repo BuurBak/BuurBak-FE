@@ -22,7 +22,7 @@ const AanbodPreview: React.FC = () => {
 
   return (
     <div className='w-full px-10 py-4 flex flex-col bg-offWhite-100 justify-center items-center'>
-      <div className='w-full justify-center md:justify-between items-center flex flex-row mb-4'><h2>Aanbod</h2><Button styling='hidden md:flex' label={'Bekijk ons hele aanbod'} /></div>
+      <div className='w-full justify-center md:justify-between items-center flex flex-row mb-4'><h2>Aanbod</h2><Button type='secondary' styling='hidden md:flex' label={'Bekijk ons hele aanbod'} /></div>
       
       {isLoading ? (
         <p>Loading...</p>
@@ -39,7 +39,7 @@ const AanbodPreview: React.FC = () => {
           )}
           </>
       )}
-      <div className='w-full flex justify-center'><Button styling='flex md:hidden' label={'Bekijk ons hele aanbod'} /></div>
+      <div className='w-full flex justify-center'><Button type='secondary' styling='flex md:hidden' label={'Bekijk ons hele aanbod'} /></div>
     </div>
   );
 };
