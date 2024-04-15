@@ -30,5 +30,6 @@ export const Primary: Story = {
 export const Secondary: Story = {
   args: {
     label: "Test 2",
+    type: "secondary"
   },
 };

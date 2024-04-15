@@ -34,21 +34,21 @@ type CardType = {
 
 const Card = ({ titel, type, img, location, distance, accesoires, price, discription, link, ...props }: CardType) => {
   return (
-    <Link href={link}>
-    <div className={(type === "overview" ? "w-48 xl:w-64" : "w-96") + " rounded-md h-fit border border-offWhite-100 bg-white"}>
-      <img alt="trailer" src={img} className={(type === "overview" ? "object-center h-32 xl:h-44" : "object-top h-64") + " w-full overflow-hidden object-cover"} />
-      <div className={(type === "overview" ? "flex" : "hidden") + " flex-col gap-1 p-2"}>
-        <h5 className="hidden xl:flex text-primary-100">{titel}</h5>
-        <p className="flex xl:hidden text-primary-100 font-bold">{titel}</p>
-        <p className="text-gray-100 xl:text-xl">{location} - {distance}</p>
-        <p className="text-gray-100 xl:text-xl">accesoires: {accesoires}</p>
-        <p className="xl:text-xl">€{price} per dag</p>
+    <Link href={link} className="w-fit">
+      <div className={(type === "overview" ? "w-48 xl:w-64" : "w-96") + " rounded-md h-fit border border-offWhite-100 bg-white"}>
+        <img alt="trailer" src={img} className={(type === "overview" ? "object-center h-32 xl:h-44" : "object-top h-64") + " w-full overflow-hidden object-cover"} />
+        <div className={(type === "overview" ? "flex" : "hidden") + " flex-col gap-1 p-2"}>
+          <h5 className="hidden xl:flex text-primary-100">{titel}</h5>
+          <p className="flex xl:hidden text-primary-100 font-bold">{titel}</p>
+          <p className="text-gray-100 xl:text-xl">{location} - {distance}</p>
+          <p className="text-gray-100 xl:text-xl">accesoires: {accesoires}</p>
+          <p className="xl:text-xl">€{price} per dag</p>
+        </div>
+        <div className={(type === "overview" ? "hidden" : "flex") + " flex-col gap-1 p-2"}>
+          <h5 className="flex text-primary-100">{titel}</h5>
+          <p className="text-gray-100 xl:text-xl min-h-14">{discription}</p>
+        </div>
       </div>
-      <div className={(type === "overview" ? "hidden" : "flex") + " flex-col gap-1 p-2"}>
-        <h5 className="flex text-primary-100">{titel}</h5>
-        <p className="text-gray-100 xl:text-xl min-h-14">{discription}</p>
-      </div>
-    </div>
     </Link>
   )
 };
