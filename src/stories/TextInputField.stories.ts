@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import TextInputField from "../app/Components/TextInputField";
-import { useState } from "react";
 
 const meta = {
   title: "InputsAndSelection/TextInputField",

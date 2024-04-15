@@ -31,7 +31,7 @@ const AanbodPreview: React.FC = () => {
             {data.length === 0 ? (
               <p>No data available</p>
             ) : (
-              <div className='flex flex-row flex-wrap sm:flex-nowrap w-full gap-4 justify-center overflow-hidden'>
+              <div className='flex flex-row flex-wrap sm:flex-nowrap w-full gap-4 justify-center lg:justify-between overflow-hidden'>
                 {data.slice(0, 5).map((item) => (
                   <Card key={item.id} titel={item.name} type={'overview'} img={item.coverImage} link={''} location={item.cityAddress.city} price={item.price.toString()} />
                 ))}
