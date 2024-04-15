@@ -5,6 +5,7 @@ import { TrailerList } from '../Types/TrailerList';
 import Card from './Card';
 import Button from './Button';
 
+
 const AanbodPreview: React.FC = () => {
   const [data, setData] = useState<TrailerList[]>([]);
   const [isLoading, setLoading] = useState(true);
@@ -17,7 +18,7 @@ const AanbodPreview: React.FC = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         setLoading(false);
       });
   }, []);
@@ -42,6 +43,7 @@ const AanbodPreview: React.FC = () => {
           </>
         )}
       <div className='w-full flex justify-center mt-4'><Button type='secondary' styling='flex md:hidden' label={'Bekijk ons hele aanbod'} /></div>
+
     </div>
   );
 };
