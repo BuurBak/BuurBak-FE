@@ -1,5 +1,3 @@
-"use client"
-
 import AanbodCatogorien from "./Components/AanbodCatogorien";
 import AanbodPreview from "./Components/AanbodPreview";
 import Footer from "./Components/Footer";

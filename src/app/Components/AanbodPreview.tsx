@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect, useState } from 'react';
 import { TrailerList } from '../Types/TrailerList';
 import Card from './Card';
@@ -33,7 +35,7 @@ const AanbodPreview: React.FC = () => {
             ) : (
               <div className='flex flex-row flex-wrap sm:flex-nowrap w-full gap-4 justify-center lg:justify-between overflow-hidden'>
                 {data.slice(0, 5).map((item) => (
-                  <Card key={item.id} titel={item.name} type={'overview'} img={item.coverImage} link={''} location={item.cityAddress.city} price={item.price.toString()} />
+                  <Card key={item.id} title={item.name} type={'overview'} img={item.coverImage} link={''} location={item.cityAddress.city} price={item.price.toString()} />
                 ))}
               </div>
             )}
