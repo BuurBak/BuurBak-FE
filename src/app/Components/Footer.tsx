@@ -27,13 +27,13 @@ const Footer = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row lg:justify-evenly gap-8 px-3 w-full pb-8">
+    <div className="flex flex-col lg:flex-row lg:justify-between gap-8 px-20 w-full pb-8 mt-16">
       <Image
         alt="Buurbak logo"
         src={LogoBig}
         className="w-fit h-fit hidden lg:block"
       />
-      <div className="lg:max-w-[50vw] lg:w-full">
+      <div className="lg:max-w-[50vw] lg:w-full flex flex-col items-centers">
         <div className="w-full">
           <ul className="flex flex-col lg:flex-row lg:justify-evenly gap-3 text-center">
             {pages?.map((page: any, index: number) => (

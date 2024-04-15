@@ -23,6 +23,7 @@ const config: Config = {
           100: "#398D89",
         },
         gray: {
+          50: "#DDDDDD",
           100: "#777777",
         },
         offWhite: {
@@ -37,6 +38,7 @@ const config: Config = {
       },
       maxWidth: {
         "4/5": "80%",
+        "1/3": "33.33333333%",
       },
     },
   },
