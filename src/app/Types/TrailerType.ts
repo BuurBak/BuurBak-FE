@@ -1,3 +1,3 @@
 export interface TrailerType {
-  name: string
+  name: "Open aanhanger" | "Gesloten aanhanger" | "Motorfiets aanhanger" | "Bagage aanhanger" | "Fietsen aanhanger" | "Overig";
 }
