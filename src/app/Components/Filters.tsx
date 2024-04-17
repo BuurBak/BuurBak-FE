@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Slider from "./RangeSlider";
+import Slider from "./MultiRangeSlider/MultiRangeSlider";
 import Rating from "./StarRating";
 import Search from "../Search/Search";
 import DatePicker from "react-datepicker";

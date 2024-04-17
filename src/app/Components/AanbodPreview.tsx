@@ -11,7 +11,7 @@ const AanbodPreview: React.FC = () => {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://pilot.buurbak.nl/api/v1/traileroffers/")
+    fetch("https://pilot.buurbak.nl/api/v1/traileroffers/", { mode: 'cors'})
       .then((res) => res.json())
       .then((data) => {
         setData(data.content);

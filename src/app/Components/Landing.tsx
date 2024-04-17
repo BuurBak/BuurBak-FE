@@ -2,36 +2,14 @@
 
 import { CheckCircleIcon } from '@heroicons/react/24/outline'
 import Button from './Button'
-import TextInputField from './TextInputField';
+import InputField from './InputField';
 import { useState } from 'react';
 
 
 export default function Landing() {
-
     const [inputValue1, setInputValue1] = useState('');
-
-    const changeInputValue1 = (event: { target: { value: any; }; }) => {
-        if (event.target && event.target.value !== undefined) {
-            setInputValue1(event.target.value)
-        }
-    }
-
     const [inputValue2, setInputValue2] = useState('');
-
-    const changeInputValue2 = (event: { target: { value: any; }; }) => {
-        if (event.target && event.target.value !== undefined) {
-            setInputValue2(event.target.value)
-        }
-    }
-    
     const [inputValue3, setInputValue3] = useState('');
-
-    const changeInputValue3 = (event: { target: { value: any; }; }) => {
-        if (event.target && event.target.value !== undefined) {
-            setInputValue3(event.target.value)
-        }
-    }
-
 
     return <div className="flex justify-center items-center h-screen w-full bg-landing-background bg-cover bg-center overflow-hidden">
         <div className="flex justify-center items-center flex-col w-full h-full backdrop-brightness-50">
@@ -44,9 +22,9 @@ export default function Landing() {
                     <div className='flex items-center'><CheckCircleIcon className="h-8 w-8 text-succes-100 mr-4" /><h6 className='text-white'>Altijd eenvoudig</h6></div>
                 </div>
                 <div className='md:grid grid-cols-2 gap-y-4 gap-x-10 flex flex-col xl:flex xl:flex-row justify-between mt-12 w-fit'>
-                    <TextInputField label='Type' icon filled outline inputValue={inputValue1} setInputValue={changeInputValue1} />
-                    <TextInputField label='Waar' icon filled outline inputValue={inputValue2} setInputValue={changeInputValue2} />
-                    <TextInputField label='Wanneer' icon filled outline inputValue={inputValue3} setInputValue={changeInputValue3} />
+                    <InputField type='text' label='Type' icon filled outline inputValue={inputValue1} setInputValue={setInputValue1} />
+                    <InputField type='text' label='Waar' icon filled outline inputValue={inputValue2} setInputValue={setInputValue2} />
+                    <InputField type='text' label='Wanneer' icon filled outline inputValue={inputValue3} setInputValue={setInputValue3} />
                     <Button label='Bekijk het aanbod' styling='w-[246px]'/>
                 </div>
             </div>
