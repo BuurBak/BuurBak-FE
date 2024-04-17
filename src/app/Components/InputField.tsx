@@ -1,7 +1,6 @@
 // als icon library is gekozen nog optie voor veschillende icons toevoegen.
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import MultiRangeSlider from "./MultiRangeSlider/MultiRangeSlider";
-import { useCallback, useEffect, useState } from "react";
+import MultiRangeSlider from "./MultiRangeSlider";
 
 type InputFieldType = {
   label: string,

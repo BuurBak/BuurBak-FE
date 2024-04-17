@@ -3,11 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import Card from './Card';
 import Button from './Button';
-import InputField from './InputField';
 
 type category = { title: string; discription: string; type: "overview" | "category"; img: string; link: string; index: number };
 
-const AanbodCatogorien: React.FC = () => {
+const AanbodCategorieën: React.FC = () => {
 
   const categorys: category[] = [
     { title: "Open aanhangers", discription: "Bied veelzijdig en eenvoudig laden.", type: "category", img: "/img/verhuurfoto.png", link: "", index: 0 },
@@ -18,7 +17,7 @@ const AanbodCatogorien: React.FC = () => {
 
   return (
     <div className='w-full sm:px-20 py-4 flex flex-col bg-offWhite-100 justify-center items-center'>
-      <div className='w-full justify-center md:justify-between items-center flex flex-row mb-4'><h3 className='font-bold'>Catogorieën</h3><Button type='secondary' styling='hidden md:flex' label={'Bekijk ons hele aanbod'} /></div>
+      <div className='w-full justify-center md:justify-between items-center flex flex-row mb-4'><h3 className='font-bold'>Categorieën</h3><Button type='secondary' styling='hidden md:flex' label={'Bekijk ons hele aanbod'} /></div>
       <div className='flex flex-col md:flex-row flex-wrap 2xl:flex-nowrap w-full gap-4 justify-center items-center 2xl:justify-between'>
         {categorys?.map((category: category) => (
           <Card title={category.title} discription={category.discription} type={category.type} img={category.img} styling='grow' link={category.link} key={category.index} />
@@ -29,4 +28,4 @@ const AanbodCatogorien: React.FC = () => {
   );
 };
 
-export default AanbodCatogorien;
+export default AanbodCategorieën;

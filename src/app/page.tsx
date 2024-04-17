@@ -1,4 +1,4 @@
-import AanbodCatogorien from "./Components/AanbodCatogorien";
+import AanbodCategorieën from "./Components/AanbodCategorieën";
 import AanbodPreview from "./Components/AanbodPreview";
 import Footer from "./Components/Footer";
 import Highlights from "./Components/Highlights";
@@ -10,7 +10,7 @@ export default function Home() {
       <Landing />
       <AanbodPreview />
       <Highlights />
-      <AanbodCatogorien />
+      <AanbodCategorieën />
       <Footer />
     </div>
   );
