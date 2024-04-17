@@ -9,8 +9,6 @@ type category = { title: string; discription: string; type: "overview" | "catego
 
 const AanbodCatogorien: React.FC = () => {
 
-  const [rating, setRating] = useState<number>();
-
   const categorys: category[] = [
     { title: "Open aanhangers", discription: "Bied veelzijdig en eenvoudig laden.", type: "category", img: "/img/verhuurfoto.png", link: "", index: 0 },
     { title: "Gesloten aanhangers", discription: "Beschermt lading tegen weersinvloeden en diefstal.", type: "category", img: "/img/verhuurfoto.png", link: "", index: 1 },
