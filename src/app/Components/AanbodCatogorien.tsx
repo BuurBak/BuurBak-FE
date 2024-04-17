@@ -20,10 +20,10 @@ const AanbodCatogorien: React.FC = () => {
 
   return (
     <div className='w-full sm:px-20 py-4 flex flex-col bg-offWhite-100 justify-center items-center'>
-      <div className='w-full justify-center md:justify-between items-center flex flex-row mb-4'></div>
-      <div className='flex flex-col md:flex-row md:justify-start w-full gap-4 justify-center items-center lg:justify-between overflow-auto'>
+      <div className='w-full justify-center md:justify-between items-center flex flex-row mb-4'><h3 className='font-bold'>Catogorieën</h3><Button type='secondary' styling='hidden md:flex' label={'Bekijk ons hele aanbod'} /></div>
+      <div className='flex flex-col md:flex-row flex-wrap 2xl:flex-nowrap w-full gap-4 justify-center items-center 2xl:justify-between'>
         {categorys?.map((category: category) => (
-          <Card title={category.title} discription={category.discription} type={category.type} img={category.img} link={category.link} key={category.index}/>
+          <Card title={category.title} discription={category.discription} type={category.type} img={category.img} styling='grow' link={category.link} key={category.index} />
         ))}
       </div>
       <div className='w-full flex justify-center mt-4'><Button type='secondary' styling='flex md:hidden' label={'Bekijk ons hele aanbod'} /></div>

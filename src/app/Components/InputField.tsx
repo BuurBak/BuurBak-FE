@@ -73,6 +73,7 @@ const InputField = ({ label, type, outline, icon, rangeMin, rangeMax, setRangeVa
       {/* MultiRangeSlider staat apart omdat dit ander teveel code werd voor in dit component */}
       {type === "rangeSlider" && <div className="w-60 h-10"><MultiRangeSlider min={rangeMin === undefined ? 0 : rangeMin} max={rangeMax === undefined ? 200 : rangeMax} setMin={setRangeValueMin} setMax={setRangeValueMax}/></div>}
       
+      {type === "dropdown" && <div></div>}
       
       </div>
   )
