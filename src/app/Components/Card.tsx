@@ -8,7 +8,7 @@ type CardType = {
   type: "overview" | "category",
   img: string,
   location?: string,
-  distance?: string,
+  distance?: number,
   accesoires?: string,
   price?: string,
   discription?: string,
@@ -24,7 +24,7 @@ const Card = ({ title, type, img, location, distance, accesoires, price, discrip
         <div className={(type === "overview" ? "flex" : "hidden") + " flex-col gap-1 p-2"}>
           <h5 className="hidden xl:flex text-primary-100">{title}</h5>
           <p className="flex xl:hidden text-primary-100 font-bold">{title}</p>
-          <p className="text-gray-100 xl:text-xl">{location} - {distance}</p>
+          <p className="text-gray-100 xl:text-xl">{location}{distance != undefined && " - " + distance + "Km"}</p>
           <p className="text-gray-100 xl:text-xl">accesoires: {accesoires}</p>
           <p className="xl:text-xl">€{price} per dag</p>
         </div>
