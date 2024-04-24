@@ -13,9 +13,11 @@ export default function AanbodPage() {
             <AanbodList />
           </div>
         </Panel>
-        <PanelResizeHandle className="w-2" />
+        <PanelResizeHandle className="w-3 bg-offWhite-100 flex items-center">
+          <div className="w-2 h-10 bg-primary-100 rounded-sm" />
+        </PanelResizeHandle>
         <Panel defaultSize={50} minSize={20}>
-          <div className="h-screen bg-primary-100"></div>
+          <div className="h-screen bg-green-400"></div>
         </Panel>
       </PanelGroup>
       <Footer />
