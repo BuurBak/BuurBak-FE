@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Button from "./Button";
+import Card from "./Card";
 import InputField from "./InputField";
 import SearchOrFilter from "./SearchOrFilterFunction";
 
@@ -37,8 +38,8 @@ const AanbodList = () => {
     },
   ];
   return (
-    <div className="flex flex-col min-h-dvh w-full p-2 bg-offWhite-100">
-      <div className="flex flex-col w-full h-full gap-3">
+    <div className="flex flex-col h-fit sm:h-full w-full p-2 bg-offWhite-100 gap-3">
+      <div className="flex flex-col w-full h-fit gap-3">
         <div className="flex flex-row gap-3  w-full">
           <InputField
             className="w-full"
@@ -74,7 +75,21 @@ const AanbodList = () => {
           </div>
         )}
       </div>
-      <div>test</div>
+      <div className="w-full h-fit flex flex-row flex-wrap gap-3">
+        {TrailerArray?.map((item) => (
+          <Card
+            key={item.id}
+            img={item.coverImage}
+            title={item.name}
+            location={item.cityAddress.city}
+            price={item.price.toString()}
+            accesoires=""
+            distance={1}
+            type="overview"
+            link="/"
+          />
+        ))}
+      </div>
     </div>
   );
 };
