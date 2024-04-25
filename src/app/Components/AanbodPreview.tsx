@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { TrailerList } from '../Types/TrailerList';
 import Card from './Card';
 import Button from './Button';
+
 const DEFAULT_CENTER = {
   lat: 52.131401,
   lng: 5.42747,
@@ -39,7 +40,7 @@ const AanbodPreview: React.FC = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
         setLoading(false);
-      });
+      })
   }, []);
 
   const TrailerDistance = (nearbyLatitude: any, nearbyLongitude: any) => {
@@ -65,6 +66,7 @@ const AanbodPreview: React.FC = () => {
         );
         return distance;
       }
+
   }
 
   return (

@@ -26,7 +26,7 @@ export const Primary: Story = {
   args: {
     title: "primary",
     location: "place",
-    distance: "10km",
+    distance: 10,
     type: "overview",
     img: "https://upload.wikimedia.org/wikipedia/en/9/9a/Trollface_non-free.png",
     accesoires: "thing",
