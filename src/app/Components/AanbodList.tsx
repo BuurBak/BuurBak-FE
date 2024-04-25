@@ -83,10 +83,10 @@ const AanbodList = () => {
             title={item.name}
             location={item.cityAddress.city}
             price={item.price.toString()}
+            link={item.id}
             accesoires=""
             distance={1}
             type="overview"
-            link="/"
           />
         ))}
       </div>

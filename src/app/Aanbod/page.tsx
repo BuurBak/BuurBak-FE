@@ -17,8 +17,9 @@ export default function AanbodPage() {
   };
 
   useEffect(() => {
+    handleResize();
     window.addEventListener("resize", handleResize);
-  });
+  }, []);
 
   return (
     <div>
@@ -30,7 +31,7 @@ export default function AanbodPage() {
           {!mobile ? (
             <AanbodList />
           ) : (
-            <div className="bg-green-400 h-full w-full"></div>
+            <div className="bg-green-400 h-full w-full">test</div>
           )}
         </Panel>
         <PanelResizeHandle className="bg-offWhite-100 flex items-center justify-center w-full h-3 sm:w-3 sm:h-auto">
@@ -38,7 +39,7 @@ export default function AanbodPage() {
         </PanelResizeHandle>
         <Panel defaultSize={50} minSize={20}>
           {!mobile ? (
-            <div className="bg-green-400 h-full w-full"></div>
+            <div className="bg-green-400 h-full w-full">test</div>
           ) : (
             <AanbodList />
           )}
