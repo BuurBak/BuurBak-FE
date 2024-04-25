@@ -32,7 +32,7 @@ export default function AanbodPage() {
           {!mobile ? (
             <AanbodList />
           ) : (
-            <div className="h-screen ">
+            <div className="h-full ">
               <Map />
             </div>
           )}
@@ -42,7 +42,7 @@ export default function AanbodPage() {
         </PanelResizeHandle>
         <Panel defaultSize={50} minSize={20}>
           {!mobile ? (
-            <div className="h-screen ">
+            <div className="h-full ">
               <Map />
             </div>
           ) : (
