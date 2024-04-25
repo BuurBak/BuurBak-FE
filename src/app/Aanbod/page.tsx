@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import AanbodList from "../Components/AanbodList";
 import Footer from "../Components/Footer";
+import Map from "../Components/Map";
 
 export default function AanbodPage() {
   const [mobile, setMobile] = useState(false);
@@ -31,7 +32,9 @@ export default function AanbodPage() {
           {!mobile ? (
             <AanbodList />
           ) : (
-            <div className="bg-green-400 h-full w-full">test</div>
+            <div className="h-screen ">
+              <Map />
+            </div>
           )}
         </Panel>
         <PanelResizeHandle className="bg-offWhite-100 flex items-center justify-center w-full h-3 sm:w-3 sm:h-auto">
@@ -39,7 +42,9 @@ export default function AanbodPage() {
         </PanelResizeHandle>
         <Panel defaultSize={50} minSize={20}>
           {!mobile ? (
-            <div className="bg-green-400 h-full w-full">test</div>
+            <div className="h-screen ">
+              <Map />
+            </div>
           ) : (
             <AanbodList />
           )}
