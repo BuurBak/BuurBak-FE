@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import { addSingleMarkers } from "./MapsMarker";
+import { useEffect, useRef, useState } from "react";
 import { addClusterMarkers } from "./MapsMarkerCluster";
 
 const DEFAULT_CENTER = { lat: 48.8566, lng: 2.3522 };
@@ -14,8 +13,7 @@ export const GoogleMaps = ({
   className?: string;
   price: Array<number>;
 }) => {
-  
-  const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER)
+  const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER);
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(success, error);
   }
@@ -25,7 +23,7 @@ export const GoogleMaps = ({
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
     setCenterCoordinates({ lat: latitude, lng: longitude });
-  }    
+  }
   function error() {
     console.log("Unable to retrieve your location");
   }
@@ -41,14 +39,9 @@ export const GoogleMaps = ({
       });
 
       // Displays cluster markers on map when called
-      addClusterMarkers({ locations, map, price});
+      addClusterMarkers({ locations, map, price });
     }
   }, [ref, locations]);
 
-  return (
-    <div
-      ref={ref}
-      className="h-full w-full"
-    />
-  );
+  return <div ref={ref} className="h-full w-full" />;
 };
