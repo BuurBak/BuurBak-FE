@@ -3,7 +3,7 @@ import {
   SuperClusterAlgorithm,
 } from "@googlemaps/markerclusterer";
 
-import { addSingleMarkers } from "./MapsMarker";
+import addSingleMarkers from "./MapsMarker";
 
 export const addClusterMarkers = ({
   locations,
