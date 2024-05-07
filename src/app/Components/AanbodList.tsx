@@ -11,7 +11,6 @@ type FilterOption = {
 };
 
 const AanbodList = () => {
-  //TrailerArray is de lijst met getypte trailers objects
   const TrailerArray = SearchOrFilter();
 
   const [showFilters, setShowFilters] = useState(false);
@@ -83,7 +82,7 @@ const AanbodList = () => {
             title={item.name}
             location={item.cityAddress.city}
             price={item.price.toString()}
-            link={item.id}
+            link={"Aanbod/" + item.id}
             accesoires=""
             distance={1}
             type="overview"

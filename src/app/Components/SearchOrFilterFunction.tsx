@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { TrailerList } from "../Types/TrailerList";
 import { TrailerType } from "../Types/TrailerType";
-const DEFAULT_CENTER = {
-  lat: 52.131401,
-  lng: 5.42747,
-};
 
 const SearchOrFilter = () => {
+  const DEFAULT_CENTER = {
+    lat: 52.131401,
+    lng: 5.42747,
+  };
+
   const [data, setData] = useState<TrailerList[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,6 +17,7 @@ const SearchOrFilter = () => {
   const [filterDimensions, setFilterDimensions] = useState();
   const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER);
   const [filteredTrailers, setFilteredTrailers] = useState<TrailerList[]>([]);
+
   // Berekent de afstand van de aanhangwagen vanaf jou locatie
   const haversineDistance = (coords1: any, coords2: any) => {
     const R = 6371; // Radius of the Earth in km
