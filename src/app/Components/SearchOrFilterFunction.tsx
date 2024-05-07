@@ -1,22 +1,22 @@
-import { useState, useEffect } from 'react'
-import { TrailerList } from '../Types/TrailerList'
-import { TrailerType } from '../Types/TrailerType'
+import { useEffect, useState } from "react";
+import { TrailerList } from "../Types/TrailerList";
+import { TrailerType } from "../Types/TrailerType";
 const DEFAULT_CENTER = {
   lat: 52.131401,
   lng: 5.42747,
 };
 
-export default function SearchOrFilter() {
-  const [data, setData] = useState<TrailerList[]>([])
-  const [isLoading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [filterDate, setFilterDate] = useState<Date>()
-  const [filterType, setFilterType] = useState<TrailerType>()
-  const [filterPrice, setFilterPrice] = useState<number>()
-  const [filterDimensions, setFilterDimensions] = useState()
-  const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER)
-  const [filteredTrailers, setFilteredTrailers] = useState<TrailerList[]>([])
-// Berekent de afstand van de aanhangwagen vanaf jou locatie
+const SearchOrFilter = () => {
+  const [data, setData] = useState<TrailerList[]>([]);
+  const [isLoading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterDate, setFilterDate] = useState<Date>();
+  const [filterType, setFilterType] = useState<TrailerType>();
+  const [filterPrice, setFilterPrice] = useState<number>();
+  const [filterDimensions, setFilterDimensions] = useState();
+  const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER);
+  const [filteredTrailers, setFilteredTrailers] = useState<TrailerList[]>([]);
+  // Berekent de afstand van de aanhangwagen vanaf jou locatie
   const haversineDistance = (coords1: any, coords2: any) => {
     const R = 6371; // Radius of the Earth in km
     const dLat = (coords2.lat - coords1.lat) * (Math.PI / 180);
@@ -36,7 +36,7 @@ export default function SearchOrFilter() {
     fetch("https://pilot.buurbak.nl/api/v1/traileroffers")
       .then((res) => res.json())
       .then((data) => {
-        setData(data);
+        setData(data.content);
         setLoading(false);
       });
   }, []);
@@ -81,8 +81,8 @@ export default function SearchOrFilter() {
             .includes(searchTerm.toLowerCase())) &&
         (!filterType || trailer.trailerType.name === filterType.name) &&
         (!filterPrice || trailer.price <= filterPrice)
-      )
-    })
+      );
+    });
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
@@ -118,12 +118,10 @@ export default function SearchOrFilter() {
       });
     }
 
-    setFilteredTrailers(filteredAndReordered)
-  }, [data, searchTerm, filterType, centerCoordinates])
+    setFilteredTrailers(filteredAndReordered);
+  }, [data, searchTerm, filterType, centerCoordinates]);
 
-  return (
-    <div>
-      
-    </div>
-  );
-}
+  return filteredTrailers;
+};
+
+export default SearchOrFilter;
