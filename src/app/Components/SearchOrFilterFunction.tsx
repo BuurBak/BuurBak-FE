@@ -41,6 +41,31 @@ export default function SearchOrFilter() {
       });
   }, []);
 
+  const TrailerDistance = (nearbyLatitude: any, nearbyLongitude: any) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+    function success(position: {
+      coords: { latitude: number; longitude: number };
+    }) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      setCenterCoordinates({ lat: latitude, lng: longitude });
+    }    
+    function error() {
+      console.log("Unable to retrieve your location");
+      return undefined;
+    }
+    if(centerCoordinates.lat !== DEFAULT_CENTER.lat ||
+      centerCoordinates.lng !== DEFAULT_CENTER.lng){
+        const distance = haversineDistance(
+          { lat: nearbyLatitude, lng: nearbyLongitude },
+          centerCoordinates
+        );
+        return distance;
+      }
+
+  }
   useEffect(() => {
     let filteredAndReordered = [...data].filter((trailer) => {
       return (
@@ -86,6 +111,10 @@ export default function SearchOrFilter() {
           centerCoordinates
         );
         return distanceA - distanceB;
+      });
+      filteredAndReordered.forEach(element => {
+        const distance = TrailerDistance(element.nearbyLatitude, element.nearbyLongitude) || 0;
+        element.distance = Math.round(distance);
       });
     }
 
