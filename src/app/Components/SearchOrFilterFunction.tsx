@@ -6,14 +6,22 @@ const DEFAULT_CENTER = {
   lng: 5.42747,
 };
 
-const SearchOrFilter = () => {
+// const [searchTerm, setSearchTerm] = useState("");
+// const [filterDate, setFilterDate] = useState<Date>();
+// const [filterType, setFilterType] = useState<TrailerType>();
+// const [filterPrice, setFilterPrice] = useState<number>();
+// const [filterDimensions, setFilterDimensions] = useState();
+
+type SearchOrFilter = {
+  searchTerm?: string,
+  filterDate?: Date,
+  filterType?: TrailerType,
+  filterPrice?: number,
+  filterDimensions?: any,
+}
+const SearchOrFilter = ({ searchTerm, filterDate, filterType, filterPrice, filterDimensions, ...props }: SearchOrFilter) => {
   const [data, setData] = useState<TrailerList[]>([]);
   const [isLoading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterDate, setFilterDate] = useState<Date>();
-  const [filterType, setFilterType] = useState<TrailerType>();
-  const [filterPrice, setFilterPrice] = useState<number>();
-  const [filterDimensions, setFilterDimensions] = useState();
   const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER);
   const [filteredTrailers, setFilteredTrailers] = useState<TrailerList[]>([]);
   // Berekent de afstand van de aanhangwagen vanaf jou locatie
@@ -24,9 +32,9 @@ const SearchOrFilter = () => {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((coords1.lat * Math.PI) / 180) *
-        Math.cos((coords2.lat * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos((coords2.lat * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     return distance;
@@ -39,68 +47,51 @@ const SearchOrFilter = () => {
         setData(data.content);
         setLoading(false);
       });
-  }, []);
-
-  const TrailerDistance = (nearbyLatitude: any, nearbyLongitude: any) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
+
     function success(position: {
       coords: { latitude: number; longitude: number };
     }) {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
       setCenterCoordinates({ lat: latitude, lng: longitude });
-    }    
+    }
     function error() {
       console.log("Unable to retrieve your location");
-      return undefined;
+    };
+  }, []);
+
+  const TrailerDistance = (nearbyLatitude: any, nearbyLongitude: any) => {
+    if (centerCoordinates.lat !== DEFAULT_CENTER.lat ||
+      centerCoordinates.lng !== DEFAULT_CENTER.lng) {
+      const distance = haversineDistance(
+        { lat: nearbyLatitude, lng: nearbyLongitude },
+        centerCoordinates
+      );
+      return distance;
     }
-    if(centerCoordinates.lat !== DEFAULT_CENTER.lat ||
-      centerCoordinates.lng !== DEFAULT_CENTER.lng){
-        const distance = haversineDistance(
-          { lat: nearbyLatitude, lng: nearbyLongitude },
-          centerCoordinates
-        );
-        return distance;
-      }
 
   }
   useEffect(() => {
     let filteredAndReordered = [...data].filter((trailer) => {
       return (
         (!searchTerm ||
-          trailer.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-        (!searchTerm ||
-          trailer.trailerType.name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())) &&
-        (!searchTerm ||
-          trailer.cityAddress.city
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())) &&
-        (!filterType || trailer.trailerType.name === filterType.name) &&
+          trailer.cityAddress.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          trailer.name?.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+          &&
+        (!filterType?.name || trailer.trailerType.name === filterType.name) &&
         (!filterPrice || trailer.price <= filterPrice)
       );
     });
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error);
-    }
-    function success(position: {
-      coords: { latitude: number; longitude: number };
-    }) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      setCenterCoordinates({ lat: latitude, lng: longitude });
-    }
 
-    function error() {
-      console.log("Unable to retrieve your location");
-    }
     if (
       centerCoordinates.lat !== DEFAULT_CENTER.lat ||
       centerCoordinates.lng !== DEFAULT_CENTER.lng
     ) {
+
       filteredAndReordered = filteredAndReordered.sort((a, b) => {
         const distanceA = haversineDistance(
           { lat: a.nearbyLatitude, lng: a.nearbyLongitude },

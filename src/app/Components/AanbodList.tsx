@@ -3,36 +3,44 @@ import Button from "./Button";
 import Card from "./Card";
 import InputField from "./InputField";
 import SearchOrFilter from "./SearchOrFilterFunction";
+import { TrailerType } from "../Types/TrailerType";
+import { Autocomplete, TextField } from "@mui/material";
 
 type FilterOption = {
   label: string;
+  options: any;
   inputValue: any;
   setInputValue: any;
 };
 
 const AanbodList = () => {
-  //TrailerArray is de lijst met getypte trailers objects
-  const TrailerArray = SearchOrFilter();
 
   const [showFilters, setShowFilters] = useState(false);
   const [inputValueSearch, setInputValueSearch] = useState("");
-  const [inputValueType, setInputValueType] = useState("");
+  const [inputValueType, setInputValueType] = useState<TrailerType>({name: ""});
   const [inputValueWhere, setInputValueWhere] = useState("");
-  const [inputValueWhen, setInputValueWhen] = useState("");
+  const [inputValueWhen, setInputValueWhen] = useState<Date>();
+  
+  //TrailerArray is de lijst met getypte trailers objects
+  const TrailerArray = SearchOrFilter({searchTerm: inputValueSearch, filterType: inputValueType, filterDate: inputValueWhen});
+  const TrailerTypes = ["Open aanhanger", "Gesloten aanhanger", "Motorfiets aanhanger", "Bagage aanhanger", "Fietsen aanhanger", "Overig"]
 
   const filterOptions: FilterOption[] = [
     {
       label: "Type",
-      inputValue: inputValueType,
+      options: TrailerTypes,
+      inputValue: inputValueType.name,
       setInputValue: setInputValueType,
     },
     {
       label: "Waar",
+      options: TrailerTypes,
       inputValue: inputValueWhere,
       setInputValue: setInputValueWhere,
     },
     {
       label: "Wanneer",
+      options: TrailerTypes,
       inputValue: inputValueWhen,
       setInputValue: setInputValueWhen,
     },
@@ -60,17 +68,13 @@ const AanbodList = () => {
         {showFilters && (
           <div className="flex flex-row flex-wrap gap-3">
             {filterOptions?.map((item: FilterOption, index: number) => (
-              <InputField
-                key={index}
-                filled
-                icon
-                inputValue={item.inputValue}
-                setInputValue={item.setInputValue}
-                label={item.label}
-                outline
-                type="text"
-                className="flex-1 min-w-fit"
-              />
+              <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={item.options}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} value={item.inputValue} onChange={item.setInputValue} label={item.label} />}
+            />
             ))}
           </div>
         )}
