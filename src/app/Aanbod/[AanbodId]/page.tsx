@@ -2,6 +2,7 @@
 
 import Carousel from "@/app/Components/AanbodItem/Carousel";
 import DialogComponent from "@/app/Components/AanbodItem/Dialog";
+import ImageGallery from "@/app/Components/AanbodItem/ImageGallery";
 import { TrailerList } from "@/app/Types/TrailerList";
 import { useEffect, useState } from "react";
 
@@ -41,15 +42,17 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   }
 
   return (
-    <div className="w-dvw h-fit flex flex-col items-center gap-4 pt-4">
-      {/* <ImageGallery trailerOffer={trailerOffer} setOpen={setOpen} /> */}
+    <div className="w-dvw h-fit flex flex-col items-center gap-4 sm:pt-4">
+      <ImageGallery trailerOffer={trailerOffer} setOpen={setOpen} />
 
       {trailerOffer && (
         <>
-          <Carousel
-            params={[trailerOffer?.coverImage, ...trailerOffer?.images]}
-            mobile={true}
-          />
+          <div className="sm:hidden w-full h-fit">
+            <Carousel
+              params={[trailerOffer?.coverImage, ...trailerOffer?.images]}
+            />
+          </div>
+
           <DialogComponent
             trailerImageArray={[
               trailerOffer?.coverImage,

@@ -23,6 +23,10 @@ const config: Config = {
         secondary: {
           100: "#398D89",
         },
+        black: {
+          100: "#000000",
+          200: "#373530",
+        },
         gray: {
           50: "#DDDDDD",
           100: "#777777",

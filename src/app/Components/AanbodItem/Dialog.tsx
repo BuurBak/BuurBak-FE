@@ -17,11 +17,8 @@ function DialogComponent({
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth={"lg"}>
-      <DialogContent className="w-full h-full ">
-        {trailerImageArray && (
-          <Carousel params={trailerImageArray} mobile={true} />
-        )}
-        <div className="w-full h-full flex justify-between"></div>
+      <DialogContent className="w-full h-full">
+        {trailerImageArray && <Carousel params={trailerImageArray} />}
       </DialogContent>
     </Dialog>
   );

@@ -15,7 +15,7 @@ const ImageGallery = ({
   return (
     <>
       {trailerOffer && (
-        <div className="w-5/6 h-96 overflow-hidden">
+        <div className="w-5/6 h-96 overflow-hidden hidden sm:block">
           <div className="grid grid-cols-3 grid-rows-2 gap-2 h-full w-full">
             <div className="row-span-2 col-span-1 relative">
               {trailerOffer?.coverImage && (
