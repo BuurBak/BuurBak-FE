@@ -18,7 +18,8 @@ export interface TrailerList {
   description: string;
   price: number;
   available: boolean;
-  cityAddress: { city: string };
+  cityAddress: { city: string }; //?? klopt deze wel ??
+  address: { city: string };
   name: string;
   createdAt: Date;
   updatedAt: Date;

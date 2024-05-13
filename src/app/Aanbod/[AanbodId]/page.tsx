@@ -5,6 +5,9 @@ import Details from "@/app/Components/AanbodItem/Details";
 import DialogComponent from "@/app/Components/AanbodItem/Dialog";
 import ImageGallery from "@/app/Components/AanbodItem/ImageGallery";
 import ProfileDisplay from "@/app/Components/AanbodItem/ProfileDisplay";
+import Button from "@/app/Components/Button";
+import Footer from "@/app/Components/Footer";
+import Map from "@/app/Components/Map";
 import PageBackButton from "@/app/Components/PageBackButton";
 import { TrailerList } from "@/app/Types/TrailerList";
 import { useEffect, useState } from "react";
@@ -65,22 +68,45 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             setOpen={setOpen}
           />
 
-          <div className="flex flex-col gap-4 w-11/12">
-            <h1 className="text-primary-100 text-h4">
-              {trailerOffer.trailerType.name}
-            </h1>
+          <div className="flex gap-4 relative">
+            <div className="flex flex-col gap-8 w-full">
+              <h1 className="text-primary-100 text-h4">
+                {trailerOffer.trailerType.name}
+              </h1>
 
-            <ProfileDisplay trailerOffer={trailerOffer} />
+              <ProfileDisplay trailerOffer={trailerOffer} />
 
-            <div>
-              <p className="text-h5 font-bold">Omschrijving</p>
-              <p>{trailerOffer.description}</p>
+              <div>
+                <p className="text-h5 font-bold">Omschrijving</p>
+                <p>{trailerOffer.description}</p>
+              </div>
+
+              <Details trailerOffer={trailerOffer} />
+
+              <div className="flex flex-col gap-2">
+                <p className="text-h5 font-bold">
+                  Locatie - Omgeving {trailerOffer.address.city}
+                </p>
+                <div className="h-[30dvh] w-full">
+                  <Map />
+                </div>
+              </div>
             </div>
-
-            <Details trailerOffer={trailerOffer} />
+            <div className="h-fit min-w-fit w-full sm:w-fit p-4 bg-offWhite-100 fixed bottom-0 sm:sticky sm:top-5 flex justify-between ">
+              <div className="flex flex-col justify-between sm:hidden">
+                <p>
+                  <span className="font-bold">€{trailerOffer.price}</span> per
+                  dag
+                </p>
+                <p>Geen datum gekozen</p>
+              </div>
+              <Button label="Reserveer nu" styling="min-w-fit" />
+            </div>
           </div>
         </>
       )}
+
+      <Footer />
     </div>
   );
 };
