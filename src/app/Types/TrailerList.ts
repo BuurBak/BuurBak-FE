@@ -30,4 +30,5 @@ export interface TrailerList {
   driversLicenseType: string;
   nearbyLatitude: any;
   nearbyLongitude: any;
+  accesoires: string[];
 }
