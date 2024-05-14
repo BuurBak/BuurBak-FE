@@ -43,9 +43,9 @@ const SearchOrFilter = ({
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((coords1.lat * Math.PI) / 180) *
-        Math.cos((coords2.lat * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos((coords2.lat * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     return distance;
@@ -93,7 +93,8 @@ const SearchOrFilter = ({
           trailer.cityAddress.city
             ?.toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          trailer.name?.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          trailer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        trailer.trailerType.name?.toLowerCase().includes(searchTerm.toLowerCase())) &&
         (!filterType ||
           filterType === "Alle" ||
           trailer.trailerType.name === filterType) &&
