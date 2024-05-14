@@ -32,4 +32,5 @@ export interface TrailerList {
   nearbyLatitude: any;
   nearbyLongitude: any;
   accesoires: string[];
+  distance?: number;
 }

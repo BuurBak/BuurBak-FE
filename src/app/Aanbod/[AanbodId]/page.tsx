@@ -5,7 +5,7 @@ import Details from "@/app/Components/AanbodItem/Details";
 import DialogComponent from "@/app/Components/AanbodItem/Dialog";
 import ImageGallery from "@/app/Components/AanbodItem/ImageGallery";
 import ProfileDisplay from "@/app/Components/AanbodItem/ProfileDisplay";
-import Button from "@/app/Components/Button";
+import Reserveren from "@/app/Components/AanbodItem/Reserveren";
 import Footer from "@/app/Components/Footer";
 import { GoogleMaps } from "@/app/Components/GoogleMaps";
 import { GoogleMapsWrapper } from "@/app/Components/GoogleMapsWrapper";
@@ -76,8 +76,8 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             setOpen={setOpen}
           />
 
-          <div className="flex gap-4 relative">
-            <div className="flex flex-col gap-8 w-full">
+          <div className="flex justify-center gap-4 relative w-full">
+            <div className="flex flex-col gap-8 w-11/12">
               <h1 className="text-primary-100 text-h4">
                 {trailerOffer.trailerType.name}
               </h1>
@@ -109,16 +109,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
                 </div>
               </div>
             </div>
-            <div className="h-fit min-w-fit w-full sm:w-fit p-4 bg-offWhite-100 fixed bottom-0 sm:sticky sm:top-5 flex justify-between ">
-              <div className="flex flex-col justify-between sm:hidden">
-                <p>
-                  <span className="font-bold">€{trailerOffer.price}</span> per
-                  dag
-                </p>
-                <p>Geen datum gekozen</p>
-              </div>
-              <Button label="Reserveer nu" styling="min-w-fit" />
-            </div>
+            <Reserveren trailerOffer={trailerOffer} />
           </div>
         </>
       )}

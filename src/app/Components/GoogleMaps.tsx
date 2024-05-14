@@ -43,6 +43,9 @@ export const GoogleMaps = ({
         center: centerCoordinates,
         zoom: DEFAULT_ZOOM,
         mapId: "DEMO_MAP_ID",
+        mapTypeControl: false,
+        fullscreenControl: false,
+        streetViewControl: false,
       });
 
       // Displays cluster markers on map when called

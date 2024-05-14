@@ -1,3 +1,4 @@
+import { nextui } from "@nextui-org/theme";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -5,6 +6,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@nextui-org/theme/dist/components/(calendar|button|ripple|spinner).js",
   ],
   theme: {
     extend: {
@@ -57,6 +59,23 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    nextui({
+      themes: {
+        "buurbak-light": {
+          extend: "light",
+          colors: {
+            primary: {
+              50: "#398D89",
+              100: "#EE7B46",
+              200: "#EB672A",
+              foreground: "#EE7B46",
+            },
+            divider: { foreground: "#398D89" },
+          },
+        },
+      },
+    }),
+  ],
 };
 export default config;
