@@ -13,8 +13,6 @@ export interface TrailerList {
   pickUpTimeEnd: string
   dropOffTimeStart: string
   dropOffTimeEnd: string
-  fakeLatitude: number
-  fakeLongitude: number
   description: string
   price: number
   available: boolean

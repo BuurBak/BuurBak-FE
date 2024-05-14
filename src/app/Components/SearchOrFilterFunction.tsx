@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { TrailerList } from "../Types/TrailerList";
 import { TrailerType } from "../Types/TrailerType";
+import { Dayjs } from "dayjs";
 const DEFAULT_CENTER = {
   lat: 52.131401,
   lng: 5.42747,
@@ -14,12 +15,13 @@ const DEFAULT_CENTER = {
 
 type SearchOrFilter = {
   searchTerm?: string,
-  filterDate?: Date,
-  filterType?: TrailerType,
+  filterDate?: Dayjs | null,
+  filterType?: TrailerType["name"],
   filterPrice?: number,
   filterDimensions?: any,
+  filterWhere?: string,
 }
-const SearchOrFilter = ({ searchTerm, filterDate, filterType, filterPrice, filterDimensions, ...props }: SearchOrFilter) => {
+const SearchOrFilter = ({ searchTerm, filterDate, filterType, filterPrice, filterDimensions, filterWhere, ...props }: SearchOrFilter) => {
   const [data, setData] = useState<TrailerList[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER);
@@ -82,8 +84,9 @@ const SearchOrFilter = ({ searchTerm, filterDate, filterType, filterPrice, filte
           trailer.name?.toLowerCase().includes(searchTerm.toLowerCase())
         )
           &&
-        (!filterType?.name || trailer.trailerType.name === filterType.name) &&
-        (!filterPrice || trailer.price <= filterPrice)
+        (!filterType || filterType === "Alle" || trailer.trailerType.name === filterType) &&
+        (!filterPrice || trailer.price <= filterPrice) &&
+        (!filterWhere || trailer.cityAddress.city?.toLowerCase().includes(filterWhere.toLowerCase()))
       );
     });
 
@@ -110,7 +113,7 @@ const SearchOrFilter = ({ searchTerm, filterDate, filterType, filterPrice, filte
     }
 
     setFilteredTrailers(filteredAndReordered);
-  }, [data, searchTerm, filterType, centerCoordinates]);
+  }, [data, searchTerm, filterType, filterWhere, filterDate, centerCoordinates]);
 
   return filteredTrailers;
 };
