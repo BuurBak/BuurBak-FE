@@ -20,7 +20,7 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
   return (
     <div className="relative">
       <div
-        className={`flex flex-col gap-5 overflow-hidden transition-[height] ease-in-out duration-300 ${collapsed && "h-[20vh]"} `}
+        className={`flex flex-col gap-5 overflow-hidden transition-[height] ease-in-out duration-300 ${collapsed && "h-[20vh]"}`}
       >
         <p className="text-h5 font-bold">Details</p>
         <div className="flex flex-col gap-3">

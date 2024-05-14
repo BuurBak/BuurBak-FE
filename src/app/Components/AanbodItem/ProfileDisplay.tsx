@@ -19,7 +19,7 @@ const ProfileDisplay = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
       </div>
       <div className="flex flex-col gap-2">
         <p className="text-normal">{trailerOffer.owner.name}</p>
-        <p className="text-small">{trailerOffer.owner.roles[0].name}</p>
+        <p className="text-small">Verhuurder</p>
       </div>
     </div>
   );

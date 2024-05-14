@@ -1,20 +1,37 @@
+import { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { TrailerList } from "../Types/TrailerList";
 import { TrailerType } from "../Types/TrailerType";
+const DEFAULT_CENTER = {
+  lat: 52.131401,
+  lng: 5.42747,
+};
 
-const SearchOrFilter = () => {
-  const DEFAULT_CENTER = {
-    lat: 52.131401,
-    lng: 5.42747,
-  };
+// const [searchTerm, setSearchTerm] = useState("");
+// const [filterDate, setFilterDate] = useState<Date>();
+// const [filterType, setFilterType] = useState<TrailerType>();
+// const [filterPrice, setFilterPrice] = useState<number>();
+// const [filterDimensions, setFilterDimensions] = useState();
 
+type SearchOrFilter = {
+  searchTerm?: string;
+  filterDate?: Dayjs | null;
+  filterType?: TrailerType["name"];
+  filterPrice?: number;
+  filterDimensions?: any;
+  filterWhere?: string;
+};
+const SearchOrFilter = ({
+  searchTerm,
+  filterDate,
+  filterType,
+  filterPrice,
+  filterDimensions,
+  filterWhere,
+  ...props
+}: SearchOrFilter) => {
   const [data, setData] = useState<TrailerList[]>([]);
   const [isLoading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterDate, setFilterDate] = useState<Date>();
-  const [filterType, setFilterType] = useState<TrailerType>();
-  const [filterPrice, setFilterPrice] = useState<number>();
-  const [filterDimensions, setFilterDimensions] = useState();
   const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER);
   const [filteredTrailers, setFilteredTrailers] = useState<TrailerList[]>([]);
 
@@ -41,28 +58,10 @@ const SearchOrFilter = () => {
         setData(data.content);
         setLoading(false);
       });
-  }, []);
-
-  useEffect(() => {
-    let filteredAndReordered = [...data].filter((trailer) => {
-      return (
-        (!searchTerm ||
-          trailer.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-        (!searchTerm ||
-          trailer.trailerType.name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())) &&
-        (!searchTerm ||
-          trailer.cityAddress.city
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())) &&
-        (!filterType || trailer.trailerType.name === filterType.name) &&
-        (!filterPrice || trailer.price <= filterPrice)
-      );
-    });
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
+
     function success(position: {
       coords: { latitude: number; longitude: number };
     }) {
@@ -70,10 +69,42 @@ const SearchOrFilter = () => {
       const longitude = position.coords.longitude;
       setCenterCoordinates({ lat: latitude, lng: longitude });
     }
-
     function error() {
       console.log("Unable to retrieve your location");
     }
+  }, []);
+
+  const TrailerDistance = (nearbyLatitude: any, nearbyLongitude: any) => {
+    if (
+      centerCoordinates.lat !== DEFAULT_CENTER.lat ||
+      centerCoordinates.lng !== DEFAULT_CENTER.lng
+    ) {
+      const distance = haversineDistance(
+        { lat: nearbyLatitude, lng: nearbyLongitude },
+        centerCoordinates
+      );
+      return distance;
+    }
+  };
+  useEffect(() => {
+    let filteredAndReordered = [...data].filter((trailer) => {
+      return (
+        (!searchTerm ||
+          trailer.cityAddress.city
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          trailer.name?.toLowerCase().includes(searchTerm.toLowerCase())) &&
+        (!filterType ||
+          filterType === "Alle" ||
+          trailer.trailerType.name === filterType) &&
+        (!filterPrice || trailer.price <= filterPrice) &&
+        (!filterWhere ||
+          trailer.cityAddress.city
+            ?.toLowerCase()
+            .includes(filterWhere.toLowerCase()))
+      );
+    });
+
     if (
       centerCoordinates.lat !== DEFAULT_CENTER.lat ||
       centerCoordinates.lng !== DEFAULT_CENTER.lng
@@ -89,10 +120,22 @@ const SearchOrFilter = () => {
         );
         return distanceA - distanceB;
       });
+      filteredAndReordered.forEach((element) => {
+        const distance =
+          TrailerDistance(element.nearbyLatitude, element.nearbyLongitude) || 0;
+        element.distance = Math.round(distance);
+      });
     }
 
     setFilteredTrailers(filteredAndReordered);
-  }, [data, searchTerm, filterType, centerCoordinates]);
+  }, [
+    data,
+    searchTerm,
+    filterType,
+    filterWhere,
+    filterDate,
+    centerCoordinates,
+  ]);
 
   return filteredTrailers;
 };

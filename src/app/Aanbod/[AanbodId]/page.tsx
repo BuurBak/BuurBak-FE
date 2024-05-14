@@ -7,7 +7,8 @@ import ImageGallery from "@/app/Components/AanbodItem/ImageGallery";
 import ProfileDisplay from "@/app/Components/AanbodItem/ProfileDisplay";
 import Button from "@/app/Components/Button";
 import Footer from "@/app/Components/Footer";
-import Map from "@/app/Components/Map";
+import { GoogleMaps } from "@/app/Components/GoogleMaps";
+import { GoogleMapsWrapper } from "@/app/Components/GoogleMapsWrapper";
 import PageBackButton from "@/app/Components/PageBackButton";
 import { TrailerList } from "@/app/Types/TrailerList";
 import { useEffect, useState } from "react";
@@ -38,6 +39,13 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
 
     fetchData();
   }, []);
+
+  const trailerLocations: readonly google.maps.LatLngLiteral[] = [
+    {
+      lat: trailerOffer?.nearbyLatitude,
+      lng: trailerOffer?.nearbyLongitude,
+    },
+  ];
 
   if (loading) {
     return <div>Loading...</div>;
@@ -88,7 +96,16 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
                   Locatie - Omgeving {trailerOffer.address.city}
                 </p>
                 <div className="h-[30dvh] w-full">
-                  <Map />
+                  <GoogleMapsWrapper>
+                    <GoogleMaps
+                      locations={trailerLocations}
+                      price={[trailerOffer.price]}
+                      zoomOnLocation={{
+                        lat: trailerOffer.nearbyLatitude,
+                        lng: trailerOffer.nearbyLongitude,
+                      }}
+                    />
+                  </GoogleMapsWrapper>
                 </div>
               </div>
             </div>

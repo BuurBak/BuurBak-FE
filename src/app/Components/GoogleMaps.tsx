@@ -8,13 +8,20 @@ export const GoogleMaps = ({
   locations,
   className,
   price,
+  zoomOnLocation,
 }: {
   locations: ReadonlyArray<google.maps.LatLngLiteral>;
   className?: string;
   price: Array<number>;
+  zoomOnLocation?: { lat: number; lng: number };
 }) => {
   const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER);
-  if (navigator.geolocation) {
+
+  useEffect(() => {
+    setCenterCoordinates(zoomOnLocation || DEFAULT_CENTER);
+  }, [zoomOnLocation]);
+
+  if (navigator.geolocation && zoomOnLocation === undefined) {
     navigator.geolocation.getCurrentPosition(success, error);
   }
   function success(position: {
