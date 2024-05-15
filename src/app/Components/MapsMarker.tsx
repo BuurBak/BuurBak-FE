@@ -1,5 +1,3 @@
-import { Marker } from "@googlemaps/markerclusterer";
-
 type customMarker = { 
   locations: ReadonlyArray<google.maps.LatLngLiteral>,
   map: google.maps.Map | null | undefined,
