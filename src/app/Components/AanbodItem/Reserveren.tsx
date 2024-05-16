@@ -3,17 +3,19 @@ import { getLocalTimeZone, today } from "@internationalized/date";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { RangeCalendar } from "@nextui-org/calendar";
 import { DateRangePicker } from "@nextui-org/date-picker";
+import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Button from "../Button";
 
 type Inputs = {
-  date: any;
+  dateStart: Date;
+  dateEnd: Date;
   time: string;
 };
 
 const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
-  const { register, handleSubmit, setValue } = useForm<Inputs>();
+  const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
 
   const pickUpTime = [
     { start: "9:00", end: "10:00" },
@@ -30,20 +32,21 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
   });
 
   useEffect(() => {
-    setDate;
-    setValue(
-      "date",
-      new Date(date.start.toString()) + " " + new Date(date.end.toString()),
-      {
-        shouldValidate: true,
-        shouldDirty: true,
-        shouldTouch: true,
-      }
-    );
+    setValue("dateStart", new Date(date.start.toString()), {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+    setValue("dateEnd", new Date(date.end.toString()), {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
   }, [date]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
+    setCollapsed(false);
   };
   return (
     <>
@@ -62,55 +65,68 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
             <p>
               <span className="font-bold">€{trailerOffer.price}</span> per dag
             </p>
-            <p>{date.start.toString()}</p>
+            <p>
+              {new Date(getValues("dateStart")).toLocaleDateString(undefined, {
+                day: "2-digit",
+                month: "2-digit",
+                year: "2-digit",
+              })}{" "}
+              tot{" "}
+              {new Date(getValues("dateEnd")).toLocaleDateString(undefined, {
+                day: "2-digit",
+                month: "2-digit",
+                year: "2-digit",
+              })}
+            </p>
           </div>
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
-          {collapsed ||
-            (window.innerWidth > 639 && (
-              <div className="flex flex-col gap-4 w-full">
-                <RangeCalendar
-                  className="buurbak-light sm:hidden"
-                  {...register("date", { required: true })}
-                  value={date}
-                  onChange={setDate}
-                />
-                <DateRangePicker
-                  label="Datum"
-                  labelPlacement="outside"
-                  className="buurbak-light hidden sm:block"
-                  {...register("date", { required: true })}
-                  value={date}
-                  onChange={setDate}
-                />
+          {(collapsed || window.innerWidth > 639) && (
+            <div className="flex flex-col gap-4 w-full">
+              <X
+                onClick={() => setCollapsed(false)}
+                className="self-end w-8 h-fit sm:hidden"
+              />
+              <RangeCalendar
+                className="buurbak-light sm:hidden"
+                value={date}
+                onChange={setDate}
+              />
+              <DateRangePicker
+                label="Datum"
+                labelPlacement="outside"
+                className="buurbak-light hidden sm:block"
+                value={date}
+                onChange={setDate}
+              />
 
-                <Autocomplete
-                  label="Op haal tijd"
-                  className="w-full buurbak-light"
-                  labelPlacement="outside"
-                  placeholder=" "
-                  defaultItems={pickUpTime}
-                  {...register("time", { required: true })}
-                >
-                  {pickUpTime.map((item, index) => (
-                    <AutocompleteItem
-                      key={index}
-                      value={merche(item)}
-                      className="buurbak-light"
-                    >
-                      {merche(item)}
-                    </AutocompleteItem>
-                  ))}
-                </Autocomplete>
-                <hr className="w-full h-1 bg-offWhite-100" />
-                <div className="w-full flex justify-between">
-                  <p className="text-h6 text-primary-100">Totaal</p>
-                  <p className="text-h6 text-primary-100">
-                    €{trailerOffer.price}
-                  </p>
-                </div>
+              <Autocomplete
+                label="Op haal tijd"
+                className="w-full buurbak-light"
+                labelPlacement="outside"
+                placeholder=" "
+                defaultItems={pickUpTime}
+                {...register("time", { required: true })}
+              >
+                {pickUpTime.map((item, index) => (
+                  <AutocompleteItem
+                    key={index}
+                    value={merche(item)}
+                    className="buurbak-light"
+                  >
+                    {merche(item)}
+                  </AutocompleteItem>
+                ))}
+              </Autocomplete>
+              <hr className="w-full h-1 bg-offWhite-100" />
+              <div className="w-full flex justify-between">
+                <p className="text-h6 text-primary-100">Totaal</p>
+                <p className="text-h6 text-primary-100">
+                  €{trailerOffer.price}
+                </p>
               </div>
-            ))}
+            </div>
+          )}
           {!collapsed && (
             <Button
               label="Kies jouw datum"
@@ -118,15 +134,13 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
               buttonAction={() => setCollapsed(!collapsed)}
             />
           )}
-          {collapsed ||
-            (window.innerWidth > 639 && (
-              <Button
-                label="Reserveer nu"
-                styling={`min-w-fit ${collapsed || (window.innerWidth > 639 && "w-full")}`}
-                // buttonAction={() => setCollapsed(!collapsed)}
-                submit={true}
-              />
-            ))}
+          {(collapsed || window.innerWidth > 639) && (
+            <Button
+              label="Reserveer nu"
+              styling={`min-w-fit ${(collapsed || window.innerWidth > 639) && "w-full"}`}
+              submit={true}
+            />
+          )}
         </form>
       </div>
     </>
