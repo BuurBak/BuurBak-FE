@@ -6,7 +6,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(calendar|button|ripple|spinner).js",
+    "./node_modules/@nextui-org/theme/dist/components/(autocomplete|calendar|date-picker|button|ripple|spinner|input|listbox|divider|popover|scroll-shadow|date-input).js",
   ],
   theme: {
     extend: {
@@ -64,14 +64,51 @@ const config: Config = {
       themes: {
         "buurbak-light": {
           extend: "light",
+          layout: {
+            boxShadow: {
+              small: "",
+              medium: "",
+              large: "",
+            },
+            radius: {
+              small: "6px",
+              medium: "6px",
+              large: "6px",
+            },
+          },
           colors: {
-            primary: {
-              50: "#398D89",
+            overlay: {
+              50: "#EE7B46",
               100: "#EE7B46",
-              200: "#EB672A",
+              200: "#EE7B46",
+              300: "#EE7B46",
+              400: "#EE7B46",
+              500: "#EE7B46",
+              600: "#EE7B46",
+              700: "#EE7B46",
+              800: "#EE7B46",
+              900: "#EE7B46",
+              DEFAULT: "#EE7B46",
               foreground: "#EE7B46",
             },
-            divider: { foreground: "#398D89" },
+            primary: {
+              50: "#EE7B4620",
+              100: "#EE7B46",
+              200: "#EB672A",
+              300: "#EE7B46",
+              400: "#EE7B46",
+              500: "#EE7B46",
+              600: "#EE7B46",
+              700: "#EE7B46",
+              800: "#EE7B46",
+              900: "#EE7B46",
+              foreground: "#EE7B46",
+              DEFAULT: "#EE7B46",
+            },
+            default: {
+              50: "#fff",
+              100: "#fff",
+            },
           },
         },
       },
