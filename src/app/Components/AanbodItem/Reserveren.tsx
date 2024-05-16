@@ -3,7 +3,7 @@ import { getLocalTimeZone, today } from "@internationalized/date";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { RangeCalendar } from "@nextui-org/calendar";
 import { DateRangePicker } from "@nextui-org/date-picker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Button from "../Button";
 
@@ -13,7 +13,7 @@ type Inputs = {
 };
 
 const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
-  const { register, handleSubmit } = useForm<Inputs>();
+  const { register, handleSubmit, setValue } = useForm<Inputs>();
 
   const pickUpTime = [
     { start: "9:00", end: "10:00" },
@@ -24,13 +24,23 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
     item.start + " - " + item.end;
 
   const [collapsed, setCollapsed] = useState(false);
-  const [value, setValue] = useState({
+  const [date, setDate] = useState({
     start: today(getLocalTimeZone()),
-    end: today(getLocalTimeZone()).add({ weeks: 1 }),
+    end: today(getLocalTimeZone()),
   });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  useEffect(() => {
+    setDate;
+    setValue("date", date.start.toString() + " " + date.end.toString(), {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  }, [date]);
 
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+  };
   return (
     <>
       {collapsed && (
@@ -48,7 +58,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
             <p>
               <span className="font-bold">€{trailerOffer.price}</span> per dag
             </p>
-            <p>{value.start.toString()}</p>
+            <p>{date.start.toString()}</p>
           </div>
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -57,19 +67,17 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
               <div className="flex flex-col gap-4 w-full">
                 <RangeCalendar
                   className="buurbak-light sm:hidden"
-                  {...register("date")}
-                  value={value}
-                  onChange={setValue}
+                  {...register("date", { required: true })}
+                  value={date}
+                  onChange={setDate}
                 />
                 <DateRangePicker
                   label="Datum"
                   labelPlacement="outside"
                   className="buurbak-light hidden sm:block"
-                  {...register("date", {
-                    setValueAs: (v) => v.toString(),
-                  })}
-                  value={value}
-                  onChange={setValue}
+                  {...register("date", { required: true })}
+                  value={date}
+                  onChange={setDate}
                 />
 
                 <Autocomplete
