@@ -31,11 +31,15 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
 
   useEffect(() => {
     setDate;
-    setValue("date", date.start.toString() + " " + date.end.toString(), {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
+    setValue(
+      "date",
+      new Date(date.start.toString()) + " " + new Date(date.end.toString()),
+      {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      }
+    );
   }, [date]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
