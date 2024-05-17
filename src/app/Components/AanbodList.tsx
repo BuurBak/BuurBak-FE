@@ -220,7 +220,7 @@ const AanbodList = () => {
         )}
       </div>
       <div className="w-full h-fit max-h-min overflow-auto flex flex-row flex-wrap gap-3">
-        {TrailerArray?.map((item) => (
+        {TrailerArray != undefined && TrailerArray.length != 0 ? TrailerArray?.map((item) => (
           <Card
             key={item.id}
             img={item.coverImage}
@@ -232,7 +232,8 @@ const AanbodList = () => {
             distance={item.distance}
             type="overview"
           />
-        ))}
+        )) : "Geen aanhangers gevonden"}
+        
       </div>
     </div>
   );
