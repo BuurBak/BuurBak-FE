@@ -74,7 +74,7 @@ const AanbodList = () => {
     
       const service = new window.google.maps.places.AutocompleteService();
     
-      service.getQueryPredictions({ input: inputValueWhere }, displaySuggestions);
+      service.getQueryPredictions({ input: inputValueWhere}, displaySuggestions);
     };
     initService();
   }, [inputValueWhere]);
