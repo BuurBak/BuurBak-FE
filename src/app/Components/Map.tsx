@@ -37,6 +37,7 @@ const Map = () => {
     <GoogleMapsWrapper>
       <GoogleMaps locations={trailerLocations} price={trailerPrices} />
     </GoogleMapsWrapper>
+
   );
 };
 

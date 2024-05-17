@@ -9,7 +9,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TrailerType } from "../Types/TrailerType";
 import Button from "./Button";
 import Card from "./Card";
@@ -26,8 +26,7 @@ type FilterOption = {
 const AanbodList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [inputValueSearch, setInputValueSearch] = useState("");
-  const [inputValueType, setInputValueType] =
-    useState<TrailerType["name"]>("Alle");
+  const [inputValueType, setInputValueType] = useState<TrailerType["name"]>("Alle");
   const [inputValueWhere, setInputValueWhere] = useState("");
   const [inputValueWhen, setInputValueWhen] = useState<Dayjs | null>();
   const [names, setNames] = useState<string[]>();
@@ -50,7 +49,35 @@ const AanbodList = () => {
   const [dateCleared, setdateCleared] = useState<boolean>(false);
   const outerTheme = useTheme();
   const [callData, setCallData] = useState<any[]>();
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);    
+  
+  useEffect(() => {
+    function initService(): void {
+      const displaySuggestions = function (
+        predictions: google.maps.places.QueryAutocompletePrediction[] | null,
+        status: google.maps.places.PlacesServiceStatus
+      ) {
+        if (status != google.maps.places.PlacesServiceStatus.OK || !predictions) {
+          alert(status);
+          return;
+        }
+        
+        let namesReturn: string[] = [];
+    
+        predictions.forEach((prediction) => {
+          namesReturn.push(prediction.description.toString());
+
+        });
+        
+        setNames(namesReturn.map(item => item.split(',')[0].trim()));
+      }
+    
+      const service = new window.google.maps.places.AutocompleteService();
+    
+      service.getQueryPredictions({ input: inputValueWhere }, displaySuggestions);
+    };
+    initService();
+  }, [inputValueWhere]);
 
   useEffect(() => {
     if (dateCleared) {
@@ -60,35 +87,8 @@ const AanbodList = () => {
 
       return () => clearTimeout(timeout);
     }
-    return () => {};
+    return () => { };
   }, [dateCleared]);
-
-  useEffect(() => {
-    if (inputValueWhere === undefined || "" || null) {
-    } else {
-      fetch(
-        "https://api.pdok.nl/bzk/locatieserver/search/v3_1/suggest?q=" +
-          inputValueWhere +
-          "&rows=100&fq=*:*"
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setCallData(data.response.docs);
-          setNames(
-            callData
-              ?.filter((item) => item.type === "woonplaats")
-              .map((item) => item.weergavenaam.split(",")[0].trim())
-          );
-          console.log("with an input");
-          console.log(data.response.docs);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          setLoading(false);
-        });
-    }
-  }, [inputValueWhere]);
 
   const filterOptions: FilterOption[] = [
     {
@@ -179,6 +179,7 @@ const AanbodList = () => {
             type="secondary"
             buttonAction={() => setShowFilters(!showFilters)}
           />
+          <div id="results"></div>
         </div>
         {showFilters && (
           <div className="flex flex-row flex-wrap gap-3">

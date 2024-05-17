@@ -5,6 +5,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import AanbodList from "../Components/AanbodList";
 import Footer from "../Components/Footer";
 import Map from "../Components/Map";
+import { GoogleMapsWrapper } from "../Components/GoogleMapsWrapper";
 
 export default function AanbodPage() {
   const [mobile, setMobile] = useState(false);
@@ -30,7 +31,9 @@ export default function AanbodPage() {
       >
         <Panel defaultSize={50} minSize={20}>
           {!mobile ? (
-            <AanbodList />
+            <GoogleMapsWrapper>
+              <AanbodList />
+             </GoogleMapsWrapper>
           ) : (
             <div className="h-full ">
               <Map />
@@ -46,7 +49,9 @@ export default function AanbodPage() {
               <Map />
             </div>
           ) : (
-            <AanbodList />
+            <GoogleMapsWrapper>
+              <AanbodList />
+            </GoogleMapsWrapper>
           )}
         </Panel>
       </PanelGroup>
