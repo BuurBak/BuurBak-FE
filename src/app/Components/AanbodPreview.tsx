@@ -56,12 +56,17 @@ const AanbodPreview: React.FC = () => {
     }    
     function error() {
       console.log("Unable to retrieve your location");
+      return undefined;
     }
-    const distance = haversineDistance(
-      { lat: nearbyLatitude, lng: nearbyLongitude },
-      centerCoordinates
-    );
-    return distance;
+    if(centerCoordinates.lat !== DEFAULT_CENTER.lat ||
+      centerCoordinates.lng !== DEFAULT_CENTER.lng){
+        const distance = haversineDistance(
+          { lat: nearbyLatitude, lng: nearbyLongitude },
+          centerCoordinates
+        );
+        return distance;
+      }
+
   }
 
   return (

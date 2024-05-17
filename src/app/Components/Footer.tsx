@@ -14,11 +14,11 @@ const Footer = () => {
 
   const pages: Link[] = [
     { title: "Home", link: "/" },
-    { title: "Aanbod", link: "/aanbod" },
-    { title: "Verhuren", link: "/verhuren" },
-    { title: "Contact", link: "/contact" },
-    { title: "FAQ", link: "/faq" },
-    { title: "Inloggen", link: "/inloggen" },
+    { title: "Aanbod", link: "/Aanbod" },
+    { title: "Verhuren", link: "/Verhuren" },
+    { title: "Contact", link: "/Contact" },
+    { title: "FAQ", link: "/Faq" },
+    { title: "Inloggen", link: "/Inloggen" },
   ];
   const subPages: Link[] = [
     { title: "Privacy policy", link: "/" },
