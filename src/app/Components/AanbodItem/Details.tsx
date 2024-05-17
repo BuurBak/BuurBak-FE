@@ -18,7 +18,7 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative mb-[3rem]">
       <div
         className={`flex flex-col gap-5 overflow-hidden transition-[height] ease-in-out duration-300 ${collapsed && "h-[20vh]"}`}
       >
@@ -43,7 +43,7 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
               </div>
             ))}
           </div>
-          {trailerOffer.accesoires && (
+          {trailerOffer.accesoires.length !== 0 && (
             <div className="flex flex-col gap-2">
               <h6 className="text-h6 font-semibold">Accesoires</h6>
               {trailerOffer.accesoires.map((item, index) => {
@@ -58,7 +58,7 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
               })}
             </div>
           )}
-          {trailerOffer.accesoires && (
+          {trailerOffer.accesoires.length !== 0 && (
             <div className="flex flex-col gap-2">
               <h6 className="text-h6 font-semibold ">Overige kenmerken</h6>
               {trailerOffer.accesoires.map((item, index) => {
@@ -80,7 +80,7 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
         buttonAction={() => setCollapsed(!collapsed)}
         icon
         type="secondary"
-        styling="absolute bottom-[-1rem] left-0 right-0 mx-auto w-1/6 min-w-fit bg-white text-black-100 rounded-md border"
+        styling={`absolute ${collapsed ? "bottom-[-1rem]" : "bottom-[-3.5rem]"} left-0 right-0 mx-auto w-1/6 min-w-fit bg-white text-black-100 rounded-md border`}
       />
     </div>
   );

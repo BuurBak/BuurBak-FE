@@ -56,12 +56,12 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   }
 
   return (
-    <div className="w-dvw h-fit flex flex-col items-center gap-4 sm:pt-4">
+    <div className="h-fit flex flex-col items-center gap-4 sm:pt-4">
       <PageBackButton />
       <ImageGallery trailerOffer={trailerOffer} setOpen={setOpen} />
       {trailerOffer && (
         <>
-          <div className="sm:hidden w-full h-fit">
+          <div className="sm:hidden w-full h-fit ">
             <Carousel
               params={[trailerOffer.coverImage, ...trailerOffer.images]}
             />
@@ -76,9 +76,9 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             setOpen={setOpen}
           />
 
-          <div className="flex justify-center gap-4 relative w-full">
-            <div className="flex flex-col gap-8 w-11/12">
-              <h1 className="text-primary-100 text-h4">
+          <div className="flex justify-center gap-4 relative w-full sm:px-8">
+            <div className="flex flex-col gap-8 w-11/12 sm:w-full">
+              <h1 className="text-primary-100 text-h4 ">
                 {trailerOffer.trailerType.name}
               </h1>
 
@@ -91,7 +91,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
 
               <Details trailerOffer={trailerOffer} />
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 ">
                 <p className="text-h5 font-bold">
                   Locatie - Omgeving {trailerOffer.address.city}
                 </p>
