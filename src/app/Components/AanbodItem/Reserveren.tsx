@@ -48,7 +48,14 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
-    router.push(`/Aanbod/${trailerOffer.id}/Reserveren`);
+    const URLParams = (
+      "time=" +
+      data.time +
+      "&" +
+      ("dateStart=" + data.dateStart + "&") +
+      ("dateEnd=" + data.dateEnd)
+    ).toString();
+    router.push(`/Aanbod/${trailerOffer.id}/Reserveren` + "?" + URLParams);
     setCollapsed(false);
   };
   return (

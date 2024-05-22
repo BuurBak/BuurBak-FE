@@ -5,9 +5,12 @@ import Checkmark from "@/app/Components/Checkmark";
 import Footer from "@/app/Components/Footer";
 import { TrailerList } from "@/app/Types/TrailerList";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const page = ({ params }: { params: { AanbodId: string } }) => {
+  const searchParams = useSearchParams();
+
   const [trailerOffer, setTrailerOffer] = useState<TrailerList>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,23 +37,40 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
     fetchData();
   }, []);
 
+  const time = searchParams.get("time");
+  const startDate = searchParams.get("dateStart");
+  const endDate = searchParams.get("dateEnd");
+
   return (
     <>
-      <></>
       <div className="flex w-dvw h-fit min-h-dvh">
         <div className="flex flex-col justify-center gap-10 flex-1 px-4 py-4">
           <h1 className="text-primary-100 text-h4">Reserveer uw aanhanger</h1>
           <div className="flex justify-between items-center">
-            <div className="flex flex-col gap-1">
-              <p className="text-h6">Datum van jou reservering</p>
-              <p className="text-normal">datum</p>
-            </div>
+            {startDate && endDate && (
+              <div className="flex flex-col gap-1">
+                <p className="text-h6">Datum van jou reservering</p>
+                <p className="text-normal">
+                  {new Date(startDate).toLocaleDateString(undefined, {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "2-digit",
+                  })}{" "}
+                  -{" "}
+                  {new Date(endDate).toLocaleDateString(undefined, {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "2-digit",
+                  })}
+                </p>
+              </div>
+            )}
             <Button label="Aanpassen" type="secondary" />
           </div>
           <div className="flex justify-between items-center">
             <div className="flex flex-col gap-1">
               <p className="text-h6">Op haal tijd</p>
-              <p className="text-normal">tijd</p>
+              <p className="text-normal">{time}</p>
             </div>
             <Button label="Aanpassen" type="secondary" />
           </div>
@@ -88,8 +108,8 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
             <Button label="Reserveer jouw aanhanger" styling="w-full" />
           </div>
         </div>
-        <div className="flex-1 bg-offWhite-100">
-          <div className="flex- flex-col gap-6 h-fit w-full bg-white p-8 m-8 rounded-md sticky top-8">
+        <div className="flex flex-1 bg-offWhite-100">
+          <div className="flex flex-col gap-3 h-fit w-full bg-white p-8 m-8 rounded-md sticky top-8">
             <div className="flex gap-2 w-full h-fit ">
               <div className="relative aspect-square h-32">
                 {trailerOffer?.coverImage && (
