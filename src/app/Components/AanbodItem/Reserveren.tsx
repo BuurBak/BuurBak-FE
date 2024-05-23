@@ -132,7 +132,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
               <div className="w-full flex justify-between">
                 <p className="text-h6 text-primary-100">Totaal</p>
                 <p className="text-h6 text-primary-100">
-                  €{trailerOffer.price}
+                  € {trailerOffer.price}
                 </p>
               </div>
             </div>

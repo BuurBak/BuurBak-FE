@@ -4,18 +4,24 @@ import Button from "@/app/Components/Button";
 import Checkmark from "@/app/Components/Checkmark";
 import Footer from "@/app/Components/Footer";
 import { TrailerList } from "@/app/Types/TrailerList";
-import { fromDate, getLocalTimeZone } from "@internationalized/date";
+import {
+  fromDate,
+  getLocalTimeZone,
+  toCalendarDate,
+} from "@internationalized/date";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { DateRangePicker } from "@nextui-org/date-picker";
+import { format, parseISO } from "date-fns";
+import { nl } from "date-fns/locale";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-
+import { SubmitHandler, useForm } from "react-hook-form";
 type Inputs = {
-  dateStart: Date;
-  dateEnd: Date;
+  dateStart: string;
+  dateEnd: string;
   time: string;
+  message: string;
 };
 
 const page = ({ params }: { params: { AanbodId: string } }) => {
@@ -23,7 +29,6 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
 
   const [changeDate, setChangeDate] = useState<Boolean>(false);
   const [changeTime, setChangeTime] = useState<Boolean>(false);
-  const [changeName, setChangeName] = useState<Boolean>(false);
 
   const [newDate, setNewDate] = useState({
     start: searchParams.get("dateStart"),
@@ -35,8 +40,12 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
   const [error, setError] = useState<string | null>(null);
   const [checked, setChecked] = useState<boolean>(false);
   const [date, setDate] = useState({
-    start: fromDate(new Date(newDate.start || ""), getLocalTimeZone()),
-    end: fromDate(new Date(newDate.end || ""), getLocalTimeZone()),
+    start: toCalendarDate(
+      fromDate(new Date(newDate.start || ""), getLocalTimeZone())
+    ),
+    end: toCalendarDate(
+      fromDate(new Date(newDate.end || ""), getLocalTimeZone())
+    ),
   });
   const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
 
@@ -44,6 +53,8 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
     { start: "9:00", end: "10:00" },
     { start: "18:00", end: "19:00" },
   ];
+
+  const time = searchParams.get("time");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,6 +67,9 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
         }
         const data: TrailerList = await response.json();
         setTrailerOffer(data);
+        if (time) {
+          setValue("time", time);
+        }
         setLoading(false);
       } catch (error: any) {
         setError(error.message);
@@ -67,12 +81,12 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
   }, []);
 
   useEffect(() => {
-    setValue("dateStart", new Date(date.start.toString()), {
+    setValue("dateStart", date.start.toString(), {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
-    setValue("dateEnd", new Date(date.end.toString()), {
+    setValue("dateEnd", date.end.toString(), {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
@@ -82,9 +96,12 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
   const merche = (item: { start: string; end: string }) =>
     item.start + " - " + item.end;
 
-  const time = searchParams.get("time");
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+  };
+
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col-reverse sm:flex-row w-dvw h-fit min-h-dvh">
         <div className="flex flex-col justify-center gap-10 flex-1 px-4 py-4">
           <h1 className="text-primary-100 text-h4">Reserveer uw aanhanger</h1>
@@ -94,28 +111,24 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
                 <p className="text-h6">Datum van jou reservering</p>
                 {!changeDate && (
                   <p className="text-normal">
-                    {new Date(getValues("dateStart")).toLocaleDateString(
-                      undefined,
-                      {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "2-digit",
-                      }
-                    )}{" "}
-                    -{" "}
-                    {new Date(getValues("dateEnd")).toLocaleDateString(
-                      undefined,
-                      {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "2-digit",
-                      }
-                    )}
+                    {getValues("dateStart") &&
+                      getValues("dateEnd") &&
+                      `${format(
+                        parseISO(getValues("dateStart")),
+                        "d MMMM yyyy",
+                        {
+                          locale: nl,
+                        }
+                      )} 
+                    tot 
+                    ${format(parseISO(getValues("dateEnd")), "d MMMM yyyy", {
+                      locale: nl,
+                    })}`}
                   </p>
                 )}
                 {changeDate && (
                   <DateRangePicker
-                    label=" "
+                    aria-label="datum prikker"
                     labelPlacement="outside"
                     className="buurbak-light hidden sm:block"
                     value={date}
@@ -133,13 +146,16 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
           <div className="flex justify-between items-center">
             <div className="flex flex-col gap-1">
               <p className="text-h6">Op haal tijd</p>
-              {!changeTime && <p className="text-normal">{time}</p>}
+              {!changeTime && (
+                <p className="text-normal">{getValues("time")}</p>
+              )}
               {changeTime && (
                 <Autocomplete
-                  label=" "
+                  aria-label="op haal tijd"
                   className="w-full buurbak-light"
                   labelPlacement="outside"
                   placeholder=" "
+                  defaultInputValue={getValues("time")}
                   defaultItems={pickUpTime}
                   {...register("time", { required: true })}
                 >
@@ -165,22 +181,22 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
             <div className="flex flex-col gap-1">
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
                 <p className="sm:w-8 text-h6">Naam:</p>
-                <p className="text-normal">Een naam</p>
+                <p className="text-normal">Comming soon</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
                 <p className="sm:w-8 text-h6">Mail:</p>
-                <p className="text-normal">een mail</p>
+                <p className="text-normal">Comming soon</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
                 <p className="sm:w-8 text-h6">Tel:</p>
-                <p className="text-normal">123452345</p>
+                <p className="text-normal">Comming soon</p>
               </div>
             </div>
-            <Button label="Aanpassen" type="secondary" />
           </div>
           <textarea
             placeholder="Bericht aan verhuurder"
             className="w-full h-20 p-2 border border-gray-100 resize-y"
+            {...register("message")}
           />
           <div className="flex flex-col gap-2">
             <div
@@ -199,7 +215,11 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
                 en de privacy policy
               </p>
             </div>
-            <Button label="Reserveer jouw aanhanger" styling="w-full" />
+            <Button
+              label="Reserveer jouw aanhanger"
+              styling="w-full"
+              submit={true}
+            />
           </div>
         </div>
         <div className="flex flex-1 bg-offWhite-100">
@@ -230,15 +250,15 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
               <div className="flex flex-col gap-2 w-full h-fit">
                 <div className="flex justify-between">
                   <p className="text-small">Aanhanger</p>
-                  <p className="text-small">234</p>
+                  <p className="text-small">Comming soon</p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-small">Registratie kosten</p>
-                  <p className="text-small">234</p>
+                  <p className="text-small">Comming soon</p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-small">Borg</p>
-                  <p className="text-small">234</p>
+                  <p className="text-small">Comming soon</p>
                 </div>
               </div>
             </div>
@@ -246,7 +266,7 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
             <div>
               <div className="flex justify-between">
                 <p className="text-normal">Totaal</p>
-                <p className="text-normal">23423</p>
+                <p className="text-normal">€ {trailerOffer?.price}</p>
               </div>
               <p className="text-small text-gray-100">Incl. 13% btw</p>
             </div>
@@ -254,7 +274,7 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
         </div>
       </div>
       <Footer />
-    </>
+    </form>
   );
 };
 
