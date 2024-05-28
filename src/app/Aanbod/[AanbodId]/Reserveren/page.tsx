@@ -102,7 +102,7 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
     setReqLoading(true);
     const reserve = async () => {
       try {
-        const res = await fetch("/api/submit", {
+        const res = await fetch("https://beta.buurbak.nl/api/v1/reservations", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -134,6 +134,8 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
         setReqLoading(false);
       }
     };
+
+    reserve();
   };
 
   return (
