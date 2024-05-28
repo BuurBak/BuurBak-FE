@@ -37,6 +37,7 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
 
   const [trailerOffer, setTrailerOffer] = useState<TrailerList>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [reqLoading, setReqLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [checked, setChecked] = useState<boolean>(false);
   const [date, setDate] = useState({
@@ -98,6 +99,41 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
+    setReqLoading(true);
+    const reserve = async () => {
+      try {
+        const res = await fetch("/api/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            trailerId: trailerOffer?.id,
+            startTime: getValues("dateStart"),
+            endTime: getValues("dateEnd"),
+            message: getValues("message"),
+            name: "Test name",
+            email: "Test mail",
+            number: "Test number",
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const result = await res.json();
+        alert(result.message);
+      } catch (err) {
+        if (err instanceof Error) {
+          alert(err.message);
+        } else {
+          alert("An unknown error occurred");
+        }
+      } finally {
+        setReqLoading(false);
+      }
+    };
   };
 
   return (
@@ -206,13 +242,11 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
               <Checkmark checked={checked} />
               <p className="">
                 Ik accepteer de{" "}
-                <span
-                  className="z-30 text-primary-100"
-                  onClick={() => alert("clicked voorwaarden")}
-                >
+                <span className="z-30 text-primary-100">
                   algemene voorwaarden
                 </span>{" "}
-                en de privacy policy
+                en de{" "}
+                <span className="z-30 text-primary-100">privacy policy</span>
               </p>
             </div>
             <Button
