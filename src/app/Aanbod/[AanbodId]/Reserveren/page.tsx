@@ -1,7 +1,6 @@
 "use client";
 
 import Button from "@/app/Components/Button";
-import Checkmark from "@/app/Components/Checkmark";
 import Footer from "@/app/Components/Footer";
 import { TrailerList } from "@/app/Types/TrailerList";
 import {
@@ -10,6 +9,7 @@ import {
   toCalendarDate,
 } from "@internationalized/date";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { Checkbox } from "@nextui-org/checkbox";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
@@ -17,11 +17,13 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+
 type Inputs = {
   dateStart: string;
   dateEnd: string;
   time: string;
   message: string;
+  terms: boolean;
 };
 
 const page = ({ params }: { params: { AanbodId: string } }) => {
@@ -107,6 +109,7 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({
             trailerId: trailerOffer?.id,
             startTime: getValues("dateStart"),
@@ -237,11 +240,16 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
             {...register("message")}
           />
           <div className="flex flex-col gap-2">
-            <div
-              className="flex items-center gap-2 z-10"
-              onClick={() => setChecked(!checked)}
-            >
-              <Checkmark checked={checked} />
+            value: {getValues("terms")}
+            <div className="flex items-center gap-2 z-10">
+              <Checkbox
+                {...register("terms", {
+                  required: true,
+                  onChange(event) {
+                    console.log("changed", event);
+                  },
+                })}
+              />
               <p className="">
                 Ik accepteer de{" "}
                 <span className="z-30 text-primary-100">
