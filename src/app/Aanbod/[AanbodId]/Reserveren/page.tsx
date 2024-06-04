@@ -26,7 +26,7 @@ type Inputs = {
   terms: boolean;
 };
 
-const page = ({ params }: { params: { AanbodId: string } }) => {
+const Page = ({ params }: { params: { AanbodId: string } }) => {
   const searchParams = useSearchParams();
 
   const [changeDate, setChangeDate] = useState<Boolean>(false);
@@ -322,4 +322,4 @@ const page = ({ params }: { params: { AanbodId: string } }) => {
   );
 };
 
-export default page;
+export default Page;
