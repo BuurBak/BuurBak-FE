@@ -4,6 +4,7 @@ import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { RangeCalendar } from "@nextui-org/calendar";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Button from "../Button";
@@ -15,6 +16,7 @@ type Inputs = {
 };
 
 const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
+  const router = useRouter();
   const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
 
   const pickUpTime = [
@@ -46,6 +48,14 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
+    const URLParams = (
+      "time=" +
+      data.time +
+      "&" +
+      ("dateStart=" + data.dateStart + "&") +
+      ("dateEnd=" + data.dateEnd)
+    ).toString();
+    router.push(`/Aanbod/${trailerOffer.id}/Reserveren` + "?" + URLParams);
     setCollapsed(false);
   };
   return (
@@ -122,7 +132,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
               <div className="w-full flex justify-between">
                 <p className="text-h6 text-primary-100">Totaal</p>
                 <p className="text-h6 text-primary-100">
-                  €{trailerOffer.price}
+                  € {trailerOffer.price}
                 </p>
               </div>
             </div>
