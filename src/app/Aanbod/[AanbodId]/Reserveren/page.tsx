@@ -240,14 +240,11 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             {...register("message")}
           />
           <div className="flex flex-col gap-2">
-            value: {getValues("terms")}
             <div className="flex items-center gap-2 z-10">
               <Checkbox
+                className="buurbak-light"
                 {...register("terms", {
                   required: true,
-                  onChange(event) {
-                    console.log("changed", event);
-                  },
                 })}
               />
               <p className="">
@@ -294,15 +291,17 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               <div className="flex flex-col gap-2 w-full h-fit">
                 <div className="flex justify-between">
                   <p className="text-small">Aanhanger</p>
-                  <p className="text-small">Comming soon</p>
+                  <p className="text-small">€ {trailerOffer?.price}</p>
                 </div>
                 <div className="flex justify-between">
-                  <p className="text-small">Registratie kosten</p>
-                  <p className="text-small">Comming soon</p>
+                  <p className="text-small">services kosten</p>
+                  {trailerOffer?.price && (
+                    <p className="text-small">€ {trailerOffer?.price * 0.1}</p>
+                  )}
                 </div>
                 <div className="flex justify-between">
-                  <p className="text-small">Borg</p>
-                  <p className="text-small">Comming soon</p>
+                  <p className="text-small">Huurder bescherming</p>
+                  <p className="text-small">€ 2</p>
                 </div>
               </div>
             </div>
@@ -310,9 +309,13 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             <div>
               <div className="flex justify-between">
                 <p className="text-normal">Totaal</p>
-                <p className="text-normal">€ {trailerOffer?.price}</p>
+                {trailerOffer?.price && (
+                  <p className="text-normal">
+                    € {trailerOffer?.price + trailerOffer?.price * 0.1 + 2}
+                  </p>
+                )}
               </div>
-              <p className="text-small text-gray-100">Incl. 13% btw</p>
+              {/* <p className="text-small text-gray-100">Incl. 13% btw</p> */}
             </div>
           </div>
         </div>
