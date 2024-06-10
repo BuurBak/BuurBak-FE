@@ -5,6 +5,7 @@ import Image from "next/image";
 import Logo from "../Assets/Frame.svg";
 import { Menu, X, Home, Tag, Mail, MessageCircleQuestion, Caravan, InstagramIcon, Facebook, Linkedin } from "lucide-react";
 import { usePathname } from "next/navigation";
+import {PlateauTrailer} from "../icons/TrailerIcons"
 
 const Navbar = () => {
     const Links = [
@@ -16,7 +17,7 @@ const Navbar = () => {
 
     const MobileLinks = [
         { name: "Home", url: "/", icon: Home },
-        { name: "Aanbod", url: "/Aanbod", icon: Caravan },
+        { name: "Aanbod", url: "/Aanbod", icon: PlateauTrailer},
         { name: "Verhuren", url: "/Verhuren", icon: Tag },
         { name: "Contact", url: "/Contact", icon: Mail },
         { name: "FAQ", url: "/FAQ", icon: MessageCircleQuestion },
@@ -80,7 +81,8 @@ const Navbar = () => {
 
                             {open ? MobileLinks.map((link, index) => (
                                 <li className={`flex flex-row gap-4 align-center py-4 md:my-0 md:ml-8 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0 ${link.url === currentRoute && "text-primary-100"}`} key={index}>
-                                    <link.icon size={32} /><a className="mt-1" href={link.url}>{link.name}</a>
+                                    <link.icon size={32} />
+                                    <a className="mt-1" href={link.url}>{link.name}</a>
                                 </li>
                             )) : Links.map((link, index) => (
                                 <li className={`py-4 md:my-0 md:ml-8 text-white ${link.name.includes("Ik wil verhuren") && "md:bg-primary-100 md:px-4 md:py-2 md:rounded"}`} key={index}>

@@ -8,12 +8,10 @@ import Navbar from "./Components/NavBar";
 export default function Home() {
   return (
     <div>
-      <Navbar />
       <Landing />
       <AanbodPreview />
       <Highlights />
       <AanbodCategorieën />
-      <Footer />
     </div>
   );
 }
