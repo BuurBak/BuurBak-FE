@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoBig from "../Assets/buurbakLogoBigColor.svg";
 import LogoMedium from "../Assets/buurbakLogoMediumColor.svg";
+import { InstagramIcon, Facebook, Linkedin } from "lucide-react";
 
 type Link = { title: string; link: string };
 
@@ -66,13 +67,13 @@ const Footer = () => {
             <p className="text-xl text-center">Volg ons</p>
             <div className="flex flex-row gap-8">
               <div className="bg-offWhite-100 p-4 rounded-full">
-                <ArchiveBoxXMarkIcon className="h-8 w-8 text-secondary-100 " />
+                <InstagramIcon className="h-8 w-8 text-secondary-100 " />
               </div>
               <div className="bg-offWhite-100 p-4 rounded-full">
-                <ArchiveBoxXMarkIcon className="h-8 w-8 text-secondary-100 " />
+                <Linkedin className="h-8 w-8 text-secondary-100 " />
               </div>
               <div className="bg-offWhite-100 p-4 rounded-full">
-                <ArchiveBoxXMarkIcon className="h-8 w-8 text-secondary-100 " />
+                <Facebook className="h-8 w-8 text-secondary-100 " />
               </div>
             </div>
           </div>
