@@ -1,11 +1,11 @@
 import { Login } from "@/app/Types/Register";
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
 
-export const logOut = () => {
-  console.log("fired");
-  cookies().delete("access_token");
-  cookies().delete("refresh_token");
-};
+// export const logOut = () => {
+//   console.log("fired");
+//   cookies().delete("access_token");
+//   cookies().delete("refresh_token");
+// };
 
 export const logIn = async (data: Login) => {
   console.log(data);

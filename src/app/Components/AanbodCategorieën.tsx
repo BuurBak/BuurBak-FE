@@ -20,7 +20,7 @@ const AanbodCategorieën: React.FC = () => {
       discription: "Bied veelzijdig en eenvoudig laden.",
       type: "category",
       img: "/img/verhuurfoto.png",
-      link: "",
+      link: "/Aanbod",
       index: 0,
     },
     {
@@ -28,7 +28,7 @@ const AanbodCategorieën: React.FC = () => {
       discription: "Beschermt lading tegen weersinvloeden en diefstal.",
       type: "category",
       img: "/img/verhuurfoto.png",
-      link: "",
+      link: "/Aanbod",
       index: 1,
     },
     {
@@ -36,7 +36,7 @@ const AanbodCategorieën: React.FC = () => {
       discription: "Vergroot het transportgemak voor tweewielers",
       type: "category",
       img: "/img/verhuurfoto.png",
-      link: "",
+      link: "/Aanbod",
       index: 2,
     },
     {
@@ -44,7 +44,7 @@ const AanbodCategorieën: React.FC = () => {
       discription: "Bied extra ruimte voor reisbenodigdheden.",
       type: "category",
       img: "/img/verhuurfoto.png",
-      link: "",
+      link: "/Aanbod",
       index: 3,
     },
   ];
@@ -59,7 +59,7 @@ const AanbodCategorieën: React.FC = () => {
           label={"Bekijk ons hele aanbod"}
         />
       </div>
-      <div className="flex flex-col md:flex-row flex-wrap 2xl:flex-nowrap w-full gap-4 justify-center items-center 2xl:justify-between">
+      <div className="flex flex-col md:flex-row flex-wrap lg:flex-nowrap w-full gap-4 justify-center items-center 2xl:justify-between">
         {categorys?.map((category: category) => (
           <Card
             title={category.title}
