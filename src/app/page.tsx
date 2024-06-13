@@ -1,5 +1,6 @@
 "use client";
 
+import { logOut } from "@/app/api/auth/Register";
 import {
   Modal,
   ModalBody,
@@ -21,6 +22,7 @@ export default function Home() {
   return (
     <div>
       <Button label="test modal" buttonAction={onOpen} />
+      <Button label="Log uit" buttonAction={logOut} />
       <Landing />
       <AanbodPreview />
       <Highlights />

@@ -17,6 +17,7 @@ type InputFieldType = {
   setInputValue?: any;
   filled?: boolean;
   required?: boolean;
+  iconClick?: () => void;
   className?: string;
 };
 
@@ -34,6 +35,7 @@ const InputField = ({
   setInputValue,
   filled,
   required,
+  iconClick,
   className,
   ...props
 }: InputFieldType) => {
@@ -84,6 +86,7 @@ const InputField = ({
               ? "right-0 top-0 p-2 bg-primary-100 rounded-r"
               : "right-2 top-2") + " absolute"
           }
+          onClick={iconClick}
         >
           <MagnifyingGlassIcon
             className={(filled ? "text-white" : "") + " h-8 w-8"}

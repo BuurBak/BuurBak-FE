@@ -1,29 +1,44 @@
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
+import { Login } from "../Types/Register";
+import { logIn } from "../api/auth/Register";
 import Button from "./Button";
 import InputField from "./InputField";
 
 const Register = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [name, setName] = useState();
   const [mobile, setMobile] = useState();
 
-  const handleSubmit = () => {
-    let data = {
-      username: email,
-      password: password,
-      deviceId: uuid(),
-    };
-    console.log(data);
+  const [loginData, setLoginData] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (email && password) {
+      let loginCredentials: Login = {
+        username: email,
+        password: password,
+        deviceId: uuid(),
+      };
+      try {
+        const data = await logIn(loginCredentials);
+        setLoginData(data);
+        setError(null);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError("An unknown error occurred");
+        }
+      }
+    }
   };
 
   return (
-    <form
-      className="w-full flex flex-col gap-4 pb-4"
-      onSubmit={() => handleSubmit()}
-    >
+    <form className="w-full flex flex-col gap-4 pb-4" onSubmit={handleSubmit}>
       {hasAccount && (
         <div className="w-full">
           <label>Naam</label>
@@ -68,12 +83,14 @@ const Register = () => {
         <label>Wachtwoord</label>
         <InputField
           setInputValue={setPassword}
-          type="password"
+          type={showPassword ? "text" : "passWord"}
           className="!w-full"
           label="Wachtwoord"
           inputType="text"
           outline={true}
           required={true}
+          icon={true}
+          iconClick={() => setShowPassword(!showPassword)}
         />
       </div>
       <Button label={hasAccount ? "Registreer" : "Log in"} submit={true} />
@@ -99,6 +116,8 @@ const Register = () => {
           </span>
         </p>
       )}
+      {loginData && <div>Success: {JSON.stringify(loginData)}</div>}
+      {error && <div>Error: {error}</div>}
     </form>
   );
 };
