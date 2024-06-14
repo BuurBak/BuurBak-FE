@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import { useState } from "react";
 import Button from "./Button";
 import InputField from "./InputField";
@@ -62,7 +63,9 @@ export default function Landing() {
               inputValue={inputValue3}
               setInputValue={setInputValue3}
             />
-            <Button label="Bekijk het aanbod" styling="w-[246px]" />
+            <Link href={"/Aanbod"}>
+              <Button label="Bekijk het aanbod" styling="w-[246px]" />
+            </Link>
           </div>
         </div>
       </div>
