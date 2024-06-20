@@ -16,3 +16,7 @@ export async function storeLoginToken(storeToken: Token) {
   cookies().set("access_token", storeToken.access_token);
   cookies().set("refresh_token", storeToken.refresh_token);
 }
+
+export async function hasToken(hasToken: string) {
+  return cookies().has(hasToken);
+}

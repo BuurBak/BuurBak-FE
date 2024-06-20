@@ -7,6 +7,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
+import { useEffect } from "react";
 import AanbodCategorieën from "./Components/AanbodCategorieën";
 import AanbodPreview from "./Components/AanbodPreview";
 import Button from "./Components/Button";
@@ -14,15 +15,28 @@ import Footer from "./Components/Footer";
 import Highlights from "./Components/Highlights";
 import Landing from "./Components/Landing";
 import Register from "./Components/Register";
-import { deleteToken } from "./api/auth/Cookies";
+import { deleteToken, hasToken } from "./api/auth/Cookies";
 
 export default function Home() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const signOut = () => {
     deleteToken("access_token");
     deleteToken("refresh_token");
   };
+
+  useEffect(() => {
+    const checkToken = async () => {
+      let token = await hasToken("access_token");
+
+      if (token) {
+        console.log("fired");
+        onClose();
+      }
+    };
+
+    checkToken();
+  });
 
   return (
     <div>
