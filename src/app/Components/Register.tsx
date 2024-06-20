@@ -13,8 +13,8 @@ const Register = () => {
   const [name, setName] = useState();
   const [mobile, setMobile] = useState();
 
-  const [loginData, setLoginData] = useState(null);
   const [error, setError] = useState<string | null>(null);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (email && password) {
@@ -23,16 +23,13 @@ const Register = () => {
         password: password,
         deviceId: uuid(),
       };
-      try {
-        const data = await logIn(loginCredentials);
-        setLoginData(data);
+      const result = await logIn(loginCredentials);
+      if (result.status === 200) {
         setError(null);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("An unknown error occurred");
-        }
+      } else if (result.status === 401) {
+        setError("Jouw email en wachtwoord komen niet overeen");
+      } else {
+        setError("Er is iets fout gegaan probeer later opnieuw");
       }
     }
   };
@@ -93,12 +90,13 @@ const Register = () => {
           iconClick={() => setShowPassword(!showPassword)}
         />
       </div>
+      {error && <div>{error}</div>}
       <Button label={hasAccount ? "Registreer" : "Log in"} submit={true} />
       {!hasAccount && (
         <p>
           Nog geen BuurBak account?{" "}
           <span
-            className="text-primary-100"
+            className="text-primary-100 cursor-pointer"
             onClick={() => setHasAccount(true)}
           >
             Registreren
@@ -116,8 +114,6 @@ const Register = () => {
           </span>
         </p>
       )}
-      {loginData && <div>Success: {JSON.stringify(loginData)}</div>}
-      {error && <div>Error: {error}</div>}
     </form>
   );
 };
