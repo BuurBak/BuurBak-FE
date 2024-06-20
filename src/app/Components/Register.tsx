@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
 import { Login } from "../Types/Register";
@@ -16,7 +18,6 @@ const Register = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     if (email && password) {
       let loginCredentials: Login = {
         username: email,
@@ -24,11 +25,14 @@ const Register = () => {
         deviceId: uuid(),
       };
       const result = await logIn(loginCredentials);
+
       if (result.status === 200) {
         setError(null);
       } else if (result.status === 401) {
+        event.preventDefault();
         setError("Jouw email en wachtwoord komen niet overeen");
       } else {
+        event.preventDefault();
         setError("Er is iets fout gegaan probeer later opnieuw");
       }
     }

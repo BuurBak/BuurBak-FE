@@ -1,17 +1,24 @@
-import { Login } from "@/app/Types/Register";
-// import { cookies } from "next/headers";
+"use server";
 
-// export const logOut = () => {
-//   console.log("fired");
-//   cookies().delete("access_token");
-//   cookies().delete("refresh_token");
-// };
+import { Login } from "@/app/Types/Register";
+import { cookies } from "next/headers";
 
 type LoginResponse = {
   status: number;
   data?: any;
   error?: string;
 };
+
+type Token = {
+  access_token: string;
+  refresh_token: string;
+};
+
+type Tokens = "access_token" | "refresh_token";
+
+export async function logOut(token: Tokens) {
+  cookies().delete(token);
+}
 
 export const logIn = async (data: Login): Promise<LoginResponse> => {
   try {
@@ -24,11 +31,10 @@ export const logIn = async (data: Login): Promise<LoginResponse> => {
     });
 
     const status = response.status;
-    let responseData;
+    let responseData: Token;
 
     if (status === 401) {
-      responseData = { error: "Invalid email or password" };
-      return { status, ...responseData };
+      return { status };
     }
 
     if (!response.ok) {
@@ -36,6 +42,8 @@ export const logIn = async (data: Login): Promise<LoginResponse> => {
     }
 
     responseData = await response.json();
+    cookies().set("access_token", responseData.access_token);
+    cookies().set("refresh_token", responseData.refresh_token);
     return { status, data: responseData };
   } catch (error) {
     if (error instanceof Error) {

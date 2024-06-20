@@ -1,6 +1,5 @@
 "use client";
 
-import { logOut } from "@/app/api/auth/Register";
 import {
   Modal,
   ModalBody,
@@ -15,14 +14,20 @@ import Footer from "./Components/Footer";
 import Highlights from "./Components/Highlights";
 import Landing from "./Components/Landing";
 import Register from "./Components/Register";
+import { logOut } from "./api/auth/Register";
 
 export default function Home() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const signOut = () => {
+    logOut("access_token");
+    logOut("refresh_token");
+  };
+
   return (
     <div>
       <Button label="test modal" buttonAction={onOpen} />
-      <Button label="Log uit" buttonAction={logOut} />
+      <Button label="Log uit" buttonAction={signOut} />
       <Landing />
       <AanbodPreview />
       <Highlights />
