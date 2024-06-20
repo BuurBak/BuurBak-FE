@@ -18,6 +18,7 @@ const Register = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (email && password) {
       let loginCredentials: Login = {
         username: email,
@@ -29,10 +30,8 @@ const Register = () => {
       if (result.status === 200) {
         setError(null);
       } else if (result.status === 401) {
-        event.preventDefault();
         setError("Jouw email en wachtwoord komen niet overeen");
       } else {
-        event.preventDefault();
         setError("Er is iets fout gegaan probeer later opnieuw");
       }
     }

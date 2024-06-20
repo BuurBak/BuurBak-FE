@@ -104,22 +104,25 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     setReqLoading(true);
     const reserve = async () => {
       try {
-        const res = await fetch("https://beta.buurbak.nl/api/v1/reservations", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            trailerId: trailerOffer?.id,
-            startTime: getValues("dateStart"),
-            endTime: getValues("dateEnd"),
-            message: getValues("message"),
-            name: "Test name",
-            email: "Test mail",
-            number: "Test number",
-          }),
-        });
+        const res = await fetch(
+          "https://pilot.buurbak.nl/api/v1/reservations",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              trailerId: trailerOffer?.id,
+              startTime: getValues("dateStart"),
+              endTime: getValues("dateEnd"),
+              message: getValues("message"),
+              name: "Test name",
+              email: "Test mail",
+              number: "Test number",
+            }),
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Network response was not ok");

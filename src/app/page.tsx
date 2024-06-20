@@ -14,19 +14,19 @@ import Footer from "./Components/Footer";
 import Highlights from "./Components/Highlights";
 import Landing from "./Components/Landing";
 import Register from "./Components/Register";
-import { logOut } from "./api/auth/Register";
+import { deleteToken } from "./api/auth/Cookies";
 
 export default function Home() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const signOut = () => {
-    logOut("access_token");
-    logOut("refresh_token");
+    deleteToken("access_token");
+    deleteToken("refresh_token");
   };
 
   return (
     <div>
-      <Button label="test modal" buttonAction={onOpen} />
+      <Button label="Log in" buttonAction={onOpen} />
       <Button label="Log uit" buttonAction={signOut} />
       <Landing />
       <AanbodPreview />

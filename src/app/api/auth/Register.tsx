@@ -1,7 +1,5 @@
-"use server";
-
 import { Login } from "@/app/Types/Register";
-import { cookies } from "next/headers";
+import { storeLoginToken } from "./Cookies";
 
 type LoginResponse = {
   status: number;
@@ -13,12 +11,6 @@ type Token = {
   access_token: string;
   refresh_token: string;
 };
-
-type Tokens = "access_token" | "refresh_token";
-
-export async function logOut(token: Tokens) {
-  cookies().delete(token);
-}
 
 export const logIn = async (data: Login): Promise<LoginResponse> => {
   try {
@@ -42,8 +34,7 @@ export const logIn = async (data: Login): Promise<LoginResponse> => {
     }
 
     responseData = await response.json();
-    cookies().set("access_token", responseData.access_token);
-    cookies().set("refresh_token", responseData.refresh_token);
+    await storeLoginToken(responseData);
     return { status, data: responseData };
   } catch (error) {
     if (error instanceof Error) {
