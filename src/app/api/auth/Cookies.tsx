@@ -27,5 +27,6 @@ export async function getToken(token: string) {
 }
 
 export async function getAllTokens() {
-  return cookies().getAll();
+  let cookie = cookies().getAll();
+  return cookie;
 }

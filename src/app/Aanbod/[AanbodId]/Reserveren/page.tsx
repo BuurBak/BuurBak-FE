@@ -27,6 +27,28 @@ type Inputs = {
   terms: boolean;
 };
 
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  roles: [
+    {
+      name: string;
+    },
+  ];
+  iban: any;
+  number: string;
+  address: {
+    id: string;
+    city: string;
+    number: string;
+    street_name: string;
+    postal_code: string;
+  };
+  profilePicture: any;
+  date_of_birth: any;
+};
+
 const Page = ({ params }: { params: { AanbodId: string } }) => {
   const searchParams = useSearchParams();
 
@@ -51,6 +73,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
       fromDate(new Date(newDate.end || ""), getLocalTimeZone())
     ),
   });
+  const [user, setUser] = useState<User>();
   const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
 
   const pickUpTime = [
@@ -82,6 +105,39 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     };
 
     fetchData();
+
+    const account = async () => {
+      try {
+        const res = await fetch(
+          "https://pilot.buurbak.nl/api/v1/customers/self",
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + (await getToken("access_token")),
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const result: User = await res.json();
+        setUser(result);
+      } catch (err) {
+        if (err instanceof Error) {
+          alert(err.message);
+        } else {
+          alert("An unknown error occurred");
+        }
+      } finally {
+        setReqLoading(false);
+      }
+    };
+
+    account();
   }, []);
 
   useEffect(() => {
@@ -101,7 +157,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     item.start + " - " + item.end;
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
+    console.log("test:", new Date(getValues("dateStart")).toISOString());
     setReqLoading(true);
     const reserve = async () => {
       try {
@@ -116,19 +172,15 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             credentials: "include",
             body: JSON.stringify({
               trailerId: trailerOffer?.id,
-              startTime: getValues("dateStart"),
-              endTime: getValues("dateEnd"),
+              startTime: new Date(getValues("dateStart")).toISOString(),
+              endTime: new Date(getValues("dateEnd")).toISOString(),
               message: getValues("message"),
-              name: "Test name",
-              email: "Test mail",
-              number: "Test number",
+              name: user?.name,
+              email: user?.email,
+              number: user?.number,
             }),
           }
         );
-
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
 
         const result = await res.json();
         alert(result.message);
@@ -227,15 +279,15 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             <div className="flex flex-col gap-1">
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
                 <p className="sm:w-8 text-h6">Naam:</p>
-                <p className="text-normal">Comming soon</p>
+                <p className="text-normal">{user?.name}</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
                 <p className="sm:w-8 text-h6">Mail:</p>
-                <p className="text-normal">Comming soon</p>
+                <p className="text-normal">{user?.email}</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
                 <p className="sm:w-8 text-h6">Tel:</p>
-                <p className="text-normal">Comming soon</p>
+                <p className="text-normal">{user?.number}</p>
               </div>
             </div>
           </div>
