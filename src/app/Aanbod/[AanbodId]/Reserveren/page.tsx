@@ -3,6 +3,7 @@
 import Button from "@/app/Components/Button";
 import Footer from "@/app/Components/Footer";
 import { TrailerList } from "@/app/Types/TrailerList";
+import { getToken } from "@/app/api/auth/Cookies";
 import {
   fromDate,
   getLocalTimeZone,
@@ -109,6 +110,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
           {
             method: "POST",
             headers: {
+              Authorization: "Bearer " + (await getToken("access_token")),
               "Content-Type": "application/json",
             },
             credentials: "include",

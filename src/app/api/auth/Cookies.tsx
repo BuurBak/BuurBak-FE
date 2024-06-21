@@ -20,3 +20,12 @@ export async function storeLoginToken(storeToken: Token) {
 export async function hasToken(hasToken: string) {
   return cookies().has(hasToken);
 }
+
+export async function getToken(token: string) {
+  let cookie = cookies().get(token);
+  return cookie?.value;
+}
+
+export async function getAllTokens() {
+  return cookies().getAll();
+}
