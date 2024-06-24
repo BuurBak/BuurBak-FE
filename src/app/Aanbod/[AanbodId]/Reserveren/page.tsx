@@ -2,7 +2,9 @@
 
 import Button from "@/app/Components/Button";
 import Footer from "@/app/Components/Footer";
+import { Reservation } from "@/app/Types/Reservation";
 import { TrailerList } from "@/app/Types/TrailerList";
+import { reservation } from "@/app/api/Reservation-controller";
 import { getToken } from "@/app/api/auth/Cookies";
 import {
   fromDate,
@@ -156,46 +158,19 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   const merche = (item: { start: string; end: string }) =>
     item.start + " - " + item.end;
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log("test:", new Date(getValues("dateStart")).toISOString());
-    setReqLoading(true);
-    const reserve = async () => {
-      try {
-        const res = await fetch(
-          "https://pilot.buurbak.nl/api/v1/reservations",
-          {
-            method: "POST",
-            headers: {
-              Authorization: "Bearer " + (await getToken("access_token")),
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-              trailerId: trailerOffer?.id,
-              startTime: new Date(getValues("dateStart")).toISOString(),
-              endTime: new Date(getValues("dateEnd")).toISOString(),
-              message: getValues("message"),
-              name: user?.name,
-              email: user?.email,
-              number: user?.number,
-            }),
-          }
-        );
-
-        const result = await res.json();
-        alert(result.message);
-      } catch (err) {
-        if (err instanceof Error) {
-          alert(err.message);
-        } else {
-          alert("An unknown error occurred");
-        }
-      } finally {
-        setReqLoading(false);
-      }
-    };
-
-    reserve();
+  const onSubmit: SubmitHandler<Inputs> = async () => {
+    if (trailerOffer && user) {
+      let data: Reservation = {
+        trailerId: trailerOffer.id,
+        startTime: new Date(getValues("dateStart")).toISOString(),
+        endTime: new Date(getValues("dateEnd")).toISOString(),
+        message: getValues("message"),
+        name: user?.name,
+        email: user?.email,
+        number: user?.number,
+      };
+      await reservation(data);
+    }
   };
 
   return (
