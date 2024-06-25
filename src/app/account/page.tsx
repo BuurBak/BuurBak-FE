@@ -4,11 +4,12 @@ import { CircleUserRound } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ReserveringCard from "../Components/ReserveringCard";
+import { ReservationResponse } from "../Types/Reservation";
 import { LoggedUser } from "../Types/User";
 import { getAccount } from "../api/Customer-controller";
 import {
-  getReservations,
-  getTrailerReservations,
+  getTrailerReservationsOwner,
+  getTrailerReservationsRenter,
 } from "../api/Reservation-controller";
 
 const page = () => {
@@ -16,6 +17,8 @@ const page = () => {
 
   const [selected, setSelected] = useState<Selected>("jouw aanhanger");
   const [user, setUser] = useState<LoggedUser>();
+  const [renter, setRenter] = useState<ReservationResponse>();
+  const [owner, setOwner] = useState<ReservationResponse>();
 
   const account: string[] = [
     "Mijn gegevens",
@@ -26,11 +29,19 @@ const page = () => {
   useEffect(() => {
     const getApi = async () => {
       setUser(await getAccount());
-      await getReservations();
-      await getTrailerReservations();
     };
     getApi();
   }, []);
+
+  useEffect(() => {
+    const getApi = async () => {
+      if (user) {
+        setOwner(await getTrailerReservationsOwner(user.id));
+        setRenter(await getTrailerReservationsRenter(user.id));
+      }
+    };
+    getApi();
+  }, [user]);
 
   return (
     <div className="w-dvw h-dvh flex justify-center items-center">
