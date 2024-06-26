@@ -1,17 +1,30 @@
 import { Calendar, Check, X } from "lucide-react";
 import Image from "next/image";
-import BuurBakImage from "../../../public/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp";
 
 type ReserveringCard = {
   trailerReservering: boolean;
+  image: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  state: boolean;
+  paid?: boolean;
 };
 
-const ReserveringCard = ({ trailerReservering }: ReserveringCard) => {
+const ReserveringCard = ({
+  trailerReservering,
+  image,
+  title,
+  startDate,
+  endDate,
+  state,
+  paid,
+}: ReserveringCard) => {
   return (
     <div className="flex gap-4 h-fit w-fit items-center">
       <div className="min-w-40 aspect-video relative">
         <Image
-          src={BuurBakImage}
+          src={image}
           alt="Trailer image 1"
           fill
           sizes="100% 100%"
@@ -20,13 +33,15 @@ const ReserveringCard = ({ trailerReservering }: ReserveringCard) => {
         />
       </div>
       <div className="flex flex-col gap-3">
-        <p className="text-normal">Open aanhanger</p>
+        <p className="text-normal">{title}</p>
         <div className="flex gap-2">
           <Calendar />
-          <p className="text-normal">30 mei tot 31 mei 2024</p>
+          <p className="text-normal">
+            {startDate} {endDate}
+          </p>
         </div>
         <p className="p-2 border rounded text-primary-100 text-small w-fit h-fit">
-          In behandeling
+          {state ? "In behandeling" : "Bevestigd"}
         </p>
       </div>
       {trailerReservering && (

@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleUserRound } from "lucide-react";
+import { CaravanIcon, CircleUserRound } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ReserveringCard from "../Components/ReserveringCard";
@@ -17,8 +17,8 @@ const page = () => {
 
   const [selected, setSelected] = useState<Selected>("jouw aanhanger");
   const [user, setUser] = useState<LoggedUser>();
-  const [renter, setRenter] = useState<ReservationResponse>();
-  const [owner, setOwner] = useState<ReservationResponse>();
+  const [renter, setRenter] = useState<ReservationResponse | null>(null);
+  const [owner, setOwner] = useState<ReservationResponse | null>(null);
 
   const account: string[] = [
     "Mijn gegevens",
@@ -36,12 +36,30 @@ const page = () => {
   useEffect(() => {
     const getApi = async () => {
       if (user) {
-        setOwner(await getTrailerReservationsOwner(user.id));
-        setRenter(await getTrailerReservationsRenter(user.id));
+        setOwner(null);
+        setRenter(null);
+        let trailerReservationsOwner = await getTrailerReservationsOwner(
+          user.id
+        );
+        if (trailerReservationsOwner) {
+          console.log("trailerReservationsOwner", trailerReservationsOwner);
+          setOwner(trailerReservationsOwner);
+        }
+        let trailerReservationsRenter = await getTrailerReservationsRenter(
+          user.id
+        );
+        if (trailerReservationsRenter) setRenter(trailerReservationsRenter);
       }
     };
     getApi();
   }, [user]);
+
+  const empty = (
+    <div className="flex flex-col gap-4 justify-center items-center text-center">
+      <CaravanIcon />
+      <p className="text-normal">Er zijn nog geen trailers</p>
+    </div>
+  );
 
   return (
     <div className="w-dvw h-dvh flex justify-center items-center">
@@ -78,16 +96,39 @@ const page = () => {
             </p>
           </div>
           <hr className="w-full bg-gray-100" />
-          {selected === "jouw reservering" && (
-            <div>
-              <ReserveringCard trailerReservering={true} />
-            </div>
-          )}
-          {selected === "jouw aanhanger" && (
-            <div>
-              <ReserveringCard trailerReservering={false} />
-            </div>
-          )}
+          {selected === "jouw reservering" && renter?.content
+            ? renter.content.map((item) => (
+                <ReserveringCard
+                  key={item.id}
+                  trailerReservering={true}
+                  image={item.trailer.coverImage}
+                  title={item.trailer.trailerType.name}
+                  state={item.confirmed}
+                  startDate={item.startTime}
+                  endDate={item.endTime}
+                />
+              ))
+            : renter === undefined
+              ? empty
+              : null}
+
+          {selected === "jouw aanhanger" && owner?.content
+            ? owner?.content?.map((item) => {
+                return (
+                  <ReserveringCard
+                    key={item.id}
+                    trailerReservering={false}
+                    image={item.trailer.coverImage}
+                    title={item.trailer.trailerType.name}
+                    state={item.confirmed}
+                    startDate={item.startTime}
+                    endDate={item.endTime}
+                  />
+                );
+              })
+            : owner === undefined
+              ? empty
+              : null}
         </div>
       </div>
     </div>

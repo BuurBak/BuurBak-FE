@@ -33,7 +33,6 @@ export const getTrailerReservationsOwner = async (ownerId: string) => {
       }
     );
 
-    console.log("owner: ", await response.json());
     const responseData: ReservationResponse = await response.json();
     return responseData;
   } catch (error) {
@@ -54,7 +53,6 @@ export const getTrailerReservationsRenter = async (renterId: string) => {
       }
     );
 
-    console.log("renter: ", await response.json());
     const responseData: ReservationResponse = await response.json();
     return responseData;
   } catch (error) {

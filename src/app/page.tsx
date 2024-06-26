@@ -16,6 +16,7 @@ import Highlights from "./Components/Highlights";
 import Landing from "./Components/Landing";
 import Register from "./Components/Register";
 import { deleteToken, hasToken } from "./api/auth/Cookies";
+import { refresh } from "./api/auth/Register";
 
 export default function Home() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -30,7 +31,7 @@ export default function Home() {
       let token = await hasToken("access_token");
 
       if (token) {
-        console.log("fired");
+        await refresh();
         onClose();
       }
     };
