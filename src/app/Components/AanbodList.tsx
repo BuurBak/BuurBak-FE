@@ -15,6 +15,7 @@ import Button from "./Button";
 import Card from "./Card";
 import InputField from "./InputField";
 import SearchOrFilter from "./SearchOrFilterFunction";
+import { nl } from "date-fns/locale";
 
 type FilterOption = {
   label: string;

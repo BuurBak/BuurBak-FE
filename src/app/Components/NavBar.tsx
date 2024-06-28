@@ -5,7 +5,7 @@ import Image from "next/image";
 import Logo from "../Assets/Frame.svg";
 import { Menu, X, Home, Tag, Mail, MessageCircleQuestion, Caravan, InstagramIcon, Facebook, Linkedin } from "lucide-react";
 import { usePathname } from "next/navigation";
-import {PlateauTrailer} from "../icons/TrailerIcons"
+import { PlateauTrailer } from "../icons/TrailerIcons"
 
 const Navbar = () => {
     const Links = [
@@ -17,7 +17,7 @@ const Navbar = () => {
 
     const MobileLinks = [
         { name: "Home", url: "/", icon: Home },
-        { name: "Aanbod", url: "/Aanbod", icon: PlateauTrailer},
+        { name: "Aanbod", url: "/Aanbod", icon: PlateauTrailer },
         { name: "Verhuren", url: "/Verhuren", icon: Tag },
         { name: "Contact", url: "/Contact", icon: Mail },
         { name: "FAQ", url: "/FAQ", icon: MessageCircleQuestion },
@@ -28,25 +28,33 @@ const Navbar = () => {
     const [singedIn, setSingendIn] = useState(false);
     const currentRoute = usePathname();
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-    
+
     useEffect(() => {
         const handleResize = () => {
             setScreenWidth(window.innerWidth);
-            if(screenWidth >=768) {
+            if (screenWidth >= 768) {
                 setOpen(false);
             }
         };
-    
+
         window.addEventListener('resize', handleResize);
+        window.addEventListener("scroll", changeCss, false);
 
         return function unMount() {
             window.removeEventListener("resize", handleResize);
-          };
-      }, []);
+        };
+    }, []);
+
+    function changeCss() {
+        var navElement = document.getElementById("nav");
+        if (navElement != null) {
+            window.scrollY > 500 ? navElement.className.replace("bg-none", "bg-white") : navElement.className.replace("bg-white", "bg-none");
+        }
+    }
 
     return (
         <main>
-            <div className="absolute top-0 w-full z-50">
+            <div id="navbar" className="fixed top-0 w-full z-50 bg-none">
                 <div className="md:flex justify-between items-center md:px-10 py-4 px-7">
                     {/*logo*/}
                     <Image alt="Buurbak logo" src={Logo} className={(open ? "hidden " : "") + "w-fit h-fit"} />
@@ -94,13 +102,13 @@ const Navbar = () => {
                                 <p className="text-xl text-primary-100 font-semibold mb-6">Volg ons</p>
                                 <div className="flex flex-row gap-8 justify-center">
                                     <div className="bg-offWhite-100 p-4 rounded-full">
-                                        <InstagramIcon className="h-8 w-8"/>
+                                        <InstagramIcon className="h-8 w-8" />
                                     </div>
                                     <div className="bg-offWhite-100 p-4 rounded-full">
-                                        <Linkedin className="h-8 w-8"/>
+                                        <Linkedin className="h-8 w-8" />
                                     </div>
                                     <div className="bg-offWhite-100 p-4 rounded-full">
-                                        <Facebook className="h-8 w-8"/>
+                                        <Facebook className="h-8 w-8" />
                                     </div>
                                 </div>
 
