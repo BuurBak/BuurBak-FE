@@ -18,8 +18,7 @@ import LogoWhite from "../Assets/Frame.svg";
 import LogoColor from "../Assets/horizontalColorLogo.svg";
 import { PlateauTrailer } from "../icons/TrailerIcons";
 
-const Navbar = () => {
-  const Links = [
+const Links = [
     { name: "Aanbod", url: "/Aanbod" },
     { name: "Ik wil verhuren", url: "/Verhuren" },
     { name: "Contact", url: "/Contact" },
@@ -34,6 +33,7 @@ const Navbar = () => {
     { name: "FAQ", url: "/FAQ", icon: MessageCircleQuestion },
   ];
 
+const Navbar = () => {
   const [open, setOpen] = useState(false);
   // add actual singed in verification
   const [singedIn, setSingendIn] = useState(false);
