@@ -37,6 +37,14 @@ const Navbar = () => {
             }
         };
 
+        function changeCss() {
+            var navElement = document.getElementById("navbar");
+            if (navElement != null) {
+                window.scrollY > 500 ? navElement.className.replace("bg-white", "bg-none") : navElement.className.replace("bg-white", "bg-none");
+                console.log("hi");
+            }
+        }
+
         window.addEventListener('resize', handleResize);
         window.addEventListener("scroll", changeCss, false);
 
@@ -44,13 +52,6 @@ const Navbar = () => {
             window.removeEventListener("resize", handleResize);
         };
     }, []);
-
-    function changeCss() {
-        var navElement = document.getElementById("nav");
-        if (navElement != null) {
-            window.scrollY > 500 ? navElement.className.replace("bg-none", "bg-white") : navElement.className.replace("bg-white", "bg-none");
-        }
-    }
 
     return (
         <main>
