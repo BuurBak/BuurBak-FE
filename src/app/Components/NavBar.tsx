@@ -14,7 +14,8 @@ import {
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import Logo from "../Assets/Frame.svg";
+import LogoWhite from "../Assets/Frame.svg";
+import LogoColor from "../Assets/horizontalColorLogo.svg";
 import { PlateauTrailer } from "../icons/TrailerIcons";
 
 const Navbar = () => {
@@ -37,46 +38,44 @@ const Navbar = () => {
   // add actual singed in verification
   const [singedIn, setSingendIn] = useState(false);
   const currentRoute = usePathname();
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [scrolled, isScrolled] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-      if (screenWidth >= 768) {
-        setOpen(false);
-      }
-    };
-
+  useEffect(() => {        
     function changeCss() {
-      var navElement = document.getElementById("navbar");
-      if (navElement != null) {
+      if (currentRoute === '/') {
         window.scrollY > 500 ? isScrolled(true) : isScrolled(false);
-        console.log("hi");
       }
     }
 
-    window.addEventListener("resize", handleResize);
+    
     window.addEventListener("scroll", changeCss, false);
-
-    return function unMount() {
-      window.removeEventListener("resize", handleResize);
-    };
   }, []);
+
+  useEffect(() => {
+    if (currentRoute !== '/') {
+        isScrolled(true)
+    }
+  }, [currentRoute])
+
+  
 
   return (
     <main>
       <div
         id="navbar"
-        className={`fixed top-0 w-full z-50 ${scrolled ? "bg-offWhite-100" : "bg-none"}`}
+        className={`fixed top-0 w-full z-50 ${scrolled ? "bg-white" : "bg-none"}`}
       >
         <div className="md:flex justify-between items-center md:px-10 py-4 px-7">
           {/*logo*/}
-          <Image
+          {scrolled ? <Image
             alt="Buurbak logo"
-            src={Logo}
+            src={LogoColor}
             className={(open ? "hidden " : "") + "w-fit h-fit"}
-          />
+          /> :<Image
+            alt="Buurbak logo"
+            src={LogoWhite}
+            className={(open ? "hidden " : "") + "w-fit h-fit"}
+          />}
 
           <div
             onClick={() => setOpen(!open)}
@@ -84,7 +83,7 @@ const Navbar = () => {
               "w-7 h-7 absolute right-8 top-6 cursor-pointer md:hidden"
             }
           >
-            {open ? <X size={36} /> : <Menu color="white" size={36} />}
+            {open ? <X size={36} /> : <Menu color={`${scrolled ? "black" : "white"}`} size={36} />}
           </div>
 
           {/*Navbar*/}
@@ -129,7 +128,7 @@ const Navbar = () => {
                   ))
                 : Links.map((link, index) => (
                     <li
-                      className={`py-4 md:my-0 md:ml-8 text-white ${link.name.includes("Ik wil verhuren") && "md:bg-primary-100 md:px-4 md:py-2 md:rounded"}`}
+                      className={`py-4 md:my-0 md:ml-8 ${scrolled ? "text-secondary-100" : "text-white"} ${link.name.includes("Ik wil verhuren") && "md:bg-primary-100 md:px-4 md:py-2 md:rounded text-white"}`}
                       key={index}
                     >
                       {link.name.includes("Inloggen") && singedIn ? (
