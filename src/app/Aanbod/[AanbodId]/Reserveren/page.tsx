@@ -320,7 +320,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
           </div>
         </div>
       </div>
-      <Footer />
     </form>
   );
 };

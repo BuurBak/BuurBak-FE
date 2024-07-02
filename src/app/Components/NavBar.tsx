@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import LogoWhite from "../Assets/Frame.svg";
 import LogoColor from "../Assets/horizontalColorLogo.svg";
 import { PlateauTrailer } from "../icons/TrailerIcons";
+import Link from "next/link";
 
 const Links = [
     { name: "Aanbod", url: "/Aanbod" },
@@ -67,7 +68,7 @@ const Navbar = () => {
       >
         <div className="md:flex justify-between items-center md:px-10 py-4 px-7">
           {/*logo*/}
-          {scrolled ? <Image
+          <Link href='/'>{scrolled ? <Image
             alt="Buurbak logo"
             src={LogoColor}
             className={(open ? "hidden " : "") + "w-fit h-fit"}
@@ -75,7 +76,7 @@ const Navbar = () => {
             alt="Buurbak logo"
             src={LogoWhite}
             className={(open ? "hidden " : "") + "w-fit h-fit"}
-          />}
+          />}</Link>
 
           <div
             onClick={() => setOpen(!open)}

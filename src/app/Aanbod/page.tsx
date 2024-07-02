@@ -55,7 +55,6 @@ export default function AanbodPage() {
           )}
         </Panel>
       </PanelGroup>
-      <Footer />
     </div>
   );
 }

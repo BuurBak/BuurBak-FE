@@ -114,7 +114,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
         </>
       )}
 
-      <Footer />
     </div>
   );
 };
