@@ -143,7 +143,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex flex-col-reverse sm:flex-row w-dvw h-fit min-h-dvh">
+      <div className="flex flex-col-reverse sm:flex-row w-dvw h-fit min-h-dvh mt-[88px]">
         <div className="flex flex-col justify-center gap-10 flex-1 px-4 py-4">
           <h1 className="text-primary-100 text-h4">Reserveer uw aanhanger</h1>
           <div className="flex justify-between items-center">
@@ -320,7 +320,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
           </div>
         </div>
       </div>
-      <Footer />
     </form>
   );
 };
