@@ -8,6 +8,8 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { useEffect } from "react";
+import { deleteToken, hasToken } from "./api/auth/Cookies";
+import { refresh } from "./api/auth/Register";
 import AanbodCategorieën from "./Components/AanbodCategorieën";
 import AanbodPreview from "./Components/AanbodPreview";
 import Button from "./Components/Button";
@@ -15,8 +17,6 @@ import Footer from "./Components/Footer";
 import Highlights from "./Components/Highlights";
 import Landing from "./Components/Landing";
 import Register from "./Components/Register";
-import { deleteToken, hasToken } from "./api/auth/Cookies";
-import { refresh } from "./api/auth/Register";
 
 export default function Home() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();

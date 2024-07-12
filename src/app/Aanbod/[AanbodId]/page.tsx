@@ -56,7 +56,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   }
 
   return (
-    <div className="h-fit flex flex-col items-center gap-4 sm:pt-4">
+    <div className="h-fit flex flex-col items-center gap-4 sm:pt-4 mt-[88px]">
       <PageBackButton />
       <ImageGallery trailerOffer={trailerOffer} setOpen={setOpen} />
       {trailerOffer && (
@@ -114,7 +114,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
         </>
       )}
 
-      <Footer />
     </div>
   );
 };
