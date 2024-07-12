@@ -12,27 +12,38 @@ import {
   X,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import LogoWhite from "../Assets/Frame.svg";
 import LogoColor from "../Assets/horizontalColorLogo.svg";
 import { PlateauTrailer } from "../icons/TrailerIcons";
-import Link from "next/link";
+
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/modal";
+import { deleteToken, hasToken } from "../api/auth/Cookies";
+import { refresh } from "../api/auth/Register";
+import Register from "./Register";
 
 const Links = [
-    { name: "Aanbod", url: "/Aanbod" },
-    { name: "Ik wil verhuren", url: "/Verhuren" },
-    { name: "Contact", url: "/Contact" },
-    { name: "Inloggen", url: "/Inloggen" },
-  ];
+  { name: "Aanbod", url: "/Aanbod" },
+  { name: "Ik wil verhuren", url: "/Verhuren" },
+  { name: "Contact", url: "/Contact" },
+  { name: "Inloggen", url: "/Inloggen" },
+];
 
-  const MobileLinks = [
-    { name: "Home", url: "/", icon: Home },
-    { name: "Aanbod", url: "/Aanbod", icon: PlateauTrailer },
-    { name: "Verhuren", url: "/Verhuren", icon: Tag },
-    { name: "Contact", url: "/Contact", icon: Mail },
-    { name: "FAQ", url: "/FAQ", icon: MessageCircleQuestion },
-  ];
+const MobileLinks = [
+  { name: "Home", url: "/", icon: Home },
+  { name: "Aanbod", url: "/Aanbod", icon: PlateauTrailer },
+  { name: "Verhuren", url: "/Verhuren", icon: Tag },
+  { name: "Contact", url: "/Contact", icon: Mail },
+  { name: "FAQ", url: "/FAQ", icon: MessageCircleQuestion },
+];
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -41,42 +52,81 @@ const Navbar = () => {
   const currentRoute = usePathname();
   const [scrolled, isScrolled] = useState(false);
 
-  useEffect(() => {        
+  useEffect(() => {
     function changeCss() {
-      if (currentRoute === '/') {
+      if (currentRoute === "/") {
         window.scrollY > 500 ? isScrolled(true) : isScrolled(false);
       }
     }
 
-    
     window.addEventListener("scroll", changeCss, false);
   }, []);
 
   useEffect(() => {
-    if (currentRoute !== '/') {
-        isScrolled(true)
+    if (currentRoute !== "/") {
+      isScrolled(true);
     }
-  }, [currentRoute])
+  }, [currentRoute]);
 
-  
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  const signOut = () => {
+    deleteToken("access_token");
+    deleteToken("refresh_token");
+  };
+
+  useEffect(() => {
+    const checkToken = async () => {
+      let token = await hasToken("access_token");
+
+      if (token) {
+        await refresh();
+        onClose();
+      }
+    };
+
+    checkToken();
+  });
+
+  useEffect(() => {
+    setOpen(false);
+  }, [onOpenChange]);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      let token = await hasToken("acces_token");
+
+      if (token) {
+        setSingendIn(true);
+        setOpen(true);
+      }
+    };
+
+    checkToken();
+  }, [onOpenChange]);
 
   return (
     <main>
       <div
-        id="navbar"
         className={`fixed top-0 w-full z-50 ${scrolled ? "bg-white" : "bg-none"}`}
       >
         <div className="md:flex justify-between items-center md:px-10 py-4 px-7">
           {/*logo*/}
-          <Link href='/'>{scrolled ? <Image
-            alt="Buurbak logo"
-            src={LogoColor}
-            className={(open ? "hidden " : "") + "w-fit h-fit"}
-          /> :<Image
-            alt="Buurbak logo"
-            src={LogoWhite}
-            className={(open ? "hidden " : "") + "w-fit h-fit"}
-          />}</Link>
+          <Link href="/">
+            {scrolled ? (
+              <Image
+                alt="Buurbak logo"
+                src={LogoColor}
+                className={(open ? "hidden " : "") + "w-fit h-fit"}
+              />
+            ) : (
+              <Image
+                alt="Buurbak logo"
+                src={LogoWhite}
+                className={(open ? "hidden " : "") + "w-fit h-fit"}
+              />
+            )}
+          </Link>
 
           <div
             onClick={() => setOpen(!open)}
@@ -84,7 +134,11 @@ const Navbar = () => {
               "w-7 h-7 absolute right-8 top-6 cursor-pointer md:hidden"
             }
           >
-            {open ? <X size={36} /> : <Menu color={`${scrolled ? "black" : "white"}`} size={36} />}
+            {open ? (
+              <X size={36} />
+            ) : (
+              <Menu color={`${scrolled ? "black" : "white"}`} size={36} />
+            )}
           </div>
 
           {/*Navbar*/}
@@ -105,13 +159,13 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className={`${open ? "" : "hidden"}`}>
-                  <li className="py-4 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0">
-                    {/* add href back in */}
-                    <a onClick={() => setSingendIn(true)}>Login</a>
-                  </li>
                   <li className="py-4 mb-10 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0">
-                    <a href="">Registreren</a>
+                    {/* add href back in */}
+                    <a onClick={onOpen}>Login</a>
                   </li>
+                  {/* <li className="py-4 mb-10 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0">
+                    <a onClick={onOpen}>Registreren</a>
+                  </li> */}
                 </div>
               )}
 
@@ -162,6 +216,18 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
+              <ModalBody>
+                <Register />
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </main>
   );
 };
