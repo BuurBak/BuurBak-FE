@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  CircleUserRound,
   Facebook,
   Home,
   InstagramIcon,
@@ -26,6 +27,8 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
+import { LoggedUser } from "../Types/User";
+import { getAccount } from "../api/Customer-controller";
 import { deleteToken, hasToken } from "../api/auth/Cookies";
 import { refresh } from "../api/auth/Register";
 import Register from "./Register";
@@ -34,7 +37,7 @@ const Links = [
   { name: "Aanbod", url: "/Aanbod" },
   { name: "Ik wil verhuren", url: "/Verhuren" },
   { name: "Contact", url: "/Contact" },
-  { name: "Inloggen", url: "/Inloggen" },
+  { name: "Inloggen" },
 ];
 
 const MobileLinks = [
@@ -51,6 +54,7 @@ const Navbar = () => {
   const [singedIn, setSingendIn] = useState(false);
   const currentRoute = usePathname();
   const [scrolled, isScrolled] = useState(false);
+  const [user, setUser] = useState<LoggedUser>();
 
   useEffect(() => {
     function changeCss() {
@@ -94,16 +98,21 @@ const Navbar = () => {
 
   useEffect(() => {
     const checkToken = async () => {
-      let token = await hasToken("acces_token");
+      let token = await hasToken("access_token");
 
       if (token) {
         setSingendIn(true);
-        setOpen(true);
+        const getApi = async () => {
+          setUser(await getAccount());
+        };
+        getApi();
+      } else {
+        setSingendIn(false);
       }
     };
 
     checkToken();
-  }, [onOpenChange]);
+  }, [onOpenChange, open]);
 
   return (
     <main>
@@ -149,12 +158,22 @@ const Navbar = () => {
               {singedIn ? (
                 // replace with actual account data
                 <div className="w-full flex flex-col items-center md:hidden">
-                  <div
-                    onClick={() => setSingendIn(false)}
-                    className="h-32 w-32 rounded-full bg-gray-50"
-                  ></div>
+                  {user && user?.profilePicture !== null ? (
+                    <div className="w-32 h-32 relative">
+                      <Image
+                        src={user.profilePicture.public_url}
+                        alt="Trailer image 1"
+                        fill
+                        sizes="100% 100%"
+                        priority={true}
+                        className="rounded-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <CircleUserRound className="w-auto h-[10vh]" />
+                  )}
                   <p className="w-fit text-2xl font-semibold mt-4 mb-12">
-                    Place Holder
+                    {user?.name}
                   </p>
                 </div>
               ) : (
@@ -186,10 +205,31 @@ const Navbar = () => {
                       className={`py-4 md:my-0 md:ml-8 ${scrolled ? "text-secondary-100" : "text-white"} ${link.name.includes("Ik wil verhuren") && "md:bg-primary-100 md:px-4 md:py-2 md:rounded text-white"}`}
                       key={index}
                     >
-                      {link.name.includes("Inloggen") && singedIn ? (
-                        <div className="h-16 w-16 rounded-full bg-gray-50"></div>
+                      {link.name === "Inloggen" && singedIn ? (
+                        user && user?.profilePicture !== null ? (
+                          <div className="w-14 h-14 relative">
+                            <Image
+                              src={user.profilePicture.public_url}
+                              alt="Trailer image 1"
+                              fill
+                              sizes="100% 100%"
+                              priority={true}
+                              className="rounded-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <CircleUserRound className="w-auto h-14" />
+                        )
                       ) : (
-                        <a href={link.url}>{link.name}</a>
+                        <a
+                          className="cursor-pointer"
+                          onClick={
+                            link.name === "Inloggen" ? onOpen : undefined
+                          }
+                          href={link.url}
+                        >
+                          {link.name}
+                        </a>
                       )}
                     </li>
                   ))}

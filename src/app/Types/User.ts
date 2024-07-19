@@ -32,6 +32,10 @@ export type LoggedUser = {
     street_name: string;
     postal_code: string;
   };
-  profilePicture: any;
+  profilePicture: {
+    id: string;
+    originalFileName: string;
+    public_url: string;
+  };
   date_of_birth: any;
 };
