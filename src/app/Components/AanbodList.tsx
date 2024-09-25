@@ -15,7 +15,6 @@ import Button from "./Button";
 import Card from "./Card";
 import InputField from "./InputField";
 import SearchOrFilter from "./SearchOrFilterFunction";
-import { nl } from "date-fns/locale";
 
 type FilterOption = {
   label: string;
@@ -226,7 +225,7 @@ const AanbodList = () => {
           </div>
         )}
       </div>
-      <div className="w-full h-fit max-h-min overflow-auto flex flex-row flex-wrap gap-3">
+      <div className="w-full h-fit max-h-min overflow-auto flex flex-row justify-center md:justify-start flex-wrap gap-3">
         {TrailerArray != undefined && TrailerArray.length != 0
           ? TrailerArray?.map((item) => (
               <Card

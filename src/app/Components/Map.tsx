@@ -4,8 +4,8 @@ import { GoogleMaps } from "./GoogleMaps";
 import { GoogleMapsWrapper } from "./GoogleMapsWrapper";
 
 export const LOCATIONS = [
-  { lat: 48.8566, lng: 2.3522 },
-  { lat: 47.1533, lng: 2.9123 },
+  { lat: 52.1552, lng: 5.3872 },
+  { lat: 52.1552, lng: 5.3872 },
 ];
 
 const Map = () => {
@@ -37,7 +37,6 @@ const Map = () => {
     <GoogleMapsWrapper>
       <GoogleMaps locations={trailerLocations} price={trailerPrices} />
     </GoogleMapsWrapper>
-
   );
 };
 

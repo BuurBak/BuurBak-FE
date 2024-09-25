@@ -112,11 +112,13 @@ const AanbodPreview: React.FC = () => {
         </>
       )}
       <div className="w-full flex justify-center mt-4">
-        <Button
-          type="secondary"
-          styling="flex md:hidden"
-          label={"Bekijk ons hele aanbod"}
-        />
+        <Link href="/Aanbod">
+          <Button
+            type="secondary"
+            styling="flex md:hidden"
+            label={"Bekijk ons hele aanbod"}
+          />
+        </Link>
       </div>
     </div>
   );

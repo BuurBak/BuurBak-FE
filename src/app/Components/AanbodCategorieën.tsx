@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React from "react";
 import Button from "./Button";
 import Card from "./Card";
@@ -53,11 +54,13 @@ const AanbodCategorieën: React.FC = () => {
     <div className="w-full sm:px-20 py-4 flex flex-col bg-offWhite-100 justify-center items-center">
       <div className="w-full justify-center md:justify-between items-center flex flex-row mb-4">
         <h3 className="font-bold">Categorieën</h3>
-        <Button
-          type="secondary"
-          styling="hidden md:flex"
-          label={"Bekijk ons hele aanbod"}
-        />
+        <Link href="/Aanbod">
+          <Button
+            type="secondary"
+            styling="hidden md:flex"
+            label={"Bekijk ons hele aanbod"}
+          />
+        </Link>
       </div>
       <div className="flex flex-col md:flex-row flex-wrap lg:flex-nowrap w-full gap-4 justify-center items-center 2xl:justify-between">
         {categorys?.map((category: category) => (
@@ -73,11 +76,13 @@ const AanbodCategorieën: React.FC = () => {
         ))}
       </div>
       <div className="w-full flex justify-center mt-4">
-        <Button
-          type="secondary"
-          styling="flex md:hidden"
-          label={"Bekijk ons hele aanbod"}
-        />
+        <Link href="/Aanbod">
+          <Button
+            type="secondary"
+            styling="flex md:hidden"
+            label={"Bekijk ons hele aanbod"}
+          />
+        </Link>
       </div>
     </div>
   );
