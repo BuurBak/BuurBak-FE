@@ -6,7 +6,6 @@ import DialogComponent from "@/app/Components/AanbodItem/Dialog";
 import ImageGallery from "@/app/Components/AanbodItem/ImageGallery";
 import ProfileDisplay from "@/app/Components/AanbodItem/ProfileDisplay";
 import Reserveren from "@/app/Components/AanbodItem/Reserveren";
-import Footer from "@/app/Components/Footer";
 import { GoogleMaps } from "@/app/Components/GoogleMaps";
 import { GoogleMapsWrapper } from "@/app/Components/GoogleMapsWrapper";
 import PageBackButton from "@/app/Components/PageBackButton";
@@ -113,7 +112,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
           </div>
         </>
       )}
-
     </div>
   );
 };
