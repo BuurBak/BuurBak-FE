@@ -5,7 +5,7 @@ import TrailerReserveringen from "./TrailerReserveringen";
 
 export default function page() {
   return (
-    <main className=" mt-[88px] bg-gray-50 md:p-16 flex md:flex-row flex-col  mx-auto">
+    <main className=" mt-[88px] bg-gray-50 md:p-16 flex md:flex-row flex-col  mx-auto max-w-[1700px]">
       <div className="bg-white md:w-96 md:m-4 m-2 p-4">
         <Profiel />
       </div>
