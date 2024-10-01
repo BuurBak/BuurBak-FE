@@ -9,13 +9,12 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { TrailerType } from "../Types/TrailerType";
 import Button from "./Button";
 import Card from "./Card";
 import InputField from "./InputField";
 import SearchOrFilter from "./SearchOrFilterFunction";
-import { nl } from "date-fns/locale";
 
 type FilterOption = {
   label: string;
@@ -27,7 +26,8 @@ type FilterOption = {
 const AanbodList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [inputValueSearch, setInputValueSearch] = useState("");
-  const [inputValueType, setInputValueType] = useState<TrailerType["name"]>("Alle");
+  const [inputValueType, setInputValueType] =
+    useState<TrailerType["name"]>("Alle");
   const [inputValueWhere, setInputValueWhere] = useState("");
   const [inputValueWhen, setInputValueWhen] = useState<Dayjs | null>();
   const [names, setNames] = useState<string[]>();
@@ -50,33 +50,38 @@ const AanbodList = () => {
   const [dateCleared, setdateCleared] = useState<boolean>(false);
   const outerTheme = useTheme();
   const [callData, setCallData] = useState<any[]>();
-  const [isLoading, setLoading] = useState(true);    
-  
+  const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
     function initService(): void {
       const displaySuggestions = function (
         predictions: google.maps.places.QueryAutocompletePrediction[] | null,
         status: google.maps.places.PlacesServiceStatus
       ) {
-        if (status != google.maps.places.PlacesServiceStatus.OK || !predictions) {
+        if (
+          status != google.maps.places.PlacesServiceStatus.OK ||
+          !predictions
+        ) {
           console.log(status);
           return;
         }
-        
+
         let namesReturn: string[] = [];
-    
+
         predictions.forEach((prediction) => {
           namesReturn.push(prediction.description.toString());
-
         });
-        
-        setNames(namesReturn.map(item => item.split(',')[0].trim()));
-      }
-    
+
+        setNames(namesReturn.map((item) => item.split(",")[0].trim()));
+      };
+
       const service = new window.google.maps.places.AutocompleteService();
-    
-      service.getQueryPredictions({ input: inputValueWhere}, displaySuggestions);
-    };
+
+      service.getQueryPredictions(
+        { input: inputValueWhere },
+        displaySuggestions
+      );
+    }
     initService();
   }, [inputValueWhere]);
 
@@ -88,7 +93,7 @@ const AanbodList = () => {
 
       return () => clearTimeout(timeout);
     }
-    return () => { };
+    return () => {};
   }, [dateCleared]);
 
   const filterOptions: FilterOption[] = [
@@ -168,7 +173,7 @@ const AanbodList = () => {
           <InputField
             className="w-full"
             label="Zoeken"
-            type="text"
+            inputType="text"
             icon={true}
             inputValue={inputValueSearch}
             setInputValue={setInputValueSearch}
@@ -220,21 +225,22 @@ const AanbodList = () => {
           </div>
         )}
       </div>
-      <div className="w-full h-fit max-h-min overflow-auto flex flex-row flex-wrap gap-3">
-        {TrailerArray != undefined && TrailerArray.length != 0 ? TrailerArray?.map((item) => (
-          <Card
-            key={item.id}
-            img={item.coverImage}
-            title={item.name}
-            location={item.cityAddress.city}
-            price={item.price.toString()}
-            link={"Aanbod/" + item.id}
-            accesoires=""
-            distance={item.distance}
-            type="overview"
-          />
-        )) : "Geen aanhangers gevonden"}
-        
+      <div className="w-full h-fit max-h-min overflow-auto flex flex-row justify-center md:justify-start flex-wrap gap-3">
+        {TrailerArray != undefined && TrailerArray.length != 0
+          ? TrailerArray?.map((item) => (
+              <Card
+                key={item.id}
+                img={item.coverImage}
+                title={item.name}
+                location={item.cityAddress.city}
+                price={item.price.toString()}
+                link={"Aanbod/" + item.id}
+                accesoires=""
+                distance={item.distance}
+                type="overview"
+              />
+            ))
+          : "Geen aanhangers gevonden"}
       </div>
     </div>
   );

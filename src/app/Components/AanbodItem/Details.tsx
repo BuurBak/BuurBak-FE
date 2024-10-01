@@ -3,7 +3,7 @@ import { useState } from "react";
 import Button from "../Button";
 
 const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   const convertMeterToCentimeter = (meter: number) => {
     const result = (meter / 100).toFixed(1);

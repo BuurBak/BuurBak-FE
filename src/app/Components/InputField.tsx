@@ -1,11 +1,13 @@
 // als icon library is gekozen nog optie voor veschillende icons toevoegen.
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { HTMLInputTypeAttribute } from "react";
 import MultiRangeSlider from "./MultiRangeSlider";
 
 type InputFieldType = {
   label: string;
   outline?: boolean;
-  type: "text" | "star" | "rangeSlider" | "dropdown";
+  type?: HTMLInputTypeAttribute;
+  inputType: "text" | "star" | "rangeSlider" | "dropdown";
   icon?: boolean;
   rangeMin?: number;
   rangeMax?: number;
@@ -14,14 +16,17 @@ type InputFieldType = {
   inputValue?: any;
   setInputValue?: any;
   filled?: boolean;
+  required?: boolean;
+  iconClick?: () => void;
   className?: string;
 };
 
 const InputField = ({
   label,
-  type,
+  inputType,
   outline,
   icon,
+  type,
   rangeMin,
   rangeMax,
   setRangeValueMin,
@@ -29,6 +34,8 @@ const InputField = ({
   inputValue,
   setInputValue,
   filled,
+  required,
+  iconClick,
   className,
   ...props
 }: InputFieldType) => {
@@ -56,8 +63,9 @@ const InputField = ({
     <div
       className={(className !== undefined ? className : "") + " relative w-fit"}
     >
-      {type === "text" && (
+      {inputType === "text" && (
         <input
+          type={type}
           value={inputValue}
           onChange={changeTextInputValue}
           className={
@@ -67,15 +75,18 @@ const InputField = ({
             " h-12 focus:outline-0 px-3 rounded w-full"
           }
           placeholder={label}
+          {...props}
+          required={required}
         ></input>
       )}
-      {type === "text" && icon && (
+      {inputType === "text" && icon && (
         <div
           className={
             (filled
               ? "right-0 top-0 p-2 bg-primary-100 rounded-r"
               : "right-2 top-2") + " absolute"
           }
+          onClick={iconClick}
         >
           <MagnifyingGlassIcon
             className={(filled ? "text-white" : "") + " h-8 w-8"}
@@ -83,7 +94,7 @@ const InputField = ({
         </div>
       )}
 
-      {type === "star" &&
+      {inputType === "star" &&
         [...Array(5)].map((_, index) => {
           const value = index + 1;
           return (
@@ -109,7 +120,7 @@ const InputField = ({
           );
         })}
       {/* MultiRangeSlider staat apart omdat dit ander teveel code werd voor in dit component */}
-      {type === "rangeSlider" && (
+      {inputType === "rangeSlider" && (
         <div className="w-60 h-10">
           <MultiRangeSlider
             min={rangeMin === undefined ? 0 : rangeMin}
@@ -120,7 +131,7 @@ const InputField = ({
         </div>
       )}
 
-      {type === "dropdown" && <div></div>}
+      {inputType === "dropdown" && <div></div>}
     </div>
   );
 };

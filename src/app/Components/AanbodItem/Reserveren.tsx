@@ -68,7 +68,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
       )}
 
       <div
-        className={`h-fit min-w-fit w-full sm:w-fit p-4 bg-offWhite-100 fixed bottom-0 sm:sticky sm:top-5 flex justify-between gap-4 ${collapsed && "flex-col"} z-40`}
+        className={`h-fit min-w-fit w-full sm:w-fit p-4 bg-offWhite-100 fixed bottom-0 sm:sticky sm:top-24 flex justify-between gap-4 ${collapsed && "flex-col"} z-40`}
       >
         {!collapsed && (
           <div className="flex flex-col justify-between sm:hidden ">
