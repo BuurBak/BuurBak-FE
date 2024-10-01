@@ -1,6 +1,8 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { ChevronDownIcon, CalendarDaysIcon } from "@heroicons/react/24/outline";
+import { getTrailerReservationsRenter2 } from "../api/Trailer-controller";
 
 const reserveringen = [
   {
@@ -8,8 +10,8 @@ const reserveringen = [
     title: "Open aanhanger",
     date: "01/01/2024",
     status: {
-      label: "In behandeling", // Status benaming
-      color: "bg-primary-100", // Status kleur
+      label: "In behandeling",
+      color: "bg-primary-100",
     },
   },
   {
@@ -42,6 +44,9 @@ const reserveringen = [
 ];
 
 export default function JouwReserveringen() {
+  useEffect(() => {
+    getTrailerReservationsRenter2();
+  });
   return (
     <div className="flex flex-col md:max-h-[700px] ">
       <div className="flex flex-col">
@@ -74,7 +79,7 @@ export default function JouwReserveringen() {
                     href=""
                     className="text-primary-100 border-1 rounded-xl p-1 border-primary-200"
                   >
-                    contact gegevens
+                    Contact gegevens
                   </a>
                 </div>
                 <div className=" flex items-center justify-center">
