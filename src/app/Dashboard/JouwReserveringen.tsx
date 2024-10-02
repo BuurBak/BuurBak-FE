@@ -45,8 +45,17 @@ const reserveringen = [
 
 export default function JouwReserveringen() {
   useEffect(() => {
-    getTrailerReservationsRenter2();
-  });
+    const fetchReservations = async () => {
+      try {
+        const data = await getTrailerReservationsRenter2();
+        console.log(data); // Log de data naar de console
+      } catch (error) {
+        console.error("Error fetching reservations:", error);
+      }
+    };
+
+    fetchReservations();
+  }, []);
   return (
     <div className="flex flex-col md:max-h-[700px] ">
       <div className="flex flex-col">
