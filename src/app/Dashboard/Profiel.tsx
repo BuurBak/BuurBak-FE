@@ -8,7 +8,7 @@ import GegevensModal from "./GegevensModal";
 export default function Profiel() {
   return (
     <>
-      <div className="flex flex-col ">
+      <div className="flex flex-col rounded-md">
         <div className="relative aspect-square ">
           <Image
             src={profielfoto}
