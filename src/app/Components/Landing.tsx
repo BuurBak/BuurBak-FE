@@ -4,7 +4,6 @@ import { CircleCheckBig } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import Button from "./Button";
-import InputField from "./InputField";
 
 export default function Landing() {
   const [inputValue1, setInputValue1] = useState("");
@@ -36,7 +35,7 @@ export default function Landing() {
             </div>
           </div>
           <div className="md:grid grid-cols-2 gap-y-4 gap-x-10 flex flex-col xl:flex xl:flex-row justify-between mt-12 w-fit">
-            <InputField
+            {/* <InputField
               inputType="text"
               label="Type"
               icon
@@ -62,7 +61,7 @@ export default function Landing() {
               outline
               inputValue={inputValue3}
               setInputValue={setInputValue3}
-            />
+            /> */}
             <Link href={"/Aanbod"}>
               <Button label="Bekijk het aanbod" styling="w-[246px]" />
             </Link>

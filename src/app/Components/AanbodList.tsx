@@ -127,7 +127,7 @@ const AanbodList = () => {
                 color: "var(--TextField-brandBorderFocusedColor)",
               },
 
-              width: "300px",
+              minWidth: "150px",
             },
           },
         },
@@ -192,6 +192,7 @@ const AanbodList = () => {
             <ThemeProvider theme={customTheme(outerTheme)}>
               {filterOptions?.map((item: FilterOption, index: number) => (
                 <Autocomplete
+                  className="flex-1"
                   disablePortal
                   id={index.toString()}
                   options={item.options}
@@ -207,6 +208,7 @@ const AanbodList = () => {
               ))}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
+                  className="flex-1"
                   label="Wanneer"
                   value={inputValueWhen}
                   onChange={(newValue) => {
