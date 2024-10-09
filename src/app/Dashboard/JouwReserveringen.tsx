@@ -1,9 +1,8 @@
 "use client";
-import { CalendarDays, ChevronDown } from "lucide-react";
+import { Calendar, ChevronDown, EuroIcon, PinIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect } from "react";
 import { getTrailerReservationsRenter2 } from "../api/Trailer-controller";
-import { Calendar, EuroIcon, PinIcon } from "lucide-react";
 
 const reserveringen: any[] = [
   {
@@ -72,54 +71,8 @@ export default function JouwReserveringen() {
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
       </div>
       <div className="overflow-y-auto">
-        {reserveringen.map((reservering, index) => (
-          <div
-            key={index}
-            className="flex flex-row mb-8 border-b-2 md:w-[550px]"
-          >
-            <div className="relative aspect-square w-60 m-2">
-              <Image
-                src={reservering.imageSrc}
-                alt={`Trailer image ${index + 1}`}
-                fill
-                sizes="100% 100%"
-                priority={true}
-                className="sm:rounded-md object-cover w-40 h-40"
-              />
-            </div>
-            <div className="w-full flex flex-col">
-              <div className=" md:grid grid-cols-2">
-                <div className=" flex items-center justify-center font-semibold text-xl">
-                  {reservering.title}
-                </div>
-                <div className="p-2 flex items-center justify-center">
-                  <a
-                    href=""
-                    className="text-primary-100 border-1 rounded-xl p-1 border-primary-200"
-                  >
-                    Contact gegevens
-                  </a>
-                </div>
-                <div className=" flex items-center justify-center">
-                  <a
-                    className="font-semibold flex-row inline-flex items-center"
-                    href=""
-                  >
-                    {reservering.date}
-                    <CalendarDays className="h-4 w-4 ml-2 align-middle" />
-                  </a>
-                </div>
-                <div className="p-2 flex items-center justify-center">
-                  <a
-                    className="font-semibold flex-row inline-flex items-center"
-                    href=""
-                  >
-                    Bekijk aanhanger{" "}
-                    <ChevronDown className="h-4 w-4 ml-2 align-middle" />
-                  </a>
-                </div>
-              </div>
-              <div className="mt-1 h-[0.5px] w-full bg-primary-200"></div>
+        {reserveringen && reserveringen.length
+          ? reserveringen.map((reservering, index) => (
               <div
                 key={index}
                 className="flex md:flex-row flex-col mb-8 border-b-2 md:w-[550px]"
