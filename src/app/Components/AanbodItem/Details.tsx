@@ -20,7 +20,9 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
   return (
     <div className="relative mb-[3rem]">
       <div
-        className={`flex flex-col gap-5 overflow-hidden transition-[height] ease-in-out duration-300 ${collapsed && "h-[20vh]"}`}
+        className={`flex flex-col gap-5 overflow-hidden transition-[height] ease-in-out duration-300 ${
+          collapsed && "h-[20vh]"
+        }`}
       >
         <p className="text-h5 font-bold">Details</p>
         <div className="flex flex-col gap-3">
@@ -50,7 +52,9 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
                 return (
                   <p
                     key={index}
-                    className={`${index % 2 === 0 ? "bg-offWhite-100" : "bg-white"} p-2 rounded w-full flex justify-between`}
+                    className={`${
+                      index % 2 === 0 ? "bg-offWhite-100" : "bg-white"
+                    } p-2 rounded w-full flex justify-between`}
                   >
                     {item}
                   </p>
@@ -65,7 +69,9 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
                 return (
                   <p
                     key={index}
-                    className={`${index % 2 === 0 ? "bg-offWhite-100" : "bg-white"} p-2 rounded w-full flex justify-between`}
+                    className={`${
+                      index % 2 === 0 ? "bg-offWhite-100" : "bg-white"
+                    } p-2 rounded w-full flex justify-between`}
                   >
                     {item}
                   </p>
@@ -79,8 +85,11 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
         label={collapsed ? "Toon meer" : "Toon minder"}
         buttonAction={() => setCollapsed(!collapsed)}
         icon
+        IconName={collapsed ? "ChevronDown" : "ChevronUp"}
         type="secondary"
-        styling={`absolute ${collapsed ? "bottom-[-1rem]" : "bottom-[-3.5rem]"} left-0 right-0 mx-auto w-1/6 min-w-fit bg-white text-black-100 rounded-md border`}
+        styling={`absolute ${
+          collapsed ? "bottom-[-1rem]" : "bottom-[-3.5rem]"
+        } left-0 right-0 mx-auto w-1/6 min-w-fit bg-white text-black-100 rounded-md border`}
       />
     </div>
   );
