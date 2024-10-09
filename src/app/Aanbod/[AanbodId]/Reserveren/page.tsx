@@ -1,7 +1,6 @@
 "use client";
 
 import Button from "@/app/Components/Button";
-import Footer from "@/app/Components/Footer";
 import { Reservation } from "@/app/Types/Reservation";
 import { TrailerList } from "@/app/Types/TrailerList";
 import { reservation } from "@/app/api/Reservation-controller";
@@ -36,7 +35,7 @@ type User = {
   roles: [
     {
       name: string;
-    },
+    }
   ];
   iban: any;
   number: string;
@@ -296,7 +295,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
           </div>
         </div>
         <div className="flex flex-1 bg-offWhite-100">
-          <div className="flex flex-col gap-3 h-fit w-full bg-white p-8 m-8 rounded-md sticky top-8">
+          <div className="flex flex-col gap-3 h-fit w-full bg-white p-8 m-8 rounded-md sticky top-24">
             <div className="flex gap-2 w-full h-fit ">
               <div className="relative aspect-square h-32">
                 {trailerOffer?.coverImage && (

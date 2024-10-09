@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { CircleCheckBig } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import Button from "./Button";
@@ -23,15 +23,15 @@ export default function Landing() {
         <div className="flex flex-col items-center mt-5 mb-16">
           <div className="hidden md:flex flex-row w-fit justify-between">
             <div className="flex items-center mr-10">
-              <CheckCircleIcon className="h-8 w-8 text-succes-100 mr-4" />
+              <CircleCheckBig className="h-8 w-8 text-succes-100 mr-4" />
               <h6 className="text-white">Altijd in de buurt</h6>
             </div>
             <div className="flex items-center mr-10">
-              <CheckCircleIcon className="h-8 w-8 text-succes-100 mr-4" />
+              <CircleCheckBig className="h-8 w-8 text-succes-100 mr-4" />
               <h6 className="text-white">Altijd duurzaam</h6>
             </div>
             <div className="flex items-center">
-              <CheckCircleIcon className="h-8 w-8 text-succes-100 mr-4" />
+              <CircleCheckBig className="h-8 w-8 text-succes-100 mr-4" />
               <h6 className="text-white">Altijd eenvoudig</h6>
             </div>
           </div>

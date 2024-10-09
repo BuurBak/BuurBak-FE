@@ -1,12 +1,11 @@
 "use client";
 
-import { ArchiveBoxXMarkIcon } from "@heroicons/react/24/outline";
+import { Facebook, InstagramIcon, Linkedin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoBig from "../Assets/buurbakLogoBigColor.svg";
 import LogoMedium from "../Assets/buurbakLogoMediumColor.svg";
-import { InstagramIcon, Facebook, Linkedin } from "lucide-react";
 
 type Link = { title: string; link: string };
 
@@ -22,8 +21,14 @@ const Footer = () => {
     { title: "Inloggen", link: "/Inloggen" },
   ];
   const subPages: Link[] = [
-    { title: "Privacy policy", link: "/" },
-    { title: "Algemene voorwaarden", link: "/" },
+    {
+      title: "Privacy policy",
+      link: "https://drive.google.com/file/d/12uOHI1prSnsfgaYo3nR8YhIy0UNVzukr/view",
+    },
+    {
+      title: "Algemene voorwaarden",
+      link: "https://drive.google.com/file/d/1D9S05Qn7hC3bsEi_ElAqz8uX1s6Se5UZ/view",
+    },
     { title: "©2024", link: "/" },
   ];
 
@@ -40,7 +45,11 @@ const Footer = () => {
             {pages?.map((page: any, index: number) => (
               <li key={index}>
                 <Link
-                  className={`${page.link === currentRoute ? "text-primary-100" : "text-black"} text-xl`}
+                  className={`${
+                    page.link === currentRoute
+                      ? "text-primary-100"
+                      : "text-black"
+                  } text-xl`}
                   href={page.link}
                 >
                   {page.title}
@@ -55,7 +64,11 @@ const Footer = () => {
             <ul className="flex flex-col lg:flex-row gap-3 text-center">
               {subPages?.map((page: any, index: number) => (
                 <li key={index}>
-                  <Link className="text-xl text-gray-100" href={page.link}>
+                  <Link
+                    className="text-xl text-gray-100"
+                    href={page.link}
+                    target="_blank"
+                  >
                     {page.title}
                   </Link>
                 </li>

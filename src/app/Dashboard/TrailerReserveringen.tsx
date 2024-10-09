@@ -1,7 +1,6 @@
-import React from "react";
+import { CalendarDays, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Button from "../Components/Button";
-import { ChevronDownIcon, CalendarDaysIcon } from "@heroicons/react/24/outline";
 
 const reserveringen = [
   {
@@ -68,7 +67,7 @@ export default function TrailerReserveringen() {
                     href=""
                   >
                     {reservering.date}
-                    <CalendarDaysIcon className="h-4 w-4 ml-2 align-middle" />
+                    <CalendarDays className="h-4 w-4 ml-2 align-middle" />
                   </a>
                 </div>
                 <div className="p-2 flex items-center justify-center">
@@ -77,7 +76,7 @@ export default function TrailerReserveringen() {
                     href=""
                   >
                     Bekijk aanhanger{" "}
-                    <ChevronDownIcon className="h-4 w-4 ml-2 align-middle" />
+                    <ChevronDown className="h-4 w-4 ml-2 align-middle" />
                   </a>
                 </div>
               </div>

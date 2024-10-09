@@ -1,5 +1,10 @@
+"use server";
+
 import { Login } from "@/app/Types/Register";
-import { storeLoginToken } from "./Cookies";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { createClient } from "../../../../utils/supabase/server";
+import { encodedRedirect } from "../../../../utils/utils";
 
 type LoginResponse = {
   status: number;
@@ -7,41 +12,21 @@ type LoginResponse = {
   error?: string;
 };
 
-type Token = {
-  access_token: string;
-  refresh_token: string;
-};
-
 export const logIn = async (data: Login): Promise<LoginResponse> => {
-  try {
-    const response = await fetch("https://pilot.buurbak.nl/api/v1/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+  const email = data.username;
+  const password = data.password;
+  const supabase = createClient();
 
-    const status = response.status;
-    let responseData: Token;
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-    if (status === 401) {
-      return { status };
-    }
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    responseData = await response.json();
-    await storeLoginToken(responseData);
-    return { status, data: responseData };
-  } catch (error) {
-    if (error instanceof Error) {
-      return { status: 500, error: error.message };
-    }
-    return { status: 500, error: "An unexpected error occurred" };
+  if (error) {
+    return encodedRedirect("error", "/", error.message);
   }
+
+  return redirect("/Dashboard");
 };
 
 export const refresh = async () => {
@@ -69,4 +54,34 @@ export const refresh = async () => {
   //     alert("An unknown error occurred");
   //   }
   // }
+};
+
+export const register = async (data: Login) => {
+  const email = data.username;
+  const password = data.password;
+  const supabase = createClient();
+  const origin = headers().get("origin");
+
+  if (!email || !password) {
+    return { error: "Email and password are required" };
+  }
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `/Dashboard`,
+    },
+  });
+
+  if (error) {
+    console.error(error.code + " " + error.message);
+    return encodedRedirect("error", "/", error.message);
+  } else {
+    return encodedRedirect(
+      "success",
+      "/",
+      "Thanks for signing up! Please check your email for a verification link."
+    );
+  }
 };

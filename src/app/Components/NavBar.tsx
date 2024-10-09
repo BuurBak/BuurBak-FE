@@ -28,9 +28,6 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { LoggedUser } from "../Types/User";
-import { getAccount } from "../api/Customer-controller";
-import { deleteToken, hasToken } from "../api/auth/Cookies";
-import { refresh } from "../api/auth/Register";
 import Register from "./Register";
 
 const Links = [
@@ -74,50 +71,52 @@ const Navbar = () => {
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
-  const signOut = () => {
-    deleteToken("access_token");
-    deleteToken("refresh_token");
-  };
+  // const signOut = () => {
+  //   deleteToken("access_token");
+  //   deleteToken("refresh_token");
+  // };
 
-  useEffect(() => {
-    const checkToken = async () => {
-      let token = await hasToken("access_token");
+  // useEffect(() => {
+  //   const checkToken = async () => {
+  //     let token = await hasToken("access_token");
 
-      if (token) {
-        await refresh();
-        onClose();
-      }
-    };
+  //     if (token) {
+  //       await refresh();
+  //       onClose();
+  //     }
+  //   };
 
-    checkToken();
-  });
+  //   checkToken();
+  // });
 
   useEffect(() => {
     setOpen(false);
   }, [onOpenChange]);
 
-  useEffect(() => {
-    const checkToken = async () => {
-      let token = await hasToken("access_token");
+  // useEffect(() => {
+  //   const checkToken = async () => {
+  //     let token = await hasToken("access_token");
 
-      if (token) {
-        setSingendIn(true);
-        const getApi = async () => {
-          setUser(await getAccount());
-        };
-        getApi();
-      } else {
-        setSingendIn(false);
-      }
-    };
+  //     if (token) {
+  //       setSingendIn(true);
+  //       const getApi = async () => {
+  //         setUser(await getAccount());
+  //       };
+  //       getApi();
+  //     } else {
+  //       setSingendIn(false);
+  //     }
+  //   };
 
-    checkToken();
-  }, [onOpenChange, open]);
+  //   checkToken();
+  // }, [onOpenChange, open]);
 
   return (
     <main>
       <div
-        className={`fixed top-0 w-full z-50 ${scrolled ? "bg-white" : "bg-none"}`}
+        className={`fixed top-0 w-full z-50 ${
+          scrolled ? "bg-white" : "bg-none"
+        }`}
       >
         <div className="md:flex justify-between items-center md:px-10 py-4 px-7">
           {/*logo*/}
@@ -153,7 +152,9 @@ const Navbar = () => {
           {/*Navbar*/}
           <div>
             <ul
-              className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static md:z-50 z-[-1] top-0 h-screen md:h-fit bg-white md:bg-transparent md:w-auto md:pl-0 px-9 md:pr-0 pt-20 md:pt-0 transition-all duration-50 ease-in ${open ? "right-0 w-11/12" : "right-[-500px]"}`}
+              className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static md:z-50 z-[-1] top-0 h-screen md:h-fit bg-white md:bg-transparent md:w-auto md:pl-0 px-9 md:pr-0 pt-20 md:pt-0 transition-all duration-50 ease-in ${
+                open ? "right-0 w-11/12" : "right-[-500px]"
+              }`}
             >
               {singedIn ? (
                 // replace with actual account data
@@ -191,7 +192,9 @@ const Navbar = () => {
               {open
                 ? MobileLinks.map((link, index) => (
                     <li
-                      className={`flex flex-row gap-4 align-center py-4 md:my-0 md:ml-8 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0 ${link.url === currentRoute && "text-primary-100"}`}
+                      className={`flex flex-row gap-4 align-center py-4 md:my-0 md:ml-8 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0 ${
+                        link.url === currentRoute && "text-primary-100"
+                      }`}
                       key={index}
                     >
                       <link.icon size={32} />
@@ -202,7 +205,12 @@ const Navbar = () => {
                   ))
                 : Links.map((link, index) => (
                     <li
-                      className={`py-4 md:my-0 md:ml-8 ${scrolled ? "text-secondary-100" : "text-white"} ${link.name.includes("Ik wil verhuren") && "md:bg-primary-100 md:px-4 md:py-2 md:rounded text-white"}`}
+                      className={`py-4 md:my-0 md:ml-8 ${
+                        scrolled ? "text-secondary-100" : "text-white"
+                      } ${
+                        link.name.includes("Ik wil verhuren") &&
+                        "md:bg-primary-100 md:px-4 md:py-2 md:rounded text-white"
+                      }`}
                       key={index}
                     >
                       {link.name === "Inloggen" && singedIn ? (
@@ -235,7 +243,9 @@ const Navbar = () => {
                   ))}
 
               <div
-                className={`flex flex-col mt-20 items-center ${open ? "" : "hidden"}`}
+                className={`flex flex-col mt-20 items-center ${
+                  open ? "" : "hidden"
+                }`}
               >
                 <p className="text-xl text-primary-100 font-semibold mb-6">
                   Volg ons

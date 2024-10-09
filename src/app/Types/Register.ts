@@ -1,7 +1,6 @@
 export type Login = {
   username: string;
   password: string;
-  deviceId: string;
 };
 
 export type Register = {

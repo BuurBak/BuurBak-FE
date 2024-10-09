@@ -1,14 +1,14 @@
 "use client";
+import { Button } from "@nextui-org/button";
 import {
   Modal,
-  ModalContent,
-  ModalHeader,
   ModalBody,
+  ModalContent,
   ModalFooter,
+  ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { Button } from "@nextui-org/button";
-import { PencilIcon } from "@heroicons/react/24/outline"; // Vervang dit door de juiste import voor je icoon
+import { PencilLine } from "lucide-react";
 import { useState } from "react"; // Importeer useState
 
 // Voorbeeld gegevensarray
@@ -79,7 +79,7 @@ export default function GegevensModal() {
                         }}
                         className="focus:outline-none" // Verhindert extra styling
                       >
-                        <PencilIcon className="h-4 w-4" />
+                        <PencilLine className="h-4 w-4" />
                       </button>
                     </div>
                   ))}

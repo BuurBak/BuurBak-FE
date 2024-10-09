@@ -1,5 +1,5 @@
 // als icon library is gekozen nog optie voor veschillende icons toevoegen.
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { Search } from "lucide-react";
 import { HTMLInputTypeAttribute } from "react";
 import MultiRangeSlider from "./MultiRangeSlider";
 
@@ -88,9 +88,7 @@ const InputField = ({
           }
           onClick={iconClick}
         >
-          <MagnifyingGlassIcon
-            className={(filled ? "text-white" : "") + " h-8 w-8"}
-          />
+          <Search className={(filled ? "text-white" : "") + " h-8 w-8"} />
         </div>
       )}
 

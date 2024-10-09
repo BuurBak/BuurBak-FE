@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { v4 as uuid } from "uuid";
 import { Login } from "../Types/Register";
-import { logIn } from "../api/auth/Register";
+import { logIn, register } from "../api/auth/Register";
 import Button from "./Button";
 import InputField from "./InputField";
 
@@ -15,24 +14,17 @@ const Register = () => {
   const [name, setName] = useState();
   const [mobile, setMobile] = useState();
 
-  const [error, setError] = useState<string | null>(null);
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (email && password) {
       let loginCredentials: Login = {
         username: email,
         password: password,
-        deviceId: uuid(),
       };
-      const result = await logIn(loginCredentials);
-
-      if (result.status === 200) {
-        setError(null);
-      } else if (result.status === 401) {
-        setError("Jouw email en wachtwoord komen niet overeen");
+      if (!hasAccount) {
+        await logIn(loginCredentials);
       } else {
-        setError("Er is iets fout gegaan probeer later opnieuw");
+        await register(loginCredentials);
       }
     }
   };
@@ -93,7 +85,6 @@ const Register = () => {
           iconClick={() => setShowPassword(!showPassword)}
         />
       </div>
-      {error && <div>{error}</div>}
       <Button label={hasAccount ? "Registreer" : "Log in"} submit={true} />
       {!hasAccount && (
         <p>
