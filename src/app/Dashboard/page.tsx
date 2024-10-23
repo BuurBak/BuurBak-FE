@@ -1,9 +1,23 @@
-import React from "react";
-import Profiel from "./Profiel";
+import { useEffect } from "react";
+import { getToken } from "../api/auth/Cookies";
 import JouwReserveringen from "./JouwReserveringen";
+import Profiel from "./Profiel";
 import TrailerReserveringen from "./TrailerReserveringen";
 
 export default function page() {
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+        console.warn("token:", token);
+      } catch (error) {
+        console.error("Error fetching token:", error);
+      }
+    };
+
+    fetchToken();
+  }, []);
+
   return (
     <main className="bg-offWhite-100">
       <div className=" mt-[88px]  md:p-2 flex md:flex-row flex-col  mx-auto max-w-[1440px]">

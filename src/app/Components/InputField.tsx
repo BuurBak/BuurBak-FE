@@ -18,6 +18,7 @@ type InputFieldType = {
   setInputValue?: any;
   filled?: boolean;
   required?: boolean;
+  pattern?: string;
   iconClick?: () => void;
   className?: string;
 };
@@ -38,6 +39,7 @@ const InputField = ({
   required,
   iconClick,
   iconName,
+  pattern,
   className,
   ...props
 }: InputFieldType) => {
@@ -77,6 +79,7 @@ const InputField = ({
             " h-12 focus:outline-0 px-3 rounded w-full"
           }
           placeholder={label}
+          pattern={pattern}
           {...props}
           required={required}
         ></input>

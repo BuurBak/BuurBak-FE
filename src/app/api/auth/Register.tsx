@@ -23,9 +23,11 @@ export const logIn = async (data: Login): Promise<LoginResponse> => {
   });
 
   if (error) {
+    console.error("error", "/", error.message);
     return encodedRedirect("error", "/", error.message);
   }
 
+  console.log("test");
   return redirect("/Dashboard");
 };
 
@@ -60,7 +62,7 @@ export const register = async (data: Login) => {
   const email = data.username;
   const password = data.password;
   const supabase = createClient();
-  const origin = headers().get("origin");
+  const origin = (await headers()).get("origin");
 
   if (!email || !password) {
     return { error: "Email and password are required" };
@@ -71,6 +73,10 @@ export const register = async (data: Login) => {
     password,
     options: {
       emailRedirectTo: `/Dashboard`,
+      data: {
+        name: data.name,
+        phoneNumber: data.phoneNumber,
+      },
     },
   });
 
