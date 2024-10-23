@@ -1,3 +1,4 @@
+"use client";
 // als icon library is gekozen nog optie voor veschillende icons toevoegen.
 import { HTMLInputTypeAttribute } from "react";
 import Icon, { IconName } from "./Icon";

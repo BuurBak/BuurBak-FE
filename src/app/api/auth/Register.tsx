@@ -62,7 +62,7 @@ export const register = async (data: Login) => {
   const email = data.username;
   const password = data.password;
   const supabase = createClient();
-  const origin = (await headers()).get("origin");
+  const origin = headers().get("origin");
 
   if (!email || !password) {
     return { error: "Email and password are required" };
@@ -88,6 +88,42 @@ export const register = async (data: Login) => {
       "success",
       "/",
       "Thanks for signing up! Please check your email for a verification link."
+    );
+  }
+};
+
+export const forgotPassword = async (email: string) => {
+  const supabase = createClient();
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: "http://localhost:3000/wachtwoord_verranderen",
+  });
+
+  if (error) {
+    console.error(error.code + " " + error.message);
+    return encodedRedirect("error", "/", error.message);
+  } else {
+    return encodedRedirect(
+      "success",
+      "/",
+      "We hebben een mail gestuurd als je bij ons bent aangemeld"
+    );
+  }
+};
+
+export const resetPassword = async (newPassword: string) => {
+  const supabase = createClient();
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+
+  if (error) {
+    console.error(error.code + " " + error.message);
+    return encodedRedirect("error", "/", error.message);
+  } else {
+    return encodedRedirect(
+      "success",
+      "/wachtwoord_verranderen",
+      "Je wachtwoord is succesvol verranderd"
     );
   }
 };

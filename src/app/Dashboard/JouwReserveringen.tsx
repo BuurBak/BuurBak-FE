@@ -3,6 +3,7 @@ import { Calendar, ChevronDown, EuroIcon, PinIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect } from "react";
 import { getTrailerReservationsRenter2 } from "../api/Trailer-controller";
+import { getToken } from "../api/auth/Cookies";
 
 const reserveringen: any[] = [
   {
@@ -64,6 +65,20 @@ export default function JouwReserveringen() {
 
     fetchReservations();
   }, []);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+        console.warn("token:", token);
+      } catch (error) {
+        console.error("Error fetching token:", error);
+      }
+    };
+
+    fetchToken();
+  }, []);
+
   return (
     <div className="flex flex-col md:max-h-[700px] ">
       <div className="flex flex-col">
