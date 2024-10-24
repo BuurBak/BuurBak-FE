@@ -135,9 +135,17 @@ export const getUser = async () => {
   return user;
 };
 
-// export const updateUser = async () => {
-//   const supabase = createClient();
+export const updateUser = async (name: string, phoneNumber: string) => {
+  const supabase = createClient();
 
-//   const user = await supabase.auth.updateUser();
-//   return user;
-// };
+  const { error } = await supabase.auth.updateUser({
+    data: { name: name, phoneNumber: phoneNumber },
+  });
+
+  if (error) {
+    console.error(error.code + " " + error.message);
+    return encodedRedirect("error", "/", error.message);
+  } else {
+    return encodedRedirect("success", "", "Gegevens succesvol aangepast");
+  }
+};
