@@ -139,7 +139,7 @@ export default function TrailerReserveringen() {
                 </div>
               </div>
             ))
-          : "hey kijk het is leeg geen reserveringen of zoiets"}
+          : "U heeft momenteel geen openstaande reserveringen."}
       </div>
     </div>
   );
