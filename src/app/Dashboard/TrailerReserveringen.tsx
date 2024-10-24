@@ -1,54 +1,73 @@
+"use client";
 import { Calendar, ChevronDown } from "lucide-react";
 import Image from "next/image";
+import { Reservations } from "../api/Reservation-controller";
 
-const reserveringen: any[] = [
-  {
-    imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
-    title: "Open aanhanger",
-    date: "01/01/2024",
-    location: "utrecht",
-    price: "50,00",
-    status: {
-      label: "In behandeling",
-      color: "text-primary-100",
-    },
-  },
-  {
-    imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
-    title: "Gesloten aanhanger",
-    date: "02/02/2024",
-    location: "utrecht",
-    price: "50,00",
-    status: {
-      label: "Voltooid",
-      color: "text-succes-100",
-    },
-  },
-  {
-    imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
-    title: "Kapotte aanhanger",
-    date: "03/03/2024",
-    location: "utrecht",
-    price: "50,00",
-    status: {
-      label: "Geweigerd",
-      color: "text-error-100",
-    },
-  },
-  {
-    imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
-    title: "Kapotte aanhanger",
-    date: "03/03/2024",
-    location: "utrecht",
-    price: "50,00",
-    status: {
-      label: "Geweigerd",
-      color: "text-error-100",
-    },
-  },
-];
+import { useEffect, useState } from "react";
+
+// const reserveringen: any[] = [
+//   {
+//     imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
+//     title: "Open aanhanger",
+//     date: "01/01/2024",
+//     location: "utrecht",
+//     price: "50,00",
+//     status: {
+//       label: "In behandeling",
+//       color: "text-primary-100",
+//     },
+//   },
+//   {
+//     imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
+//     title: "Gesloten aanhanger",
+//     date: "02/02/2024",
+//     location: "utrecht",
+//     price: "50,00",
+//     status: {
+//       label: "Voltooid",
+//       color: "text-succes-100",
+//     },
+//   },
+//   {
+//     imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
+//     title: "Kapotte aanhanger",
+//     date: "03/03/2024",
+//     location: "utrecht",
+//     price: "50,00",
+//     status: {
+//       label: "Geweigerd",
+//       color: "text-error-100",
+//     },
+//   },
+//   {
+//     imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
+//     title: "Kapotte aanhanger",
+//     date: "03/03/2024",
+//     location: "utrecht",
+//     price: "50,00",
+//     status: {
+//       label: "Geweigerd",
+//       color: "text-error-100",
+//     },
+//   },
+// ];
 
 export default function TrailerReserveringen() {
+  const [reserveringen, setReserveringen] = useState<any[] | undefined>([]);
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        const data = await Reservations();
+        setReserveringen(data); // Zet de ontvangen data in de state
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching reservations:", error);
+      }
+    };
+
+    fetchReservations();
+  }, []);
   return (
     <div className="flex flex-col md:max-h-[700px] ">
       <div className="flex flex-col">

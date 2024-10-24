@@ -11,7 +11,7 @@ export const getTrailerReservationsRenter2 = async () => {
           Authorization:
             "Bearer " +
             //Hier handmatig token toevoegen vanuit Swagger
-            "eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InN0ZXZlNzY5QGtwbi5ubCIsInN1YiI6IjU1NmNjMTNhLTAwMjAtNDBhNC04YTk5LTg4YTFmMTUwOTYwNCIsImV4cCI6MTczMDgxMDk1NSwiaWF0IjoxNzI5NjAxMzU1fQ.JXKnslaW6q6RQYNh3qdC-uo3FfL5DymRccO9hwFQpOOrxBBRD6mtCD9XzX_yUgqSAa-kpGNY2gcS878VPXIncQ",
+            "eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InN0ZXZlMjkzQGtwbi5ubCIsInN1YiI6IjU0MjcwMzBhLTFiYjItNDRiMi04NzRiLWE4M2E1MmE2ZjUyNiIsImV4cCI6MTczMDg5MjkwMywiaWF0IjoxNzI5NjgzMzAzfQ.mWhnvVc3N216zveCUhRZdOrxOb9-hKal10fYnZDNzO1ITOZkk3y05Rr5Dwbb4rLbOm5GQAFRHnicIEiOQcdqEA",
           "Content-Type": "application/json",
         },
       }
