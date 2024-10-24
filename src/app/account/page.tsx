@@ -83,13 +83,17 @@ const page = () => {
         <div className="w-[40vw] h-fit flex flex-col gap-3">
           <div className="flex gap-2">
             <p
-              className={` ${selected !== "jouw reservering" && "text-primary-100"} cursor-pointer`}
+              className={` ${
+                selected !== "jouw reservering" && "text-primary-100"
+              } cursor-pointer`}
               onClick={() => setSelected("jouw aanhanger")}
             >
               Jouw reservering
             </p>
             <p
-              className={` ${selected !== "jouw aanhanger" && "text-primary-100"} cursor-pointer`}
+              className={` ${
+                selected !== "jouw aanhanger" && "text-primary-100"
+              } cursor-pointer`}
               onClick={() => setSelected("jouw reservering")}
             >
               Jouw aanhanger
@@ -109,8 +113,8 @@ const page = () => {
                 />
               ))
             : renter === undefined
-              ? empty
-              : null}
+            ? empty
+            : null}
 
           {selected === "jouw aanhanger" && owner?.content
             ? owner?.content?.map((item) => {
@@ -127,8 +131,8 @@ const page = () => {
                 );
               })
             : owner === undefined
-              ? empty
-              : null}
+            ? empty
+            : null}
         </div>
       </div>
     </div>
