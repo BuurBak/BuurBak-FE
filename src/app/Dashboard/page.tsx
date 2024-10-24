@@ -1,6 +1,5 @@
-import React from "react";
-import Profiel from "./Profiel";
 import JouwReserveringen from "./JouwReserveringen";
+import Profiel from "./Profiel";
 import TrailerReserveringen from "./TrailerReserveringen";
 
 export default function page() {

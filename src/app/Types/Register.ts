@@ -1,6 +1,8 @@
 export type Login = {
   username: string;
   password: string;
+  name?: string;
+  phoneNumber?: number;
 };
 
 export type Register = {

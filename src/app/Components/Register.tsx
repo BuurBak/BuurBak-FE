@@ -16,15 +16,24 @@ const Register = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (email && password) {
-      let loginCredentials: Login = {
-        username: email,
-        password: password,
-      };
-      if (!hasAccount) {
+
+    if (!hasAccount) {
+      if (email && password) {
+        let loginCredentials: Login = {
+          username: email,
+          password: password,
+        };
         await logIn(loginCredentials);
       } else {
-        await register(loginCredentials);
+        if (email && password && name && mobile) {
+          let registerCredentials: Login = {
+            username: email,
+            password: password,
+            name: name,
+            phoneNumber: mobile,
+          };
+          await register(registerCredentials);
+        }
       }
     }
   };
@@ -37,6 +46,7 @@ const Register = () => {
           <InputField
             setInputValue={setName}
             type="text"
+            // pattern="^(?:[A-Z]|[a-z])[a-z ]+(?: [A-Z]?[a-z ]*)*$"
             className="!w-full"
             label="Naam"
             inputType="text"
@@ -51,6 +61,7 @@ const Register = () => {
           setInputValue={setEmail}
           type="email"
           className="!w-full"
+          // pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
           label="Email"
           inputType="text"
           outline={true}
@@ -62,7 +73,8 @@ const Register = () => {
           <label>Telefoon nummer</label>
           <InputField
             setInputValue={setMobile}
-            type="number"
+            type="tel"
+            // pattern="^(06|00316|\+316|0031 6|\+31 6)(?:\s?)(?:[0-9]{2}\s?){4}$"
             className="!w-full"
             label="Telefoon nummer"
             inputType="text"

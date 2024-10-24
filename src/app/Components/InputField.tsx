@@ -1,6 +1,7 @@
+"use client";
 // als icon library is gekozen nog optie voor veschillende icons toevoegen.
-import { Search } from "lucide-react";
 import { HTMLInputTypeAttribute } from "react";
+import Icon, { IconName } from "./Icon";
 import MultiRangeSlider from "./MultiRangeSlider";
 
 type InputFieldType = {
@@ -9,6 +10,7 @@ type InputFieldType = {
   type?: HTMLInputTypeAttribute;
   inputType: "text" | "star" | "rangeSlider" | "dropdown";
   icon?: boolean;
+  iconName?: IconName;
   rangeMin?: number;
   rangeMax?: number;
   setRangeValueMin?: any;
@@ -17,6 +19,7 @@ type InputFieldType = {
   setInputValue?: any;
   filled?: boolean;
   required?: boolean;
+  pattern?: string;
   iconClick?: () => void;
   className?: string;
 };
@@ -36,6 +39,8 @@ const InputField = ({
   filled,
   required,
   iconClick,
+  iconName,
+  pattern,
   className,
   ...props
 }: InputFieldType) => {
@@ -75,6 +80,7 @@ const InputField = ({
             " h-12 focus:outline-0 px-3 rounded w-full"
           }
           placeholder={label}
+          pattern={pattern}
           {...props}
           required={required}
         ></input>
@@ -88,7 +94,10 @@ const InputField = ({
           }
           onClick={iconClick}
         >
-          <Search className={(filled ? "text-white" : "") + " h-8 w-8"} />
+          <Icon
+            name={iconName || "Search"}
+            className={(filled ? "text-white" : "") + " h-8 w-8"}
+          />
         </div>
       )}
 
