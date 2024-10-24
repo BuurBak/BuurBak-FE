@@ -1,23 +1,25 @@
+import { TrailerData } from "../Types/Reservation";
 import { PostTrailer } from "../Types/TrailerType";
 import { getToken } from "./auth/Cookies";
 
 export const getTrailers = async () => {
   try {
     const response = await fetch(
-      `http://localhost:8080/trailers`, // Id van de reservering
+      `https://api.buurbak.nl/trailers`, // Id van de reservering
       {
         method: "GET",
         headers: {
           Authorization:
             "Bearer " +
             //Hier handmatig token toevoegen vanuit Swagger
-            "eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InN0ZXZlMjM5QGtwbi5ubCIsInN1YiI6ImU1MzdjNGM3LWFiODUtNDQ0Ny1hZmY2LTQ2Yjk0NmU1ODk1YSIsImV4cCI6MTcyODk5NjY2MywiaWF0IjoxNzI3Nzg3MDYzfQ.ktRUc-dCyNqwZqwZy1mtAcYRFOfvPQhg8ajO0tJb-jrLSveqeYjVMRN6JPjgp3hymdv-NgObSDE-UnooSBGO9Q",
+            "eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InN0ZXZlMjkzQGtwbi5ubCIsInN1YiI6IjU0MjcwMzBhLTFiYjItNDRiMi04NzRiLWE4M2E1MmE2ZjUyNiIsImV4cCI6MTczMDg5MjkwMywiaWF0IjoxNzI5NjgzMzAzfQ.mWhnvVc3N216zveCUhRZdOrxOb9-hKal10fYnZDNzO1ITOZkk3y05Rr5Dwbb4rLbOm5GQAFRHnicIEiOQcdqEA",
           "Content-Type": "application/json",
         },
       }
     );
 
-    console.log(await response.json());
+    const data: TrailerData[] = await response.json();
+    return data;
   } catch (error) {
     console.warn(error);
   }
