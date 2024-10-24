@@ -2,7 +2,7 @@
 import { Calendar, ChevronDown, EuroIcon, PinIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect } from "react";
-import { getTrailerReservationsRenter2 } from "../api/Trailer-controller";
+import { getTrailers } from "../api/Trailer-controller";
 
 const reserveringen: any[] = [
   {
@@ -55,7 +55,7 @@ export default function JouwReserveringen() {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const data = await getTrailerReservationsRenter2();
+        const data = await getTrailers();
         console.log(data); // Log de data naar de console
       } catch (error) {
         console.error("Error fetching reservations:", error);

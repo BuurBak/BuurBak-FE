@@ -1,6 +1,7 @@
+import { PostTrailer } from "../Types/TrailerType";
 import { getToken } from "./auth/Cookies";
 
-export const getTrailerReservationsRenter2 = async () => {
+export const getTrailers = async () => {
   try {
     const response = await fetch(
       `http://localhost:8080/trailers`, // Id van de reservering
@@ -19,5 +20,28 @@ export const getTrailerReservationsRenter2 = async () => {
     console.log(await response.json());
   } catch (error) {
     console.warn(error);
+  }
+};
+
+export const postTrailer = async (data: PostTrailer) => {
+  const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+
+  if (token) {
+    try {
+      const response = await fetch(`https://api.buurbak.nl/trailers`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token.replace("base64-", ""),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      console.log(await response.json());
+    } catch (error) {
+      console.warn(error);
+    }
+  } else {
+    console.warn("Missing token");
   }
 };
