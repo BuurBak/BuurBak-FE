@@ -31,33 +31,6 @@ export const logIn = async (data: Login): Promise<LoginResponse> => {
   return redirect("/Dashboard");
 };
 
-// export const refresh = async () => {
-//   // try {
-//   //   const res = await fetch("https://pilot.buurbak.nl/api/v1/auth/refresh", {
-//   //     method: "POST",
-//   //     headers: {
-//   //       Authorization: "Bearer " + (await getToken("refresh_token")),
-//   //       "Content-Type": "application/json",
-//   //     },
-//   //     credentials: "include",
-//   //     body: JSON.stringify({ deviceId: uuid() }),
-//   //   });
-//   //   if (!res.ok) {
-//   //     throw new Error("Network response was not ok");
-//   //   }
-//   //   const result: Token = await res.json();
-//   //   await storeLoginToken(result);
-//   //   console.log(result);
-//   //   return result;
-//   // } catch (err) {
-//   //   if (err instanceof Error) {
-//   //     alert(err.message);
-//   //   } else {
-//   //     alert("An unknown error occurred");
-//   //   }
-//   // }
-// };
-
 export const register = async (data: Login) => {
   const email = data.username;
   const password = data.password;

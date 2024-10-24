@@ -3,7 +3,7 @@
 import Button from "@/app/Components/Button";
 import { Reservation } from "@/app/Types/Reservation";
 import { TrailerList } from "@/app/Types/TrailerList";
-import { reservation } from "@/app/api/Reservation-controller";
+import { reservation } from "@/app/api/Reservations-controller";
 import { getToken } from "@/app/api/auth/Cookies";
 import {
   fromDate,

@@ -14,8 +14,7 @@ export default function JouwReserveringen() {
     const fetchReservations = async () => {
       try {
         const data = await getTrailers();
-        setReserveringen(data); // Zet de ontvangen data in de state
-        console.log(data);
+        setReserveringen(data);
       } catch (error) {
         console.error("Error fetching reservations:", error);
       }

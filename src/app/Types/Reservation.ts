@@ -1,3 +1,11 @@
+export type PostReservations = {
+  message: string;
+  trailer_uuid: string;
+  start_date: string;
+  end_date: string;
+  pick_up_time: string;
+};
+
 type Address = {
   city: string;
   number: string;
@@ -69,7 +77,7 @@ export type ReservationResponse = {
         roles: [
           {
             name: string;
-          },
+          }
         ];
         profilePictureUrl: string;
       };
@@ -83,7 +91,7 @@ export type ReservationResponse = {
           roles: [
             {
               name: string;
-            },
+            }
           ];
           profilePictureUrl: string;
         };
@@ -111,7 +119,7 @@ export type ReservationResponse = {
             date: string;
             price: number;
             timeSlots: Day[];
-          },
+          }
         ];
         coverImage: string;
         images: string[];
@@ -138,7 +146,7 @@ export type ReservationResponse = {
       canceledBy: string;
       createdAt: string;
       updatedAt: string;
-    },
+    }
   ];
   number: number;
   sort: {

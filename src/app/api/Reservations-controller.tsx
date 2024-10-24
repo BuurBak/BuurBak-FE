@@ -1,18 +1,25 @@
-import { Reservation, ReservationResponse } from "../Types/Reservation";
+import {
+  PostReservations,
+  Reservation,
+  ReservationResponse,
+} from "../Types/Reservation";
 import { getToken } from "./auth/Cookies";
 
-export const Reservations = async () => {
+//Any type of return
+export const getReservationsRequests = async () => {
+  const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+
   try {
     const response = await fetch(
       `https://api.buurbak.nl/reservations`, // Id van de reservering
       {
         method: "GET",
         headers: {
-          Authorization:
-            "Bearer " +
-            //Hier handmatig token toevoegen vanuit Swagger
-            "eyJhbGciOiJIUzUxMiJ9.eyJlbWFpbCI6InN0ZXZlMjkzQGtwbi5ubCIsInN1YiI6IjU0MjcwMzBhLTFiYjItNDRiMi04NzRiLWE4M2E1MmE2ZjUyNiIsImV4cCI6MTczMDg5MjkwMywiaWF0IjoxNzI5NjgzMzAzfQ.mWhnvVc3N216zveCUhRZdOrxOb9-hKal10fYnZDNzO1ITOZkk3y05Rr5Dwbb4rLbOm5GQAFRHnicIEiOQcdqEA",
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${
+            token
+              ? token.replace("base64-", "")
+              : process.env.NEXT_PUBLIC_JWT_TOKEN
+          }`,
         },
       }
     );
@@ -23,6 +30,84 @@ export const Reservations = async () => {
     console.warn(error);
   }
 };
+
+// Console.log no return yet and any type of return
+export const putReservations: any = async (id: number, confirmed: boolean) => {
+  const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+
+  try {
+    const response = await fetch(
+      `https://api.buurbak.nl/reservations?id=${id}&confirmed=${confirmed}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${
+            token
+              ? token.replace("base64-", "")
+              : process.env.NEXT_PUBLIC_JWT_TOKEN
+          }`,
+        },
+      }
+    );
+
+    const data: any = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+// Console.log no return yet and any type of return
+export const postReservations = async (data: PostReservations) => {
+  const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+
+  try {
+    const response = await fetch(`https://api.buurbak.nl/reservations`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${
+          token
+            ? token.replace("base64-", "")
+            : process.env.NEXT_PUBLIC_JWT_TOKEN
+        }`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    console.log(await response.json());
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+// Console.log no return yet and any type of return
+export const getReservations = async () => {
+  const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+
+  try {
+    const response = await fetch(
+      `https://api.buurbak.nl/reservations/account`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${
+            token
+              ? token.replace("base64-", "")
+              : process.env.NEXT_PUBLIC_JWT_TOKEN
+          }`,
+        },
+      }
+    );
+
+    const data: any = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+//OLD BE
+
 export const getSpecificReservations = async (reservationId: string) => {
   try {
     const response = await fetch(
@@ -119,6 +204,7 @@ export const cancelTrailerReservations = async (reservationId: string) => {
     console.warn(error);
   }
 };
+
 export const deleteTrailerReservations = async (reservationId: string) => {
   try {
     const response = await fetch(

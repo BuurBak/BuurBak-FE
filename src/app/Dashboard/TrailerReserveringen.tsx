@@ -1,7 +1,7 @@
 "use client";
 import { Calendar, ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { Reservations } from "../api/Reservation-controller";
+import { getReservationsRequests } from "../api/Reservations-controller";
 
 import { useEffect, useState } from "react";
 
@@ -58,7 +58,7 @@ export default function TrailerReserveringen() {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const data = await Reservations();
+        const data = await getReservationsRequests();
         setReserveringen(data); // Zet de ontvangen data in de state
         console.log(data);
       } catch (error) {

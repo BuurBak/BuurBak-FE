@@ -10,7 +10,7 @@ import { getAccount } from "../api/Customer-controller";
 import {
   getTrailerReservationsOwner,
   getTrailerReservationsRenter,
-} from "../api/Reservation-controller";
+} from "../api/Reservations-controller";
 
 const page = () => {
   type Selected = "jouw aanhanger" | "jouw reservering";
