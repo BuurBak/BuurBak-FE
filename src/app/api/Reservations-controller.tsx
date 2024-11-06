@@ -1,9 +1,11 @@
+import { Session } from "@supabase/supabase-js";
 import {
   PostReservations,
   Reservation,
   ReservationResponse,
 } from "../Types/Reservation";
 import { getToken } from "./auth/Cookies";
+import { getSession } from "./auth/Register";
 
 //Any type of return
 export const getReservationsRequests = async () => {
@@ -59,22 +61,23 @@ export const putReservations: any = async (id: number, confirmed: boolean) => {
 
 // Console.log no return yet and any type of return
 export const postReservations = async (data: PostReservations) => {
-  const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+  const sessionToken: Session | null = await getSession();
 
   try {
     const response = await fetch(`https://api.buurbak.nl/reservations`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${
-          token
-            ? token.replace("base64-", "")
+          sessionToken
+            ? sessionToken.access_token
             : process.env.NEXT_PUBLIC_JWT_TOKEN
         }`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
 
-    console.log(await response.json());
+    return await response.json();
   } catch (error) {
     console.warn(error);
   }

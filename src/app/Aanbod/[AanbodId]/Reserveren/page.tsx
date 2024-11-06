@@ -2,8 +2,8 @@
 
 import Button from "@/app/Components/Button";
 import { SupaUser } from "@/app/Types/Register";
-import { Reservation, TrailerData } from "@/app/Types/Reservation";
-import { reservation } from "@/app/api/Reservations-controller";
+import { PostReservations, TrailerData } from "@/app/Types/Reservation";
+import { postReservations } from "@/app/api/Reservations-controller";
 import { getTrailer } from "@/app/api/Trailer-controller";
 import { getUser } from "@/app/api/auth/Register";
 import {
@@ -27,28 +27,6 @@ type Inputs = {
   time: string;
   message: string;
   terms: boolean;
-};
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  roles: [
-    {
-      name: string;
-    }
-  ];
-  iban: any;
-  number: string;
-  address: {
-    id: string;
-    city: string;
-    number: string;
-    street_name: string;
-    postal_code: string;
-  };
-  profilePicture: any;
-  date_of_birth: any;
 };
 
 const Page = ({ params }: { params: { AanbodId: string } }) => {
@@ -98,41 +76,9 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
 
     fetchData();
 
-    // const account = async () => {
-    //   try {
-    //     const res = await fetch(
-    //       "https://pilot.buurbak.nl/api/v1/customers/self",
-    //       {
-    //         method: "GET",
-    //         headers: {
-    //           Authorization: "Bearer " + (await getToken("access_token")),
-    //           "Content-Type": "application/json",
-    //         },
-    //         credentials: "include",
-    //       }
-    //     );
-
-    //     if (!res.ok) {
-    //       throw new Error("Network response was not ok");
-    //     }
-
-    //     const result: User = await res.json();
-    //     setUser(result);
-    //   } catch (err) {
-    //     if (err instanceof Error) {
-    //       alert(err.message);
-    //     } else {
-    //       alert("An unknown error occurred");
-    //     }
-    //   } finally {
-    //     setReqLoading(false);
-    //   }
-    // };
-
     const account = async () => {
       const data = await getUser();
       setUser(data.data.user);
-      console.warn(user);
     };
 
     account();
@@ -154,18 +100,19 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   const merche = (item: { start: string; end: string }) =>
     item.start + " - " + item.end;
 
+  // new Date(getValues("dateEnd")).toISOString()
+  // new Date(getValues("dateStart")).toISOString()
+
   const onSubmit: SubmitHandler<Inputs> = async () => {
     if (trailerOffer && user) {
-      let data: Reservation = {
-        trailerId: trailerOffer.uuid,
-        startTime: new Date(getValues("dateStart")).toISOString(),
-        endTime: new Date(getValues("dateEnd")).toISOString(),
+      const data: PostReservations = {
+        trailer_uuid: trailerOffer.uuid,
+        start_date: "2024-10-09",
+        end_date: "2024-10-10",
         message: getValues("message"),
-        name: user?.user_metadata.name,
-        email: user?.user_metadata.email,
-        number: user?.user_metadata.phoneNumber,
+        pick_up_time: "14:30:00",
       };
-      await reservation(data);
+      await postReservations(data);
     }
   };
 
@@ -214,13 +161,13 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
           </div>
           <div className="flex justify-between items-center">
             <div className="flex flex-col gap-1">
-              <p className="text-h6">Op haal tijd</p>
+              <p className="text-h6">Ophaaltijd</p>
               {!changeTime && (
                 <p className="text-normal">{getValues("time")}</p>
               )}
               {changeTime && (
                 <Autocomplete
-                  aria-label="op haal tijd"
+                  aria-label="ophaaltijd"
                   className="w-full buurbak-light"
                   labelPlacement="outside"
                   placeholder=" "

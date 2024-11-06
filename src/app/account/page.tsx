@@ -42,7 +42,6 @@ const page = () => {
           user.id
         );
         if (trailerReservationsOwner) {
-          console.log("trailerReservationsOwner", trailerReservationsOwner);
           setOwner(trailerReservationsOwner);
         }
         let trailerReservationsRenter = await getTrailerReservationsRenter(

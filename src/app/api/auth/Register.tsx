@@ -27,7 +27,6 @@ export const logIn = async (data: Login): Promise<LoginResponse> => {
     return encodedRedirect("error", "/", error.message);
   }
 
-  console.log("test");
   return redirect("/Dashboard");
 };
 
@@ -121,4 +120,17 @@ export const updateUser = async (name: string, phoneNumber: string) => {
   } else {
     return encodedRedirect("success", "", "Gegevens succesvol aangepast");
   }
+};
+
+export const getSession = async () => {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.auth.getSession();
+
+  if (error) {
+    console.error("error", "/", error.message);
+    return encodedRedirect("error", "/", error.message);
+  }
+
+  return data.session;
 };

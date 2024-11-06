@@ -62,7 +62,6 @@ const AanbodList = () => {
           status != google.maps.places.PlacesServiceStatus.OK ||
           !predictions
         ) {
-          console.log(status);
           return;
         }
 

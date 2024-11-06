@@ -13,7 +13,6 @@ const page = () => {
     const test = async () => {
       if (mail) {
         const forgot = await forgotPassword(mail);
-        console.log(forgot);
       }
     };
 

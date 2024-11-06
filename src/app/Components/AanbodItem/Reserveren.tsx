@@ -47,7 +47,6 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
   }, [date]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
     const URLParams = (
       "time=" +
       data.time +
@@ -114,7 +113,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
               />
 
               <Autocomplete
-                label="Op haal tijd"
+                label="ophaaltijd"
                 className="w-full buurbak-light"
                 labelPlacement="outside"
                 placeholder=" "

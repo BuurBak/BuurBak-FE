@@ -22,7 +22,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     const fetchData = async () => {
       try {
         const data = await getTrailer(params.AanbodId);
-        console.log(data);
         setTrailerOffer(data);
         setLoading(false);
       } catch (error: any) {

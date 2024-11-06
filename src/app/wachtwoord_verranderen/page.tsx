@@ -14,7 +14,6 @@ const page = () => {
     const test = async () => {
       if (pass === secPass && pass && secPass) {
         const forgot = await resetPassword(pass);
-        console.log(forgot);
       }
     };
 
