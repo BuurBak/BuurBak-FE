@@ -34,7 +34,7 @@ type Location = {
   longitude: number;
 };
 
-export type TrailerData = {
+export interface TrailerData {
   uuid: string;
   title: string;
   description: string;
@@ -49,7 +49,7 @@ export type TrailerData = {
   location: Location;
   accessories: string[];
   images: string[];
-};
+}
 
 export type Reservation = {
   trailerId: string;

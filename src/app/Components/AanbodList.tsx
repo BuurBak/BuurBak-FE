@@ -231,14 +231,14 @@ const AanbodList = () => {
         {TrailerArray != undefined && TrailerArray.length != 0
           ? TrailerArray?.map((item) => (
               <Card
-                key={item.id}
-                img={item.coverImage}
-                title={item.name}
-                location={item.cityAddress.city}
-                price={item.price.toString()}
-                link={"Aanbod/" + item.id}
+                key={item.uuid}
+                img={item.images[0]}
+                title={item.trailer_type}
+                location={item.address.city}
+                price={item.rental_price.toString()}
+                link={"Aanbod/" + item.uuid}
                 accesoires=""
-                distance={item.distance}
+                distance={2}
                 type="overview"
               />
             ))

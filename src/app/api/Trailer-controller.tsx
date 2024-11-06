@@ -2,6 +2,29 @@ import { TrailerData } from "../Types/Reservation";
 import { PostTrailer } from "../Types/TrailerType";
 import { getToken } from "./auth/Cookies";
 
+export const getAllTrailers = async () => {
+  // const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+
+  try {
+    const response = await fetch(`https://api.buurbak.nl/trailers/all`, {
+      method: "GET",
+      headers: {
+        // Authorization: `Bearer ${
+        //   token
+        //     ? token.replace("base64-", "")
+        //     : process.env.NEXT_PUBLIC_JWT_TOKEN
+        // }`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data: TrailerData[] = await response.json();
+    return data;
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
 export const getTrailers = async () => {
   const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
 
@@ -60,7 +83,7 @@ export const getTrailer = async (uuid: string) => {
     });
 
     const data: TrailerData = await response.json();
-    console.log(data);
+    return data;
   } catch (error) {
     console.warn(error);
   }

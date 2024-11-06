@@ -1,8 +1,8 @@
-import { TrailerList } from "@/app/Types/TrailerList";
+import { TrailerData } from "@/app/Types/Reservation";
 import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
 
-const ProfileDisplay = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
+const ProfileDisplay = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
   return (
     <div className="flex items-center gap-4 w-full h-fit bg-offWhite-100 rounded-md p-2">
       <div className="relative h-full w-auto aspect-square">

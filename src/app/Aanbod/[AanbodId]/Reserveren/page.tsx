@@ -1,10 +1,11 @@
 "use client";
 
 import Button from "@/app/Components/Button";
-import { Reservation } from "@/app/Types/Reservation";
-import { TrailerList } from "@/app/Types/TrailerList";
+import { SupaUser } from "@/app/Types/Register";
+import { Reservation, TrailerData } from "@/app/Types/Reservation";
 import { reservation } from "@/app/api/Reservations-controller";
-import { getToken } from "@/app/api/auth/Cookies";
+import { getTrailer } from "@/app/api/Trailer-controller";
+import { getUser } from "@/app/api/auth/Register";
 import {
   fromDate,
   getLocalTimeZone,
@@ -61,7 +62,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     end: searchParams.get("dateEnd"),
   });
 
-  const [trailerOffer, setTrailerOffer] = useState<TrailerList>();
+  const [trailerOffer, setTrailerOffer] = useState<TrailerData>();
   const [loading, setLoading] = useState<boolean>(true);
   const [reqLoading, setReqLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,7 +75,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
       fromDate(new Date(newDate.end || ""), getLocalTimeZone())
     ),
   });
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<SupaUser>();
   const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
 
   const pickUpTime = [
@@ -85,57 +86,73 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   const time = searchParams.get("time");
 
   useEffect(() => {
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `https://pilot.buurbak.nl/api/v1/traileroffers/${params.AanbodId}`
+    //     );
+    //     if (!response.ok) {
+    //       throw new Error("Failed to fetch data");
+    //     }
+    //     const data: TrailerList = await response.json();
+    //     setTrailerOffer(data);
+    //     if (time) {
+    //       setValue("time", time);
+    //     }
+    //     setLoading(false);
+    //   } catch (error: any) {
+    //     setError(error.message);
+    //     setLoading(false);
+    //   }
+    // };
+
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `https://pilot.buurbak.nl/api/v1/traileroffers/${params.AanbodId}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data: TrailerList = await response.json();
+        const data = await getTrailer(params.AanbodId);
         setTrailerOffer(data);
-        if (time) {
-          setValue("time", time);
-        }
         setLoading(false);
-      } catch (error: any) {
-        setError(error.message);
-        setLoading(false);
+      } catch (error) {
+        console.warn(error);
       }
     };
 
     fetchData();
 
+    // const account = async () => {
+    //   try {
+    //     const res = await fetch(
+    //       "https://pilot.buurbak.nl/api/v1/customers/self",
+    //       {
+    //         method: "GET",
+    //         headers: {
+    //           Authorization: "Bearer " + (await getToken("access_token")),
+    //           "Content-Type": "application/json",
+    //         },
+    //         credentials: "include",
+    //       }
+    //     );
+
+    //     if (!res.ok) {
+    //       throw new Error("Network response was not ok");
+    //     }
+
+    //     const result: User = await res.json();
+    //     setUser(result);
+    //   } catch (err) {
+    //     if (err instanceof Error) {
+    //       alert(err.message);
+    //     } else {
+    //       alert("An unknown error occurred");
+    //     }
+    //   } finally {
+    //     setReqLoading(false);
+    //   }
+    // };
+
     const account = async () => {
-      try {
-        const res = await fetch(
-          "https://pilot.buurbak.nl/api/v1/customers/self",
-          {
-            method: "GET",
-            headers: {
-              Authorization: "Bearer " + (await getToken("access_token")),
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const result: User = await res.json();
-        setUser(result);
-      } catch (err) {
-        if (err instanceof Error) {
-          alert(err.message);
-        } else {
-          alert("An unknown error occurred");
-        }
-      } finally {
-        setReqLoading(false);
-      }
+      const data = await getUser();
+      setUser(data.data.user);
+      console.warn(user);
     };
 
     account();
@@ -160,13 +177,13 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   const onSubmit: SubmitHandler<Inputs> = async () => {
     if (trailerOffer && user) {
       let data: Reservation = {
-        trailerId: trailerOffer.id,
+        trailerId: trailerOffer.uuid,
         startTime: new Date(getValues("dateStart")).toISOString(),
         endTime: new Date(getValues("dateEnd")).toISOString(),
         message: getValues("message"),
-        name: user?.name,
-        email: user?.email,
-        number: user?.number,
+        name: user?.user_metadata.name,
+        email: user?.user_metadata.email,
+        number: user?.user_metadata.phoneNumber,
       };
       await reservation(data);
     }
@@ -253,7 +270,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             <div className="flex flex-col gap-1">
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
                 <p className="sm:w-8 text-h6">Naam:</p>
-                <p className="text-normal">{user?.name}</p>
+                <p className="text-normal">{user?.user_metadata.name}</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
                 <p className="sm:w-8 text-h6">Mail:</p>
@@ -261,7 +278,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               </div>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
                 <p className="sm:w-8 text-h6">Tel:</p>
-                <p className="text-normal">{user?.number}</p>
+                <p className="text-normal">{user?.user_metadata.phoneNumber}</p>
               </div>
             </div>
           </div>
@@ -298,9 +315,9 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
           <div className="flex flex-col gap-3 h-fit w-full bg-white p-8 m-8 rounded-md sticky top-24">
             <div className="flex gap-2 w-full h-fit ">
               <div className="relative aspect-square h-32">
-                {trailerOffer?.coverImage && (
+                {trailerOffer?.images[0] && (
                   <Image
-                    src={trailerOffer?.coverImage}
+                    src={trailerOffer?.images[0]}
                     alt="Trailer image 1"
                     fill
                     sizes="100% 100%"
@@ -311,7 +328,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               </div>
               <div className="flex flex-col gap-2">
                 <p className="text-primary-100 text-h5">
-                  {trailerOffer?.trailerType.name}
+                  {trailerOffer?.trailer_type}
                 </p>
                 <p className="text-normal">{trailerOffer?.address.city}</p>
               </div>
@@ -322,12 +339,14 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               <div className="flex flex-col gap-2 w-full h-fit">
                 <div className="flex justify-between">
                   <p className="text-small">Aanhanger</p>
-                  <p className="text-small">€ {trailerOffer?.price}</p>
+                  <p className="text-small">€ {trailerOffer?.rental_price}</p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-small">services kosten</p>
-                  {trailerOffer?.price && (
-                    <p className="text-small">€ {trailerOffer?.price * 0.1}</p>
+                  {trailerOffer?.rental_price && (
+                    <p className="text-small">
+                      € {trailerOffer?.rental_price * 0.1}
+                    </p>
                   )}
                 </div>
                 <div className="flex justify-between">
@@ -340,9 +359,12 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             <div>
               <div className="flex justify-between">
                 <p className="text-normal">Totaal</p>
-                {trailerOffer?.price && (
+                {trailerOffer?.rental_price && (
                   <p className="text-normal">
-                    € {trailerOffer?.price + trailerOffer?.price * 0.1 + 2}
+                    €{" "}
+                    {trailerOffer?.rental_price +
+                      trailerOffer?.rental_price * 0.1 +
+                      2}
                   </p>
                 )}
               </div>

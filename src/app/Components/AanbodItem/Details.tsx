@@ -1,8 +1,9 @@
+import { TrailerData } from "@/app/Types/Reservation";
 import { TrailerList } from "@/app/Types/TrailerList";
 import { useState } from "react";
 import Button from "../Button";
 
-const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
+const Details = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
   const [collapsed, setCollapsed] = useState(true);
 
   const convertMeterToCentimeter = (meter: number) => {
@@ -35,20 +36,20 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
               >
                 <p>{dutchLabel}:</p>
                 <p>
-                  {convertMeterToCentimeter(
+                  {/* {convertMeterToCentimeter(
                     trailerOffer[
-                      dimensionLabels[dutchLabel] as keyof TrailerList
+                      dimensionLabels[dutchLabel] as keyof TrailerData
                     ]
-                  ) + " "}
+                  ) + " "} */}
                   meter
                 </p>
               </div>
             ))}
           </div>
-          {trailerOffer.accesoires.length !== 0 && (
+          {trailerOffer.accessories.length !== 0 && (
             <div className="flex flex-col gap-2">
               <h6 className="text-h6 font-semibold">Accesoires</h6>
-              {trailerOffer.accesoires.map((item, index) => {
+              {trailerOffer.accessories.map((item, index) => {
                 return (
                   <p
                     key={index}
@@ -62,10 +63,10 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
               })}
             </div>
           )}
-          {trailerOffer.accesoires.length !== 0 && (
+          {trailerOffer.accessories.length !== 0 && (
             <div className="flex flex-col gap-2">
               <h6 className="text-h6 font-semibold ">Overige kenmerken</h6>
-              {trailerOffer.accesoires.map((item, index) => {
+              {trailerOffer.accessories.map((item, index) => {
                 return (
                   <p
                     key={index}

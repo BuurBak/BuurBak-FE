@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { TrailerList } from "../Types/TrailerList";
+import { getAllTrailers } from "../api/Trailer-controller";
+import { TrailerData } from "../Types/Reservation";
 import { GoogleMaps } from "./GoogleMaps";
 import { GoogleMapsWrapper } from "./GoogleMapsWrapper";
 
@@ -9,30 +10,45 @@ export const LOCATIONS = [
 ];
 
 const Map = () => {
-  const [data, setData] = useState<TrailerList[]>([]);
+  const [data, setData] = useState<TrailerData[]>([]);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://pilot.buurbak.nl/api/v1/traileroffers/", { mode: "cors" })
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.content);
+    // fetch("https://pilot.buurbak.nl/api/v1/traileroffers/", { mode: "cors" })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     setData(data.content);
+    //     setLoading(false);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching data:", error);
+    //     setLoading(false);
+    //   });
+
+    const fetchData = async () => {
+      try {
+        const trailerData = await getAllTrailers();
+        if (trailerData) {
+          setData(trailerData);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log("Error fetching data:", error);
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   const trailerLocations: readonly google.maps.LatLngLiteral[] = data.map(
     (obj) => ({
-      lat: obj.nearbyLatitude,
-      lng: obj.nearbyLongitude,
+      lat: obj.location.latitude,
+      lng: obj.location.longitude,
     })
   );
 
-  const trailerPrices = data.map((obj) => obj.price);
+  const trailerPrices = data.map((obj) => obj.rental_price);
   return (
     <GoogleMapsWrapper>
       <GoogleMaps locations={trailerLocations} price={trailerPrices} />

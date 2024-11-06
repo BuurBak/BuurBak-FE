@@ -1,4 +1,4 @@
-import { TrailerList } from "@/app/Types/TrailerList";
+import { TrailerData } from "@/app/Types/Reservation";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { RangeCalendar } from "@nextui-org/calendar";
@@ -15,7 +15,7 @@ type Inputs = {
   time: string;
 };
 
-const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
+const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
   const router = useRouter();
   const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
 
@@ -55,7 +55,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
       ("dateStart=" + data.dateStart + "&") +
       ("dateEnd=" + data.dateEnd)
     ).toString();
-    router.push(`/Aanbod/${trailerOffer.id}/Reserveren` + "?" + URLParams);
+    router.push(`/Aanbod/${trailerOffer.uuid}/Reserveren` + "?" + URLParams);
     setCollapsed(false);
   };
   return (
@@ -68,12 +68,15 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
       )}
 
       <div
-        className={`h-fit min-w-fit w-full sm:w-fit p-4 bg-offWhite-100 fixed bottom-0 sm:sticky sm:top-24 flex justify-between gap-4 ${collapsed && "flex-col"} z-40`}
+        className={`h-fit min-w-fit w-full sm:w-fit p-4 bg-offWhite-100 fixed bottom-0 sm:sticky sm:top-24 flex justify-between gap-4 ${
+          collapsed && "flex-col"
+        } z-40`}
       >
         {!collapsed && (
           <div className="flex flex-col justify-between sm:hidden ">
             <p>
-              <span className="font-bold">€{trailerOffer.price}</span> per dag
+              <span className="font-bold">€{trailerOffer.rental_price}</span>{" "}
+              per dag
             </p>
             <p>
               {new Date(getValues("dateStart")).toLocaleDateString(undefined, {
@@ -132,7 +135,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
               <div className="w-full flex justify-between">
                 <p className="text-h6 text-primary-100">Totaal</p>
                 <p className="text-h6 text-primary-100">
-                  € {trailerOffer.price}
+                  € {trailerOffer.rental_price}
                 </p>
               </div>
             </div>
@@ -147,7 +150,9 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
           {(collapsed || window.innerWidth > 639) && (
             <Button
               label="Reserveer nu"
-              styling={`min-w-fit ${(collapsed || window.innerWidth > 639) && "w-full"}`}
+              styling={`min-w-fit ${
+                (collapsed || window.innerWidth > 639) && "w-full"
+              }`}
               submit={true}
             />
           )}

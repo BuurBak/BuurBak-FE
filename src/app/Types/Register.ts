@@ -1,3 +1,5 @@
+import { UserResponse } from "@supabase/supabase-js";
+
 export type Login = {
   username: string;
   password: string;
@@ -26,3 +28,5 @@ export type ChangePassword = {
   currentPassword: "string";
   newPassword: "string";
 };
+
+export type SupaUser = UserResponse["data"]["user"];

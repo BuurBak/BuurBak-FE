@@ -1,4 +1,4 @@
-import { TrailerList } from "@/app/Types/TrailerList";
+import { TrailerData } from "@/app/Types/Reservation";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
@@ -6,7 +6,7 @@ const ImageGallery = ({
   trailerOffer,
   setOpen,
 }: {
-  trailerOffer: TrailerList | undefined;
+  trailerOffer: TrailerData | undefined;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const handleClickOpen = () => {
@@ -18,10 +18,10 @@ const ImageGallery = ({
         <div className="w-5/6 h-96 overflow-hidden hidden sm:block">
           <div className="grid grid-cols-3 grid-rows-2 gap-2 h-full w-full">
             <div className="row-span-2 col-span-1 relative">
-              {trailerOffer?.coverImage && (
+              {trailerOffer?.images && (
                 <Image
                   onClick={handleClickOpen}
-                  src={trailerOffer.coverImage}
+                  src={trailerOffer.images[0]}
                   alt="Trailer image 1"
                   fill
                   sizes="100% 100%"
@@ -30,7 +30,7 @@ const ImageGallery = ({
                 />
               )}
             </div>
-            {trailerOffer.images?.slice(0, 4).map((item, index) => (
+            {trailerOffer.images?.slice(1, 4).map((item, index) => (
               <div key={index} className="col-span-1 row-span-1 relative">
                 <Image
                   onClick={handleClickOpen}
