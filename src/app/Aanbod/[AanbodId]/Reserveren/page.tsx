@@ -86,26 +86,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   const time = searchParams.get("time");
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await fetch(
-    //       `https://pilot.buurbak.nl/api/v1/traileroffers/${params.AanbodId}`
-    //     );
-    //     if (!response.ok) {
-    //       throw new Error("Failed to fetch data");
-    //     }
-    //     const data: TrailerList = await response.json();
-    //     setTrailerOffer(data);
-    //     if (time) {
-    //       setValue("time", time);
-    //     }
-    //     setLoading(false);
-    //   } catch (error: any) {
-    //     setError(error.message);
-    //     setLoading(false);
-    //   }
-    // };
-
     const fetchData = async () => {
       try {
         const data = await getTrailer(params.AanbodId);

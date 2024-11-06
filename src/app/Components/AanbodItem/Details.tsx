@@ -1,5 +1,4 @@
 import { TrailerData } from "@/app/Types/Reservation";
-import { TrailerList } from "@/app/Types/TrailerList";
 import { useState } from "react";
 import Button from "../Button";
 
@@ -12,7 +11,7 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
     return result;
   };
 
-  const dimensionLabels: Record<string, keyof TrailerList> = {
+  const dimensionLabels: Record<string, keyof TrailerData["dimensions"]> = {
     Hoogte: "height",
     Lengte: "length",
     Breedte: "width",
@@ -36,11 +35,13 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
               >
                 <p>{dutchLabel}:</p>
                 <p>
-                  {/* {convertMeterToCentimeter(
-                    trailerOffer[
-                      dimensionLabels[dutchLabel] as keyof TrailerData
+                  {convertMeterToCentimeter(
+                    trailerOffer.dimensions[
+                      dimensionLabels[
+                        dutchLabel
+                      ] as keyof TrailerData["dimensions"]
                     ]
-                  ) + " "} */}
+                  ) + " "}
                   meter
                 </p>
               </div>

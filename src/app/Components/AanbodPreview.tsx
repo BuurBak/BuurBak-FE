@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { TrailerList } from "../Types/TrailerList";
+import { TrailerData } from "../Types/Reservation";
 import Button from "./Button";
 import Card from "./Card";
 
@@ -12,7 +12,7 @@ const DEFAULT_CENTER = {
 };
 
 const AanbodPreview: React.FC = () => {
-  const [data, setData] = useState<TrailerList[]>([]);
+  const [data, setData] = useState<TrailerData[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER);
 
@@ -94,16 +94,16 @@ const AanbodPreview: React.FC = () => {
             <div className="flex flex-row flex-wrap md:flex-nowrap w-full gap-4 justify-center lg:justify-between overflow-hidden">
               {data.slice(0, 5).map((item) => (
                 <Card
-                  key={item.id}
-                  title={item.name}
+                  key={item.uuid}
+                  title={item.trailer_type}
                   type={"overview"}
-                  img={item.coverImage}
-                  link={"Aanbod/" + item.id}
-                  location={item.cityAddress.city}
-                  price={item.price.toString()}
+                  img={item.images[0]}
+                  link={"Aanbod/" + item.uuid}
+                  location={item.address.city}
+                  price={item.rental_price.toString()}
                   distance={TrailerDistance(
-                    item.nearbyLatitude,
-                    item.nearbyLongitude
+                    item.location.latitude,
+                    item.location.longitude
                   )}
                 />
               ))}
