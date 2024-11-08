@@ -1,6 +1,5 @@
 import { TrailerData } from "@/app/Types/Reservation";
 import { getLocalTimeZone, today } from "@internationalized/date";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { RangeCalendar } from "@nextui-org/calendar";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { X } from "lucide-react";
@@ -18,11 +17,6 @@ type Inputs = {
 const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
   const router = useRouter();
   const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
-
-  const pickUpTime = [
-    { start: "9:00", end: "10:00" },
-    { start: "18:00", end: "19:00" },
-  ];
 
   const merche = (item: { start: string; end: string }) =>
     item.start + " - " + item.end;
@@ -112,7 +106,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
                 onChange={setDate}
               />
 
-              <Autocomplete
+              {/* <Autocomplete
                 label="ophaaltijd"
                 className="w-full buurbak-light"
                 labelPlacement="outside"
@@ -129,7 +123,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
                     {merche(item)}
                   </AutocompleteItem>
                 ))}
-              </Autocomplete>
+              </Autocomplete> */}
               <hr className="w-full h-1 bg-offWhite-100" />
               <div className="w-full flex justify-between">
                 <p className="text-h6 text-primary-100">Totaal</p>

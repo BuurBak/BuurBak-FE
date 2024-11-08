@@ -1,3 +1,4 @@
+"use server";
 import { TrailerData } from "../Types/Reservation";
 import { PostTrailer } from "../Types/TrailerType";
 import { getToken } from "./auth/Cookies";

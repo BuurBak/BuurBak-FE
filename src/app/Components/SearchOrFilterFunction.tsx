@@ -53,13 +53,6 @@ const SearchOrFilter = ({
   };
 
   useEffect(() => {
-    //Nieuwe BE nog toevoegen
-    // fetch("https://pilot.buurbak.nl/api/v1/traileroffers")
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     setData(data.content);
-    //     setLoading(false);
-    //   });
     const fetchData = async () => {
       const trailerData = await getAllTrailers();
       if (trailerData) {

@@ -6,9 +6,9 @@ const ProfileDisplay = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
   return (
     <div className="flex items-center gap-4 w-full h-fit bg-offWhite-100 rounded-md p-2">
       <div className="relative h-full w-auto aspect-square">
-        {(trailerOffer.owner.profilePictureUrl && (
+        {(trailerOffer.owner.profile_picture && (
           <Image
-            src={trailerOffer.owner.profilePictureUrl}
+            src={trailerOffer.owner.profile_picture}
             alt="profile picture"
             fill
             sizes="100% 100%"

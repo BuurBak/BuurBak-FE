@@ -1,5 +1,4 @@
 "use server";
-
 import { Login } from "@/app/Types/Register";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";

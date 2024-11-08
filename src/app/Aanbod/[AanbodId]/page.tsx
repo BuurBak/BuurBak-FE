@@ -5,6 +5,7 @@ import Carousel from "@/app/Components/AanbodItem/Carousel";
 import Details from "@/app/Components/AanbodItem/Details";
 import DialogComponent from "@/app/Components/AanbodItem/Dialog";
 import ImageGallery from "@/app/Components/AanbodItem/ImageGallery";
+import ProfileDisplay from "@/app/Components/AanbodItem/ProfileDisplay";
 import Reserveren from "@/app/Components/AanbodItem/Reserveren";
 import { GoogleMaps } from "@/app/Components/GoogleMaps";
 import { GoogleMapsWrapper } from "@/app/Components/GoogleMapsWrapper";
@@ -71,7 +72,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
                 {trailerOffer.trailer_type}
               </h1>
 
-              {/* <ProfileDisplay trailerOffer={trailerOffer} /> */}
+              <ProfileDisplay trailerOffer={trailerOffer} />
 
               <div>
                 <p className="text-h5 font-bold">Omschrijving</p>

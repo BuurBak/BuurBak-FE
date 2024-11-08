@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { getAllTrailers } from "../api/Trailer-controller";
 import { TrailerData } from "../Types/Reservation";
 import Button from "./Button";
 import Card from "./Card";
@@ -32,16 +33,15 @@ const AanbodPreview: React.FC = () => {
   };
 
   useEffect(() => {
-    fetch("https://pilot.buurbak.nl/api/v1/traileroffers/", { mode: "cors" })
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.content);
+    const fetchData = async () => {
+      const trailerData = await getAllTrailers();
+      if (trailerData) {
+        setData(trailerData);
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   const TrailerDistance = (nearbyLatitude: any, nearbyLongitude: any) => {

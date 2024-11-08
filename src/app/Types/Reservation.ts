@@ -34,6 +34,11 @@ type Location = {
   longitude: number;
 };
 
+type Owner = {
+  profile_picture: string;
+  name: string;
+};
+
 export interface TrailerData {
   uuid: string;
   title: string;
@@ -49,6 +54,7 @@ export interface TrailerData {
   location: Location;
   accessories: string[];
   images: string[];
+  owner: Owner;
 }
 
 export type Reservation = {

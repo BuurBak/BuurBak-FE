@@ -11,7 +11,6 @@ import {
   getLocalTimeZone,
   toCalendarDate,
 } from "@internationalized/date";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { Checkbox } from "@nextui-org/checkbox";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { format, parseISO } from "date-fns";
@@ -56,13 +55,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   const [user, setUser] = useState<SupaUser>();
   const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
 
-  const pickUpTime = [
-    { start: "9:00", end: "10:00" },
-    { start: "18:00", end: "19:00" },
-  ];
-
-  const time = searchParams.get("time");
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -97,18 +89,30 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     });
   }, [date]);
 
-  const merche = (item: { start: string; end: string }) =>
-    item.start + " - " + item.end;
-
-  // new Date(getValues("dateEnd")).toISOString()
-  // new Date(getValues("dateStart")).toISOString()
+  const formatDate = (date: Date) => {
+    return (
+      date.getFullYear() +
+      "-" +
+      String(date.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(date.getDate()).padStart(2, "0")
+    );
+  };
 
   const onSubmit: SubmitHandler<Inputs> = async () => {
     if (trailerOffer && user) {
+      const startDate = new Date(getValues("dateStart"));
+      const endDate = new Date(getValues("dateEnd"));
+
+      const formattedStartDate = formatDate(startDate);
+      const formattedEndDate = formatDate(endDate);
+
+      console.log(formattedStartDate);
+
       const data: PostReservations = {
         trailer_uuid: trailerOffer.uuid,
-        start_date: "2024-10-09",
-        end_date: "2024-10-10",
+        start_date: formattedStartDate,
+        end_date: formattedEndDate,
         message: getValues("message"),
         pick_up_time: "14:30:00",
       };
@@ -159,7 +163,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               buttonAction={() => setChangeDate(!changeDate)}
             />
           </div>
-          <div className="flex justify-between items-center">
+          {/* <div className="flex justify-between items-center">
             <div className="flex flex-col gap-1">
               <p className="text-h6">Ophaaltijd</p>
               {!changeTime && (
@@ -192,7 +196,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               type="secondary"
               buttonAction={() => setChangeTime(!changeTime)}
             />
-          </div>
+          </div> */}
           <div className="flex justify-between items-center">
             <div className="flex flex-col gap-1">
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">

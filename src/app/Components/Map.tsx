@@ -14,17 +14,6 @@ const Map = () => {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    // fetch("https://pilot.buurbak.nl/api/v1/traileroffers/", { mode: "cors" })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     setData(data.content);
-    //     setLoading(false);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching data:", error);
-    //     setLoading(false);
-    //   });
-
     const fetchData = async () => {
       try {
         const trailerData = await getAllTrailers();
