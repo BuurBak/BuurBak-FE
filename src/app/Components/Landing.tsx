@@ -2,14 +2,9 @@
 
 import { CircleCheckBig } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import Button from "./Button";
 
 export default function Landing() {
-  const [inputValue1, setInputValue1] = useState("");
-  const [inputValue2, setInputValue2] = useState("");
-  const [inputValue3, setInputValue3] = useState("");
-
   return (
     <div className="flex justify-center items-center h-screen w-full bg-landing-background bg-cover bg-center overflow-hidden">
       <div className="flex justify-center items-center flex-col w-full h-full backdrop-brightness-50">
@@ -34,34 +29,7 @@ export default function Landing() {
               <h6 className="text-white">Altijd eenvoudig</h6>
             </div>
           </div>
-          <div className="md:grid grid-cols-2 gap-y-4 gap-x-10 flex flex-col xl:flex xl:flex-row justify-between mt-12 w-fit">
-            {/* <InputField
-              inputType="text"
-              label="Type"
-              icon
-              filled
-              outline
-              inputValue={inputValue1}
-              setInputValue={setInputValue1}
-            />
-            <InputField
-              inputType="text"
-              label="Waar"
-              icon
-              filled
-              outline
-              inputValue={inputValue2}
-              setInputValue={setInputValue2}
-            />
-            <InputField
-              inputType="text"
-              label="Wanneer"
-              icon
-              filled
-              outline
-              inputValue={inputValue3}
-              setInputValue={setInputValue3}
-            /> */}
+          <div className="flex justify-between mt-12 w-fit">
             <Link href={"/Aanbod"}>
               <Button label="Bekijk het aanbod" styling="w-[246px]" />
             </Link>
