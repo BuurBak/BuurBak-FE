@@ -1,8 +1,8 @@
 "use client";
 
 import Button from "@/app/Components/Button";
-import { SupaUser } from "@/app/Types/Register";
 import { PostReservations, TrailerData } from "@/app/Types/Reservation";
+import { SupaUser } from "@/app/Types/User";
 import { postReservations } from "@/app/api/Reservations-controller";
 import { getTrailer } from "@/app/api/Trailer-controller";
 import { getUser } from "@/app/api/auth/Register";

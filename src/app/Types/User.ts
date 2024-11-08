@@ -1,18 +1,6 @@
-import { Address } from "./Address";
-import { Role } from "./Role";
+import { UserResponse } from "@supabase/supabase-js";
 
-export interface User {
-  id: string;
-  name?: string;
-  email?: string;
-  roles: Role[];
-  iban?: string;
-  number?: string;
-  address?: Address;
-  date_of_birth?: Date;
-  profilePictureUrl?: string;
-  rating?: number;
-}
+export type SupaUser = UserResponse["data"]["user"];
 
 export type LoggedUser = {
   id: string;
@@ -21,7 +9,7 @@ export type LoggedUser = {
   roles: [
     {
       name: string;
-    },
+    }
   ];
   iban: any;
   number: string;
@@ -38,4 +26,11 @@ export type LoggedUser = {
     public_url: string;
   };
   date_of_birth: any;
+};
+
+export type Login = {
+  username: string;
+  password: string;
+  name?: string;
+  phoneNumber?: number;
 };

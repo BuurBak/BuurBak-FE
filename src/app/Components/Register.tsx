@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Login } from "../Types/Register";
+import { Login } from "../Types/User";
 import { logIn, register } from "../api/auth/Register";
 import Button from "./Button";
 import InputField from "./InputField";
