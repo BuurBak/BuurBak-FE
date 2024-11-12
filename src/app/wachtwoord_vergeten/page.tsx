@@ -4,7 +4,7 @@ import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import { forgotPassword } from "../api/auth/Register";
 
-const page = () => {
+const Page = () => {
   const [mail, setMail] = useState<string>();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -49,4 +49,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

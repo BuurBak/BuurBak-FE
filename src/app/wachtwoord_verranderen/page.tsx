@@ -4,7 +4,7 @@ import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import { resetPassword } from "../api/auth/Register";
 
-const page = () => {
+const Page = () => {
   const [pass, setPass] = useState<string>();
   const [secPass, setSecPass] = useState<string>();
 
@@ -54,4 +54,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
