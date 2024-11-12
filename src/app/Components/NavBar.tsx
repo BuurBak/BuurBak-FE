@@ -31,17 +31,17 @@ import { LoggedUser } from "../Types/User";
 import Register from "./Register";
 
 const Links = [
-  { name: "Aanbod", url: "/Aanbod" },
-  { name: "Ik wil verhuren", url: "/Verhuren" },
-  { name: "Contact", url: "/Contact" },
+  { name: "Aanbod", url: "/aanbod" },
+  { name: "Ik wil verhuren", url: "/verhuren" },
+  { name: "Contact", url: "/contact" },
   { name: "Inloggen" },
 ];
 
 const MobileLinks = [
   { name: "Home", url: "/", icon: Home },
-  { name: "Aanbod", url: "/Aanbod", icon: PlateauTrailer },
-  { name: "Verhuren", url: "/Verhuren", icon: Tag },
-  { name: "Contact", url: "/Contact", icon: Mail },
+  { name: "Aanbod", url: "/aanbod", icon: PlateauTrailer },
+  { name: "Verhuren", url: "/verhuren", icon: Tag },
+  { name: "Contact", url: "/contact", icon: Mail },
   { name: "FAQ", url: "/FAQ", icon: MessageCircleQuestion },
 ];
 
