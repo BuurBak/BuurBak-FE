@@ -5,7 +5,7 @@ import { PostReservations, TrailerData } from "@/app/Types/Reservation";
 import { SupaUser } from "@/app/Types/User";
 import { postReservations } from "@/app/api/Reservations-controller";
 import { getTrailer } from "@/app/api/Trailer-controller";
-import { getUser } from "@/app/api/auth/Register";
+import { getUserSupaBase } from "@/app/api/auth/Register";
 import {
   fromDate,
   getLocalTimeZone,
@@ -69,7 +69,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     fetchData();
 
     const account = async () => {
-      const data = await getUser();
+      const data = await getUserSupaBase();
       setUser(data.data.user);
     };
 
