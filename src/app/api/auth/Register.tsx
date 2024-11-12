@@ -1,9 +1,11 @@
 "use server";
-import { Login } from "@/app/Types/User";
+import { GetUser, Login } from "@/app/Types/User";
+import { Session } from "@supabase/supabase-js";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "../../../../utils/supabase/server";
 import { encodedRedirect } from "../../../../utils/utils";
+import { deleteToken } from "./Cookies";
 
 type LoginResponse = {
   status: number;
@@ -99,11 +101,34 @@ export const resetPassword = async (newPassword: string) => {
   }
 };
 
-export const getUser = async () => {
+export const getUserSupaBase = async () => {
   const supabase = createClient();
 
   const user = await supabase.auth.getUser();
   return user;
+};
+
+export const getUser = async () => {
+  const sessionToken: Session | null = await getSession();
+
+  try {
+    const response = await fetch(`https://api.buurbak.nl/accounts/info`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${
+          sessionToken
+            ? sessionToken.access_token
+            : process.env.NEXT_PUBLIC_JWT_TOKEN
+        }`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data: GetUser = await response.json();
+    return data;
+  } catch (error) {
+    console.warn(error);
+  }
 };
 
 export const updateUser = async (name: string, phoneNumber: string) => {
@@ -132,4 +157,8 @@ export const getSession = async () => {
   }
 
   return data.session;
+};
+
+export const signOut = async () => {
+  await deleteToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
 };

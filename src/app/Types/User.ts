@@ -34,3 +34,10 @@ export type Login = {
   name?: string;
   phoneNumber?: number;
 };
+
+export type GetUser = {
+  email: string;
+  name: string;
+  phone_number: string;
+  profile_picture: string;
+};
