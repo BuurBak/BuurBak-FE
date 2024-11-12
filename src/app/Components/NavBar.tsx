@@ -47,7 +47,6 @@ const MobileLinks = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  // add actual singed in verification
   const [singedIn, setSingendIn] = useState(false);
   const currentRoute = usePathname();
   const [scrolled, isScrolled] = useState(false);
