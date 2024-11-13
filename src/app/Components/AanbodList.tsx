@@ -235,7 +235,7 @@ const AanbodList = () => {
                 title={item.trailer_type}
                 location={item.address.city}
                 price={item.rental_price.toString()}
-                link={"Aanbod/" + item.uuid}
+                link={"aanbod/" + item.uuid}
                 accesoires=""
                 distance={2}
                 type="overview"

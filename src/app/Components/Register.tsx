@@ -24,17 +24,15 @@ const Register = () => {
           password: password,
         };
         await logIn(loginCredentials);
-      } else {
-        if (email && password && name && mobile) {
-          let registerCredentials: Login = {
-            username: email,
-            password: password,
-            name: name,
-            phoneNumber: mobile,
-          };
-          await register(registerCredentials);
-        }
       }
+    } else if (email && password && name && mobile) {
+      let registerCredentials: Login = {
+        username: email,
+        password: password,
+        name: name,
+        phoneNumber: mobile,
+      };
+      await register(registerCredentials);
     }
   };
 

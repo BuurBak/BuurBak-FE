@@ -14,7 +14,7 @@ const Footer = () => {
 
   const pages: Link[] = [
     { title: "Home", link: "/" },
-    { title: "Aanbod", link: "/Aanbod" },
+    { title: "Aanbod", link: "/aanbod" },
     { title: "Verhuren", link: "/Verhuren" },
     { title: "Contact", link: "/Contact" },
     { title: "FAQ", link: "/Faq" },

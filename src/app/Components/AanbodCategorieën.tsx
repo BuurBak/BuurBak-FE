@@ -21,7 +21,7 @@ const AanbodCategorieën: React.FC = () => {
       discription: "Bied veelzijdig en eenvoudig laden.",
       type: "category",
       img: "/img/verhuurfoto.png",
-      link: "/Aanbod",
+      link: "/aanbod",
       index: 0,
     },
     {
@@ -29,7 +29,7 @@ const AanbodCategorieën: React.FC = () => {
       discription: "Beschermt lading tegen weersinvloeden en diefstal.",
       type: "category",
       img: "/img/verhuurfoto.png",
-      link: "/Aanbod",
+      link: "/aanbod",
       index: 1,
     },
     {
@@ -37,7 +37,7 @@ const AanbodCategorieën: React.FC = () => {
       discription: "Vergroot het transportgemak voor tweewielers",
       type: "category",
       img: "/img/verhuurfoto.png",
-      link: "/Aanbod",
+      link: "/aanbod",
       index: 2,
     },
     {
@@ -45,7 +45,7 @@ const AanbodCategorieën: React.FC = () => {
       discription: "Bied extra ruimte voor reisbenodigdheden.",
       type: "category",
       img: "/img/verhuurfoto.png",
-      link: "/Aanbod",
+      link: "/aanbod",
       index: 3,
     },
   ];
@@ -54,7 +54,7 @@ const AanbodCategorieën: React.FC = () => {
     <div className="w-full sm:px-20 py-4 flex flex-col bg-offWhite-100 justify-center items-center">
       <div className="w-full justify-center md:justify-between items-center flex flex-row mb-4">
         <h3 className="font-bold">Categorieën</h3>
-        <Link href="/Aanbod">
+        <Link href="/aanbod">
           <Button
             type="secondary"
             styling="hidden md:flex"
@@ -76,7 +76,7 @@ const AanbodCategorieën: React.FC = () => {
         ))}
       </div>
       <div className="w-full flex justify-center mt-4">
-        <Link href="/Aanbod">
+        <Link href="/aanbod">
           <Button
             type="secondary"
             styling="flex md:hidden"

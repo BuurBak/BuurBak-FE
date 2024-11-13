@@ -75,7 +75,7 @@ const AanbodPreview: React.FC = () => {
     <div className="w-full sm:px-20 py-4 flex flex-col bg-offWhite-100 justify-center items-center">
       <div className="w-full justify-center md:justify-between items-center flex flex-row mb-4">
         <h3 className="font-bold">Aanbod</h3>
-        <Link href={"/Aanbod"}>
+        <Link href={"/aanbod"}>
           <Button
             type="secondary"
             styling="hidden md:flex"
@@ -98,7 +98,7 @@ const AanbodPreview: React.FC = () => {
                   title={item.trailer_type}
                   type={"overview"}
                   img={item.images[0]}
-                  link={"Aanbod/" + item.uuid}
+                  link={"aanbod/" + item.uuid}
                   location={item.address.city}
                   price={item.rental_price.toString()}
                   distance={TrailerDistance(
@@ -112,7 +112,7 @@ const AanbodPreview: React.FC = () => {
         </>
       )}
       <div className="w-full flex justify-center mt-4">
-        <Link href="/Aanbod">
+        <Link href="/aanbod">
           <Button
             type="secondary"
             styling="flex md:hidden"
