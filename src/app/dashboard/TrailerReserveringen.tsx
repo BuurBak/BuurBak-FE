@@ -59,7 +59,7 @@ export default function TrailerReserveringen() {
     const fetchReservations = async () => {
       try {
         const data = await getReservationsRequests();
-        setReserveringen(data); // Zet de ontvangen data in de state
+        setReserveringen(data);
       } catch (error) {
         console.error("Error fetching reservations:", error);
       }

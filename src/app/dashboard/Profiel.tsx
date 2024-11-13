@@ -1,10 +1,27 @@
-// Profiel.tsx
+"use client";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import profielfoto from "../../../public/img/verhuurfoto.png";
 import GegevensModal from "./GegevensModal";
+import { useEffect, useState } from "react";
+import { getUser } from "../api/auth/Register";
+import { GetUser } from "../Types/User";
 
 export default function Profiel() {
+  const [user, setUser] = useState<GetUser>();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await getUser();
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching reservations:", error);
+      }
+    };
+    fetchUser();
+  }, []);
+
   return (
     <>
       <div className="flex flex-col rounded-md">
@@ -18,7 +35,7 @@ export default function Profiel() {
             className="sm:rounded-md object-cover"
           />
         </div>
-        <p className="text-center text-2xl font-bold m-4">Naam achternaam</p>
+        <p className="text-center text-2xl font-bold m-4">{user?.name}</p>
       </div>
       <div className="flex flex-col mt-8">
         {/* Vervang de oude link door de modal */}
