@@ -1,5 +1,6 @@
-"use client";
-import { Button } from "@nextui-org/button";
+import { useEffect, useState } from "react";
+import { getUser, updateUser } from "../api/auth/Register";
+import { GetUser } from "../Types/User";
 import {
   Modal,
   ModalBody,
@@ -8,22 +9,53 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
+import { Button } from "@nextui-org/button";
 import { PencilLine } from "lucide-react";
-import { useState } from "react"; // Importeer useState
-
-// Voorbeeld gegevensarray
-const initialGegevens = [
-  { label: "Naam", value: "Bas van Ad" },
-  { label: "Telefoon", value: "(31)718-90-13" },
-  { label: "E-mail", value: "bas.van.ad@gmail.com" },
-  { label: "Wachtwoord", value: "******" },
-];
 
 export default function GegevensModal() {
+  const [user, setUser] = useState<GetUser>();
+  const [gegevens, setGegevens] = useState([
+    { label: "Naam", value: "" },
+    { label: "Telefoon", value: "" },
+    { label: "E-mail", value: "" },
+  ]);
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [gegevens, setGegevens] = useState(initialGegevens);
   const [editableIndex, setEditableIndex] = useState<number | null>(null);
   const [editableValue, setEditableValue] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await getUser();
+        setUser(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      setGegevens((prevGegevens) => [
+        { label: "Naam", value: user.name },
+        { label: "Telefoon", value: user.phone_number },
+        { label: "E-mail", value: user.email },
+      ]);
+    }
+  }, [user]);
+
+  // useEffect(() => {
+  //   const data: GetUser = {
+  //     name: gegevens[0].value,
+  //     phone_number: gegevens[1].value,
+  //     email: gegevens[2].value,
+  //     profile_picture: "",
+  //   };
+  //   updateUser(data);
+  // }, [gegevens]);
 
   const handleEditClick = (index: number, value: string) => {
     setEditableIndex(index);
@@ -34,7 +66,18 @@ export default function GegevensModal() {
     const updatedGegevens = [...gegevens];
     updatedGegevens[index].value = editableValue;
     setGegevens(updatedGegevens);
-    setEditableIndex(null); // Sluit de bewerkingsmodus
+    setEditableIndex(null);
+  };
+
+  const save = () => {
+    const data: GetUser = {
+      name: gegevens[0].value,
+      phone_number: gegevens[1].value,
+      email: gegevens[2].value,
+      profile_picture: "",
+    };
+    updateUser(data);
+    console.log("poep", data);
   };
 
   return (
@@ -77,7 +120,7 @@ export default function GegevensModal() {
                             handleEditClick(index, item.value);
                           }
                         }}
-                        className="focus:outline-none" // Verhindert extra styling
+                        className="focus:outline-none"
                       >
                         <PencilLine className="h-4 w-4" />
                       </button>
@@ -86,7 +129,7 @@ export default function GegevensModal() {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button variant="light" onClick={onClose}>
+                <Button variant="light" onClick={() => save()}>
                   Opslaan
                 </Button>
               </ModalFooter>

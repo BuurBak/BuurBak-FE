@@ -131,7 +131,28 @@ export const getUser = async () => {
   }
 };
 
-export const updateUser = async (name: string, phoneNumber: string) => {
+export const updateUser = async (data: GetUser) => {
+  const sessionToken: Session | null = await getSession();
+
+  try {
+    const response = await fetch(`https://api.buurbak.nl/accounts/info`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${
+          sessionToken ? sessionToken : process.env.NEXT_PUBLIC_JWT_TOKEN
+        }`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    console.log(await response.json());
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+export const updateSupaUser = async (name: string, phoneNumber: string) => {
   const supabase = createClient();
 
   const { error } = await supabase.auth.updateUser({
