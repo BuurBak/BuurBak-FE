@@ -27,31 +27,32 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { LoggedUser } from "../Types/User";
+import { hasToken } from "../api/auth/Cookies";
+import { getUser } from "../api/auth/Register";
+import { GetUser } from "../Types/User";
 import Register from "./Register";
 
 const Links = [
-  { name: "Aanbod", url: "/Aanbod" },
-  { name: "Ik wil verhuren", url: "/Verhuren" },
-  { name: "Contact", url: "/Contact" },
+  { name: "Aanbod", url: "/aanbod" },
+  { name: "Ik wil verhuren", url: "/verhuren" },
+  { name: "Contact", url: "/contact" },
   { name: "Inloggen" },
 ];
 
 const MobileLinks = [
   { name: "Home", url: "/", icon: Home },
-  { name: "Aanbod", url: "/Aanbod", icon: PlateauTrailer },
-  { name: "Verhuren", url: "/Verhuren", icon: Tag },
-  { name: "Contact", url: "/Contact", icon: Mail },
+  { name: "Aanbod", url: "/aanbod", icon: PlateauTrailer },
+  { name: "Verhuren", url: "/verhuren", icon: Tag },
+  { name: "Contact", url: "/contact", icon: Mail },
   { name: "FAQ", url: "/FAQ", icon: MessageCircleQuestion },
 ];
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  // add actual singed in verification
   const [singedIn, setSingendIn] = useState(false);
   const currentRoute = usePathname();
   const [scrolled, isScrolled] = useState(false);
-  const [user, setUser] = useState<LoggedUser>();
+  const [user, setUser] = useState<GetUser>();
 
   useEffect(() => {
     function changeCss() {
@@ -71,45 +72,28 @@ const Navbar = () => {
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
-  // const signOut = () => {
-  //   deleteToken("access_token");
-  //   deleteToken("refresh_token");
-  // };
-
-  // useEffect(() => {
-  //   const checkToken = async () => {
-  //     let token = await hasToken("access_token");
-
-  //     if (token) {
-  //       await refresh();
-  //       onClose();
-  //     }
-  //   };
-
-  //   checkToken();
-  // });
-
   useEffect(() => {
     setOpen(false);
   }, [onOpenChange]);
 
-  // useEffect(() => {
-  //   const checkToken = async () => {
-  //     let token = await hasToken("access_token");
+  useEffect(() => {
+    const checkToken = async () => {
+      let token = await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
 
-  //     if (token) {
-  //       setSingendIn(true);
-  //       const getApi = async () => {
-  //         setUser(await getAccount());
-  //       };
-  //       getApi();
-  //     } else {
-  //       setSingendIn(false);
-  //     }
-  //   };
+      if (token) {
+        setSingendIn(true);
+        const getApi = async () => {
+          const userData = await getUser();
+          setUser(userData);
+        };
+        getApi();
+      } else {
+        setSingendIn(false);
+      }
+    };
 
-  //   checkToken();
-  // }, [onOpenChange, open]);
+    checkToken();
+  }, [onOpenChange, open]);
 
   return (
     <main>
@@ -157,21 +141,24 @@ const Navbar = () => {
               }`}
             >
               {singedIn ? (
-                // replace with actual account data
                 <div className="w-full flex flex-col items-center md:hidden">
-                  {user && user?.profilePicture !== null ? (
-                    <div className="w-32 h-32 relative">
-                      <Image
-                        src={user.profilePicture.public_url}
-                        alt="Trailer image 1"
-                        fill
-                        sizes="100% 100%"
-                        priority={true}
-                        className="rounded-full object-cover"
-                      />
-                    </div>
+                  {user && user?.profile_picture !== null ? (
+                    <Link href="/dashboard">
+                      <div className="w-32 h-32 relative">
+                        <Image
+                          src={user.profile_picture}
+                          alt="Trailer image 1"
+                          fill
+                          sizes="100% 100%"
+                          priority={true}
+                          className="rounded-full object-cover"
+                        />
+                      </div>
+                    </Link>
                   ) : (
-                    <CircleUserRound className="w-auto h-[10vh]" />
+                    <Link href="/dashboard">
+                      <CircleUserRound className="w-auto h-[10dvh]" />
+                    </Link>
                   )}
                   <p className="w-fit text-2xl font-semibold mt-4 mb-12">
                     {user?.name}
@@ -180,12 +167,8 @@ const Navbar = () => {
               ) : (
                 <div className={`${open ? "" : "hidden"}`}>
                   <li className="py-4 mb-10 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0">
-                    {/* add href back in */}
                     <a onClick={onOpen}>Login</a>
                   </li>
-                  {/* <li className="py-4 mb-10 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0">
-                    <a onClick={onOpen}>Registreren</a>
-                  </li> */}
                 </div>
               )}
 
@@ -214,19 +197,23 @@ const Navbar = () => {
                       key={index}
                     >
                       {link.name === "Inloggen" && singedIn ? (
-                        user && user?.profilePicture !== null ? (
-                          <div className="w-14 h-14 relative">
-                            <Image
-                              src={user.profilePicture.public_url}
-                              alt="Trailer image 1"
-                              fill
-                              sizes="100% 100%"
-                              priority={true}
-                              className="rounded-full object-cover"
-                            />
-                          </div>
+                        user && user?.profile_picture !== null ? (
+                          <Link href="/dashboard">
+                            <div className="w-14 h-14 relative">
+                              <Image
+                                src={user.profile_picture}
+                                alt="Trailer image 1"
+                                fill
+                                sizes="100% 100%"
+                                priority={true}
+                                className="rounded-full object-cover"
+                              />
+                            </div>
+                          </Link>
                         ) : (
-                          <CircleUserRound className="w-auto h-14" />
+                          <Link href="/dashboard">
+                            <CircleUserRound className="w-auto h-12" />
+                          </Link>
                         )
                       ) : (
                         <a

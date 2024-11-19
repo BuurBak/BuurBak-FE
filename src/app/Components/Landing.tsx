@@ -30,7 +30,7 @@ export default function Landing() {
             </div>
           </div>
           <div className="flex justify-between mt-12 w-fit">
-            <Link href={"/Aanbod"}>
+            <Link href={"/aanbod"}>
               <Button label="Bekijk het aanbod" styling="w-[246px]" />
             </Link>
           </div>

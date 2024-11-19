@@ -48,7 +48,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
       ("dateStart=" + data.dateStart + "&") +
       ("dateEnd=" + data.dateEnd)
     ).toString();
-    router.push(`/Aanbod/${trailerOffer.uuid}/Reserveren` + "?" + URLParams);
+    router.push(`/aanbod/${trailerOffer.uuid}/reserveren` + "?" + URLParams);
     setCollapsed(false);
   };
   return (

@@ -1,9 +1,11 @@
 "use server";
-import { Login } from "@/app/Types/User";
+import { GetUser, Login } from "@/app/Types/User";
+import { Session } from "@supabase/supabase-js";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "../../../../utils/supabase/server";
 import { encodedRedirect } from "../../../../utils/utils";
+import { deleteToken } from "./Cookies";
 
 type LoginResponse = {
   status: number;
@@ -26,7 +28,7 @@ export const logIn = async (data: Login): Promise<LoginResponse> => {
     return encodedRedirect("error", "/", error.message);
   }
 
-  return redirect("/Dashboard");
+  return redirect("/dashboard");
 };
 
 export const register = async (data: Login) => {
@@ -43,7 +45,7 @@ export const register = async (data: Login) => {
     email,
     password,
     options: {
-      emailRedirectTo: `/Dashboard`,
+      emailRedirectTo: `/dashboard`,
       data: {
         name: data.name,
         phoneNumber: data.phoneNumber,
@@ -99,14 +101,58 @@ export const resetPassword = async (newPassword: string) => {
   }
 };
 
-export const getUser = async () => {
+export const getUserSupaBase = async () => {
   const supabase = createClient();
 
   const user = await supabase.auth.getUser();
   return user;
 };
 
-export const updateUser = async (name: string, phoneNumber: string) => {
+export const getUser = async () => {
+  const sessionToken: Session | null = await getSession();
+
+  try {
+    const response = await fetch(`https://api.buurbak.nl/accounts/info`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${
+          sessionToken
+            ? sessionToken.access_token
+            : process.env.NEXT_PUBLIC_JWT_TOKEN
+        }`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data: GetUser = await response.json();
+    return data;
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+export const updateUser = async (data: GetUser) => {
+  const sessionToken: Session | null = await getSession();
+
+  try {
+    const response = await fetch(`https://api.buurbak.nl/accounts/info`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${
+          sessionToken ? sessionToken : process.env.NEXT_PUBLIC_JWT_TOKEN
+        }`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    console.log(await response.json());
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+export const updateSupaUser = async (name: string, phoneNumber: string) => {
   const supabase = createClient();
 
   const { error } = await supabase.auth.updateUser({
@@ -132,4 +178,8 @@ export const getSession = async () => {
   }
 
   return data.session;
+};
+
+export const signOut = async () => {
+  await deleteToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
 };
