@@ -10,7 +10,7 @@ type InputFieldType = {
   type?: HTMLInputTypeAttribute;
   inputType: "text" | "star" | "rangeSlider" | "dropdown";
   icon?: boolean;
-  iconName?: IconName;
+  iconName?: IconName | "L" | "B" | "H";
   rangeMin?: number;
   rangeMax?: number;
   setRangeValueMin?: any;
@@ -22,6 +22,7 @@ type InputFieldType = {
   pattern?: string;
   iconClick?: () => void;
   className?: string;
+  iconLeft?: boolean;
 };
 
 const InputField = ({
@@ -42,6 +43,7 @@ const InputField = ({
   iconName,
   pattern,
   className,
+  iconLeft,
   ...props
 }: InputFieldType) => {
   const changeTextInputValue = (event: { target: { value: any } }) => {
@@ -74,10 +76,11 @@ const InputField = ({
           value={inputValue}
           onChange={changeTextInputValue}
           className={
+            (iconLeft ? "pl-12 pr-3 " : "px-3 ") +
             (outline
-              ? "outline-0 border border-primary-100"
-              : "outline-0 border border-offWhite-100") +
-            " h-12 focus:outline-0 px-3 rounded w-full"
+              ? "outline-0 border border-primary-100 "
+              : "outline-0 border border-offWhite-100 ") +
+            "h-12 focus:outline-0 rounded w-full"
           }
           placeholder={label}
           pattern={pattern}
@@ -89,15 +92,23 @@ const InputField = ({
         <div
           className={
             (filled
-              ? "right-0 top-0 p-2 bg-primary-100 rounded-r"
+              ? iconLeft
+                ? "left-0 top-0 p-2 bg-primary-100 rounded-r"
+                : "right-0 top-0 p-2 bg-primary-100 rounded-r"
+              : iconLeft
+              ? "left-2 top-2"
               : "right-2 top-2") + " absolute"
           }
           onClick={iconClick}
         >
-          <Icon
-            name={iconName || "Search"}
-            className={(filled ? "text-white" : "") + " h-8 w-8"}
-          />
+          {iconName === "L" || iconName === "B" || iconName === "H" ? (
+            <p className="h-8 w-8 text-[1.5rem] text-center">{iconName}</p>
+          ) : (
+            <Icon
+              name={iconName || "Search"}
+              className={(filled ? "text-white" : "") + "h-8 w-8"}
+            />
+          )}
         </div>
       )}
 
