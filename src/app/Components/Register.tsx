@@ -92,6 +92,7 @@ const Register = () => {
           outline={true}
           required={true}
           icon={true}
+          iconName={showPassword ? "Eye" : "EyeOff"}
           iconClick={() => setShowPassword(!showPassword)}
         />
       </div>
