@@ -55,18 +55,21 @@ const Navbar = () => {
   const [user, setUser] = useState<GetUser>();
 
   useEffect(() => {
-    function changeCss() {
-      if (currentRoute === "/") {
-        window.scrollY > 500 ? isScrolled(true) : isScrolled(false);
+    if (currentRoute !== "/") {
+      function changeCss() {
+        if (currentRoute === "/") {
+          window.scrollY > 500 ? isScrolled(true) : isScrolled(false);
+        }
       }
-    }
 
-    window.addEventListener("scroll", changeCss, false);
+      window.addEventListener("scroll", changeCss, false);
+    }
   }, []);
 
   useEffect(() => {
     if (currentRoute !== "/") {
       isScrolled(true);
+      onClose();
     }
   }, [currentRoute]);
 
