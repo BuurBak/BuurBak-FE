@@ -4,8 +4,8 @@ import InputField from "../Components/InputField";
 
 const verhuren = () => {
   return (
-    <div className="w-full h-dvh flex flex-row pt-20 gap-5">
-      <div className="w-2/3 h-full">
+    <div className="w-full h-fit flex flex-row pt-20 gap-5">
+      <div className="w-2/3">
         <h1 className="text-center text-h3 font-bold">
           Maak jouw advertentie <br /> compleet
         </h1>
@@ -51,13 +51,51 @@ const verhuren = () => {
               Kies het soort rijbewijs wat vereist is:
             </p>
           </div>
-          <div className="w-3/4">
+          <div className="flex flex-col w-3/4 gap-5">
             <p className="font-bold">Vul de afmetingen van je aanhanger in:</p>
+            <div className="flex flex-col gap-3 w-full">
+              <InputField
+                inputType="text"
+                label="Vul de lengte van je aanhanger in "
+                icon
+                iconLeft
+                iconName="L"
+                outline
+                className="w-full"
+              />
+              <InputField
+                inputType="text"
+                label="Vul de breedte van je aanhanger in "
+                icon
+                iconLeft
+                iconName="B"
+                outline
+                className="w-full"
+              />
+              <InputField
+                inputType="text"
+                label="Vul de hoogte van je aanhanger in "
+                icon
+                iconLeft
+                iconName="H"
+                outline
+                className="w-full"
+              />
+            </div>
           </div>
-          <div className="w-3/4">
+          <div className="flex flex-col w-3/4 gap-5">
             <p className="font-bold">
               Voor hoeveel € wil je je aanhanger verhuren:
             </p>
+            <InputField
+              inputType="text"
+              label="Prijs... "
+              icon
+              iconLeft
+              iconName="Euro"
+              outline
+              className="w-full"
+            />
           </div>
           <div className="w-3/4">
             <p className="font-bold">
@@ -67,7 +105,7 @@ const verhuren = () => {
           </div>
         </div>
       </div>
-      <div className="w-1/3 h-full bg-offWhite-100"></div>
+      <div className="w-1/3 bg-offWhite-100"></div>
     </div>
   );
 };
