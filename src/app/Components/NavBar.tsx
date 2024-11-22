@@ -67,6 +67,7 @@ const Navbar = () => {
   useEffect(() => {
     if (currentRoute !== "/") {
       isScrolled(true);
+      onClose();
     }
   }, [currentRoute]);
 

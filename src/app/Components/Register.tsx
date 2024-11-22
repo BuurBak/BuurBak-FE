@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Login } from "../Types/User";
 import { logIn, register } from "../api/auth/Register";
@@ -96,6 +97,7 @@ const Register = () => {
           iconClick={() => setShowPassword(!showPassword)}
         />
       </div>
+      <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
       <Button label={hasAccount ? "Registreer" : "Log in"} submit={true} />
       {!hasAccount && (
         <p>
