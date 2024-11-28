@@ -183,3 +183,26 @@ export const getSession = async () => {
 export const signOut = async () => {
   await deleteToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
 };
+
+export const deleteUser = async () => {
+  const supabase = createClient();
+
+  const sessionToken: Session | null = await getSession();
+
+  if (sessionToken) {
+    const { data, error } = await supabase.auth.admin.deleteUser(
+      sessionToken.toString()
+    );
+
+    if (data) {
+      console.log(data);
+    }
+    if (error) {
+      console.warn(error);
+    } else {
+      console.log("unkown error");
+    }
+  } else {
+    console.log("User token not found");
+  }
+};
