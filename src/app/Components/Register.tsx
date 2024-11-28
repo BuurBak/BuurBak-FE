@@ -25,6 +25,7 @@ const Register = () => {
           password: password,
         };
         await logIn(loginCredentials);
+        window.location.reload();
       }
     } else if (email && password && name && mobile) {
       let registerCredentials: Login = {
@@ -34,6 +35,7 @@ const Register = () => {
         phoneNumber: mobile,
       };
       await register(registerCredentials);
+      window.location.reload();
     }
   };
 

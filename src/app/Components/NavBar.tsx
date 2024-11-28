@@ -54,6 +54,11 @@ const Navbar = () => {
   const [scrolled, isScrolled] = useState(false);
   const [user, setUser] = useState<GetUser>();
 
+  const isReserverenPage = () => {
+    const reserverenPattern = /^\/aanbod\/[^/]+\/reserveren$/;
+    return reserverenPattern.test(currentRoute);
+  };
+
   useEffect(() => {
     function changeCss() {
       if (currentRoute === "/") {
@@ -69,6 +74,16 @@ const Navbar = () => {
       isScrolled(true);
       onClose();
     }
+
+    if (isReserverenPage()) {
+      const loginRequired = async () => {
+        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
+          onOpen();
+        }
+      };
+
+      loginRequired();
+    }
   }, [currentRoute]);
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -79,9 +94,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const checkToken = async () => {
-      let token = await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
-
-      if (token) {
+      if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
         setSingendIn(true);
         const getApi = async () => {
           const userData = await getUser();
@@ -95,6 +108,13 @@ const Navbar = () => {
 
     checkToken();
   }, [onOpenChange, open]);
+
+  useEffect(() => {
+    if (singedIn) {
+      onClose();
+      console.log("fired");
+    }
+  }, [singedIn]);
 
   return (
     <main>

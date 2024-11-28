@@ -28,7 +28,7 @@ export const logIn = async (data: Login): Promise<LoginResponse> => {
     return encodedRedirect("error", "/", error.message);
   }
 
-  return redirect("/dashboard");
+  return redirect("");
 };
 
 export const register = async (data: Login) => {
