@@ -54,7 +54,8 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     ),
   });
   const [user, setUser] = useState<SupaUser>();
-  const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
+  const { register, handleSubmit, setValue, getValues, watch } =
+    useForm<Inputs>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -103,6 +104,8 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
       String(date.getDate()).padStart(2, "0")
     );
   };
+
+  const terms = watch("terms");
 
   const onSubmit: SubmitHandler<Inputs> = async () => {
     if (trailerOffer && user) {
@@ -250,7 +253,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               label="Reserveer jouw aanhanger"
               styling="w-full"
               submit={true}
-              disabled={user === undefined}
+              disabled={user === undefined || !terms}
             />
           </div>
         </div>
