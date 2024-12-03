@@ -9,7 +9,7 @@ const nextConfig = {
         pathname: "/buurbak_public/**",
       },
       {
-        protocol: "http",
+        protocol: "https",
         hostname: "api.buurbak.nl",
         port: "",
         pathname: "/images/**",
