@@ -1,12 +1,24 @@
 "use client";
 
-import { Check, ImageIcon, ImagesIcon, X } from "lucide-react";
-import React, { useState } from "react";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { Check, X } from "lucide-react";
+import { useState } from "react";
 import InputField from "../Components/InputField";
+import FileUpload from "../Components/UploadFile";
 
-const verhuren = () => {
-  const [day, setDay] = useState({
+type DayState = {
+  [key in
+    | "monday"
+    | "tuesday"
+    | "wednesday"
+    | "thursday"
+    | "friday"
+    | "saturday"
+    | "sunday"]: boolean;
+};
+
+const Verhuren = () => {
+  const [days, setDays] = useState<DayState>({
     monday: false,
     tuesday: false,
     wednesday: false,
@@ -37,6 +49,17 @@ const verhuren = () => {
     "Lange Lading bord",
   ];
 
+  const toggleDay = (day: keyof DayState) => {
+    setDays((prevDays) => ({
+      ...prevDays,
+      [day]: !prevDays[day],
+    }));
+  };
+
+  const getDayAbbreviation = (day: string) => {
+    return day.slice(0, 2).charAt(0).toUpperCase() + day.slice(0, 2).charAt(1);
+  };
+
   return (
     <div className="w-full min-h-screen h-fit flex flex-col sm:flex-row pt-20 gap-5">
       <div className="w-2/3">
@@ -51,13 +74,7 @@ const verhuren = () => {
             <p className="font-bold">
               Kies de foto's die jouw aanhanger het beste representeren:
             </p>
-            <div className="w-full flex flex-row items-start gap-5 rounded border-2 p-6 pl-10">
-              <ImagesIcon className="size-9" />
-              <div className="flex flex-col">
-                <p>Sleep je foto's hierheen</p>
-                <p className="underline">Upload tenminste 4 foto's</p>
-              </div>
-            </div>
+            <FileUpload />
           </div>
           <div className="w-3/4">
             <p className="font-bold ">Kies je soort aanhanger:</p>
@@ -183,115 +200,26 @@ const verhuren = () => {
               ophaal:
             </p>
             <div className="flex flex-row gap-3 w-full">
-              {/* monday */}
-              <div
-                className={`flex flex-col rounded w-fit p-6 cursor-pointer ${
-                  day.monday ? "bg-primary-100 text-white" : "bg-offWhite-100"
-                }`}
-                onClick={() =>
-                  setDay((prevDay) => ({
-                    ...prevDay,
-                    monday: !prevDay.monday,
-                  }))
-                }
-              >
-                <p className="font-bold">Ma</p>
-
-                {day.monday ? <Check /> : <X />}
-              </div>
-              {/* tuesday */}
-              <div
-                className={`flex flex-col rounded w-fit p-6 cursor-pointer ${
-                  day.tuesday ? "bg-primary-100 text-white" : "bg-offWhite-100"
-                }`}
-                onClick={() =>
-                  setDay((prevDay) => ({
-                    ...prevDay,
-                    tuesday: !prevDay.tuesday,
-                  }))
-                }
-              >
-                <p className="font-bold">Di</p>
-
-                {day.tuesday ? <Check /> : <X />}
-              </div>
-              {/* wednesday */}
-              <div
-                className={`flex flex-col rounded w-fit p-6 cursor-pointer ${
-                  day.wednesday
-                    ? "bg-primary-100 text-white"
-                    : "bg-offWhite-100"
-                }`}
-                onClick={() =>
-                  setDay((prevDay) => ({
-                    ...prevDay,
-                    wednesday: !prevDay.wednesday,
-                  }))
-                }
-              >
-                <p className="font-bold">Wo</p>
-                {day.wednesday ? <Check /> : <X />}
-              </div>
-              {/* thursday */}
-              <div
-                className={`flex flex-col rounded w-fit p-6 cursor-pointer ${
-                  day.thursday ? "bg-primary-100 text-white" : "bg-offWhite-100"
-                }`}
-                onClick={() =>
-                  setDay((prevDay) => ({
-                    ...prevDay,
-                    thursday: !prevDay.thursday,
-                  }))
-                }
-              >
-                <p className="font-bold">Do</p>
-                {day.thursday ? <Check /> : <X />}
-              </div>
-              {/* friday */}
-              <div
-                className={`flex flex-col rounded w-fit p-6 cursor-pointer ${
-                  day.friday ? "bg-primary-100 text-white" : "bg-offWhite-100"
-                }`}
-                onClick={() =>
-                  setDay((prevDay) => ({
-                    ...prevDay,
-                    friday: !prevDay.friday,
-                  }))
-                }
-              >
-                <p className="font-bold">Vr</p>
-                {day.friday ? <Check /> : <X />}
-              </div>
-              {/* saturday */}
-              <div
-                className={`flex flex-col rounded w-fit p-6 cursor-pointer ${
-                  day.saturday ? "bg-primary-100 text-white" : "bg-offWhite-100"
-                }`}
-                onClick={() =>
-                  setDay((prevDay) => ({
-                    ...prevDay,
-                    saturday: !prevDay.saturday,
-                  }))
-                }
-              >
-                <p className="font-bold">Za</p>
-                {day.saturday ? <Check /> : <X />}
-              </div>
-              {/* sunday */}
-              <div
-                className={`flex flex-col rounded w-fit p-6 cursor-pointer ${
-                  day.sunday ? "bg-primary-100 text-white" : "bg-offWhite-100"
-                }`}
-                onClick={() =>
-                  setDay((prevDay) => ({
-                    ...prevDay,
-                    sunday: !prevDay.sunday,
-                  }))
-                }
-              >
-                <p className="font-bold">Zo</p>
-                {day.sunday ? <Check /> : <X />}
-              </div>
+              {(Object.entries(days) as [keyof DayState, boolean][]).map(
+                ([day, isSelected]) => (
+                  <div
+                    key={day}
+                    className={`flex flex-col items-center justify-center rounded w-14 h-20 cursor-pointer ${
+                      isSelected
+                        ? "bg-primary-100 text-white"
+                        : "bg-offWhite-100"
+                    }`}
+                    onClick={() => toggleDay(day)}
+                  >
+                    <p className="font-bold">{getDayAbbreviation(day)}</p>
+                    {isSelected ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <X className="h-4 w-4" />
+                    )}
+                  </div>
+                )
+              )}
             </div>
           </div>
         </div>
@@ -301,8 +229,4 @@ const verhuren = () => {
   );
 };
 
-//TODO
-// Kleur fixen oranje
-// Meer tekst, tekst aan linkerkant flexbox
-// sizes textboxes fixen
-export default verhuren;
+export default Verhuren;
