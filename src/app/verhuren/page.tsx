@@ -2,6 +2,7 @@
 
 import { Check, ImageIcon, ImagesIcon, X } from "lucide-react";
 import React, { useState } from "react";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import InputField from "../Components/InputField";
 
 const verhuren = () => {
@@ -14,6 +15,27 @@ const verhuren = () => {
     saturday: false,
     sunday: false,
   });
+  const dagen: string[] = ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
+  const license: string[] = ["A", "B", "C"];
+  const soortAanhanger: string[] = [
+    "Open Aanhanger",
+    "Gesloten Aanhanger",
+    "Motorfiets Aanhanger",
+    "Bagage Aanhanger",
+    "Fietsen Aanhanger",
+    "Overig",
+  ];
+  const accesoires: string[] = [
+    "Disselslot",
+    "Oprijplaten",
+    "7 naar 13 polige adapter",
+    "13 naar 7 polige adapter",
+    "Afdek Zijl",
+    "Afdek Net",
+    "Pionnen",
+    "Kruiwagen",
+    "Lange Lading bord",
+  ];
 
   return (
     <div className="w-full min-h-screen h-fit flex flex-col sm:flex-row pt-20 gap-5">
@@ -39,12 +61,26 @@ const verhuren = () => {
           </div>
           <div className="w-3/4">
             <p className="font-bold ">Kies je soort aanhanger:</p>
+            <Autocomplete
+              className="w-full buurbak-light border-primary-100 rounded border-1"
+              placeholder="Soort..."
+            >
+              {soortAanhanger.map((item, index) => (
+                <AutocompleteItem
+                  key={index}
+                  value={item}
+                  className="buurbak-light "
+                >
+                  {item}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
           </div>
           <div className="w-3/4">
             <p className="font-bold">Geef een beschrijving voor de huurder:</p>
             <textarea
               id="message"
-              className="flex flex-row mt-5 p-2.5 w-full h-32 rounded border-2 border-primary-100"
+              className="flex flex-row mt-5 p-2.5 w-full h-32 rounded border-1 border-primary-100"
               placeholder="Typ een kleine beschrijving over je aanhanger..."
             />
           </div>
@@ -52,6 +88,20 @@ const verhuren = () => {
             <p className="font-bold">
               Kies de accesoires die je bij je aanhanger wilt verhuren:
             </p>
+            <Autocomplete
+              className="w-full buurbak-light border-primary-100 rounded border-1"
+              placeholder="Accesoires..."
+            >
+              {accesoires.map((item, index) => (
+                <AutocompleteItem
+                  key={index}
+                  value={item}
+                  className="buurbak-light "
+                >
+                  {item}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
           </div>
           <div className="w-3/4">
             <p className="font-bold">
@@ -62,6 +112,20 @@ const verhuren = () => {
             <p className="font-bold">
               Kies het soort rijbewijs wat vereist is:
             </p>
+            <Autocomplete
+              className="w-full buurbak-light border-primary-100 rounded border-1"
+              placeholder="Rijbewijs..."
+            >
+              {license.map((item, index) => (
+                <AutocompleteItem
+                  key={index}
+                  value={item}
+                  className="buurbak-light "
+                >
+                  {item}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
           </div>
           <div className="flex flex-col w-3/4 gap-5">
             <p className="font-bold">Vul de afmetingen van je aanhanger in:</p>
