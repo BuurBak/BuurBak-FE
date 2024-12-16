@@ -347,11 +347,49 @@ const Verhuren = () => {
         <div className="flex mt-2 justify-center">
           <h4 className="font-bold">Details</h4>
         </div>
-        <div className="flex flex-col justify-start"></div>
-        <p className="font-bold mt-5">Benodigd Rijbewijs</p>
+        <div className="flex flex-col justify-start">
+          <p className="font-bold mt-5">Benodigd Rijbewijs</p>
+        </div>
         <div className="flex flex-row">
           <p className="bg-gray-100 mt-3">Rijbewijs</p>
           <p className="mt-3 bg-gray-100 pl-20">B</p>
+        </div>
+        <div className="flex flex-col justify-start">
+          <p className="font-bold mt-5">Afmetingen</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="bg-gray-100 mt-3">Lengte</p>
+          <p className="mt-3 bg-gray-100 pl-20">2 meter</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="mt-3">Breedte</p>
+          <p className="mt-3 pl-20">6 meter</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="bg-gray-100 mt-3">Hoogte</p>
+          <p className="mt-3 bg-gray-100 pl-20">1 meter</p>
+        </div>
+        <div className="flex flex-col justify-start">
+          <p className="font-bold mt-5">Accessoires</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="bg-gray-100 mt-3">Dissel Slot</p>
+          <p className="mt-3 bg-gray-100 pl-20">Ja</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="mt-3">Reserve Wiel</p>
+          <p className="mt-3 pl-20">Nee</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="bg-gray-100 mt-3">Net</p>
+          <p className="mt-3 bg-gray-100 pl-20">Ja</p>
+        </div>
+        <div className="flex flex-col justify-start">
+          <p className="font-bold mt-5">Overige Kenmerken</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="bg-gray-100 mt-3">Opvouwbaar</p>
+          <p className="mt-3 bg-gray-100 pl-20">Nee</p>
         </div>
       </div>
     </div>
