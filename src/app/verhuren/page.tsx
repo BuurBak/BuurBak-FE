@@ -35,6 +35,12 @@ const getDayAbbreviation = (day: keyof PostTrailer["availability"]) => {
   }
 };
 
+type LocationData = {
+  address: string;
+  lat: number;
+  lng: number;
+};
+
 const Verhuren = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [location, setLocation] = useState<any>();
@@ -125,6 +131,11 @@ const Verhuren = () => {
     }
   }, [files]);
 
+  const handleLocationChange = (locationData: LocationData) => {
+    console.log("Selected location:", locationData);
+    // Use the locationData (address, lat, lng) as needed
+  };
+
   const onSubmit = (data: PostTrailer) => {
     const addTrailer = async () => {
       console.log(data);
@@ -211,7 +222,7 @@ const Verhuren = () => {
             <p className="font-bold">
               Kies de locatie waar je je aanhanger vanaf verhuurd:
             </p>
-            <LocationInput onLocationChange={location} />
+            <LocationInput onLocationChange={handleLocationChange} />
             <p>{location}</p>
           </div>
           <div className="w-3/4 gap-5">

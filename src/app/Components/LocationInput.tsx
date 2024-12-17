@@ -122,21 +122,34 @@ const LocationInput = ({ onLocationChange }: PropType) => {
     );
   }, [inputValueWhere, isGoogleMapsLoaded]);
 
-  const handleAddressSelect = (address: string) => {
-    if (!geocoderRef.current) return;
+  const handleAddressSelect = async (address: string) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          address
+        )}&key=${process.env.NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY}`
+      );
 
-    geocoderRef.current.geocode({ address }, (results, status) => {
-      if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
-        const { lat, lng } = results[0].geometry.location;
+      if (!response.ok) {
+        console.error("Geocoding failed:", response.statusText);
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.status === "OK" && data.results[0]) {
+        const { lat, lng } = data.results[0].geometry.location;
         onLocationChange({
           address,
-          lat: lat(),
-          lng: lng(),
+          lat,
+          lng,
         });
       } else {
-        console.error("Geocoding failed:", status);
+        console.error("Geocoding failed:", data.status);
       }
-    });
+    } catch (error) {
+      console.error("Geocoding error:", error);
+    }
   };
 
   return (
