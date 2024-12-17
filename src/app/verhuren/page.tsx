@@ -212,7 +212,7 @@ const Verhuren = () => {
             <div className="flex flex-col gap-3 w-full">
               <InputField
                 inputType="text"
-                label="Vul de lengte van je aanhanger in "
+                label="Vul de lengte van je aanhanger in, in CM "
                 icon
                 iconLeft
                 type="number"
@@ -223,7 +223,7 @@ const Verhuren = () => {
               />
               <InputField
                 inputType="text"
-                label="Vul de breedte van je aanhanger in "
+                label="Vul de breedte van je aanhanger in, in CM"
                 icon
                 iconLeft
                 type="number"
@@ -234,7 +234,7 @@ const Verhuren = () => {
               />
               <InputField
                 inputType="text"
-                label="Vul de hoogte van je aanhanger in "
+                label="Vul de hoogte van je aanhanger in, in CM "
                 icon
                 iconLeft
                 type="number"
