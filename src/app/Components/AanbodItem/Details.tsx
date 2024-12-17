@@ -1,8 +1,13 @@
 import { TrailerData } from "@/app/Types/Reservation";
+import { PostTrailer } from "@/app/Types/TrailerType";
 import { useState } from "react";
 import Button from "../Button";
 
-const Details = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
+const Details = ({
+  trailerOffer,
+}: {
+  trailerOffer: TrailerData | PostTrailer;
+}) => {
   const [collapsed, setCollapsed] = useState(true);
 
   const convertMeterToCentimeter = (meter: number) => {
@@ -64,7 +69,7 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
               })}
             </div>
           )}
-          {trailerOffer.accessories.length !== 0 && (
+          {/* {trailerOffer.accessories.length !== 0 && (
             <div className="flex flex-col gap-2">
               <h6 className="text-h6 font-semibold ">Overige kenmerken</h6>
               {trailerOffer.accessories.map((item, index) => {
@@ -80,7 +85,7 @@ const Details = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
                 );
               })}
             </div>
-          )}
+          )} */}
         </div>
       </div>
       <Button
