@@ -36,7 +36,7 @@ const getDayAbbreviation = (day: keyof PostTrailer["availability"]) => {
 
 const Verhuren = () => {
   const [files, setFiles] = useState<File[]>([]);
-  const [location, setLocation] = useState<string>("");
+  const [location, setLocation] = useState<any>();
 
   const form = useForm<PostTrailer>({
     defaultValues: {
@@ -210,7 +210,7 @@ const Verhuren = () => {
             <p className="font-bold">
               Kies de locatie waar je je aanhanger vanaf verhuurd:
             </p>
-            <LocationInput outputValue={location} />
+            <LocationInput onLocationChange={location} />
             <p>{location}</p>
           </div>
           <div className="w-3/4">
