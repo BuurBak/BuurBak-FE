@@ -122,12 +122,18 @@ const LocationInput = ({ onLocationChange }: PropType) => {
     );
   }, [inputValueWhere, isGoogleMapsLoaded]);
 
+  interface AddressComponent {
+    long_name: string;
+    short_name: string;
+    types: string[];
+  }
+
   const handleAddressSelect = async (address: string) => {
     try {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
           address
-        )}&key=${process.env.NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY}`
+        )}&key=${process.env.NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY}&language=nl`
       );
 
       if (!response.ok) {
@@ -138,9 +144,28 @@ const LocationInput = ({ onLocationChange }: PropType) => {
       const data = await response.json();
 
       if (data.status === "OK" && data.results[0]) {
-        const { lat, lng } = data.results[0].geometry.location;
+        const result = data.results[0];
+        const { lat, lng } = result.geometry.location;
+
+        // Extract the postal code
+        const postalCodeComponent = result.address_components.find(
+          (component: AddressComponent) =>
+            component.types.includes("postal_code")
+        );
+
+        const postalCode = postalCodeComponent
+          ? postalCodeComponent.long_name
+          : "";
+
+        // Check if the formatted_address already includes the postal code
+        const formattedAddress = result.formatted_address;
+        const fullAddress = formattedAddress.includes(postalCode)
+          ? formattedAddress
+          : `${formattedAddress}, ${postalCode}`;
+
+        // Pass the full address, including postal code if necessary, to the parent component
         onLocationChange({
-          address,
+          address: fullAddress,
           lat,
           lng,
         });

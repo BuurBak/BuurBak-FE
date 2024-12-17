@@ -114,6 +114,10 @@ const Verhuren = () => {
   };
 
   useEffect(() => {
+    setValue("title", watch("trailer_type"));
+  }, [watch("trailer_type")]);
+
+  useEffect(() => {
     const imageUuidArray = async () => {
       const imageUUID: string[] = [];
       const res = await postImages(files);
@@ -133,7 +137,51 @@ const Verhuren = () => {
 
   const handleLocationChange = (locationData: LocationData) => {
     console.log("Selected location:", locationData);
-    // Use the locationData (address, lat, lng) as needed
+    setValue("location.latitude", locationData.lat);
+    setValue("location.longitude", locationData.lng);
+
+    const extractAddress = (input: string) => {
+      const parts = input.split(",").map((part) => part.trim());
+
+      const address = {
+        city: "",
+        house_number: "",
+        postal_code: "",
+        street_name: "",
+      };
+
+      if (parts.length >= 3) {
+        // Extract street name and house number (from the first part)
+        const streetAndNumber = parts[0].match(/(.*\D)\s(\d+[A-Za-z]?)$/);
+        if (streetAndNumber) {
+          address.street_name = streetAndNumber[1].trim();
+          address.house_number = streetAndNumber[2].trim();
+        }
+
+        // Extract postal code and city (from the second part)
+        const postalCodeCity = parts[1].trim();
+        const postalCodeMatch = postalCodeCity.match(/(\d{4}\s?[A-Za-z]{2})/i); // Added 'i' for case insensitivity
+        if (postalCodeMatch) {
+          address.postal_code = postalCodeMatch[1];
+        }
+
+        // City is whatever comes after the postal code (if any)
+        const cityMatch = postalCodeCity
+          .replace(address.postal_code, "")
+          .trim();
+        if (cityMatch) {
+          address.city = cityMatch;
+        }
+
+        // Set the values for each field
+        setValue("address.city", address.city);
+        setValue("address.house_number", address.house_number);
+        setValue("address.postal_code", address.postal_code);
+        setValue("address.street_name", address.street_name);
+      }
+    };
+
+    extractAddress(locationData.address);
   };
 
   const onSubmit = (data: PostTrailer) => {
