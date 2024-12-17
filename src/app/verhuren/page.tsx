@@ -137,10 +137,10 @@ const Verhuren = () => {
   return (
     <div className="w-full min-h-screen h-fit flex flex-col sm:flex-row pt-20 gap-5">
       <div className="w-2/3">
-        <h1 className="text-center text-h3 font-bold">
+        <h1 className="text-center text-h3 font-bold mt-2">
           Maak jouw advertentie compleet
         </h1>
-        <div className="flex flex-col mt-5 items-center ">
+        <div className="flex flex-col mt-5 items-center gap-5">
           <hr className="w-11/12 h-0.5 bg-black-200 " />
         </div>
         <form
@@ -154,10 +154,10 @@ const Verhuren = () => {
             </p>
             <FileUpload onFilesChange={setFiles} />
           </div>
-          <div className="w-3/4">
-            <p className="font-bold ">Kies je soort aanhanger:</p>
+          <div className="w-3/4 ">
+            <p className="font-bold">Kies je soort aanhanger:</p>
             <Autocomplete
-              className="w-full buurbak-light border-primary-100 rounded border-1"
+              className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
               placeholder="Soort..."
               aria-label="trailer_type"
               {...register("trailer_type")}
@@ -189,7 +189,7 @@ const Verhuren = () => {
               Kies de accesoires die je bij je aanhanger wilt verhuren:
             </p>
             <Autocomplete
-              className="w-full buurbak-light border-primary-100 rounded border-1"
+              className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
               placeholder="Accesoires..."
               aria-label="accessories"
               {...register("accessories")}
@@ -206,19 +206,19 @@ const Verhuren = () => {
               ))}
             </Autocomplete>
           </div>
-          <div className="w-3/4">
+          <div className="w-3/4 gap-5">
             <p className="font-bold">
               Kies de locatie waar je je aanhanger vanaf verhuurd:
             </p>
             <LocationInput onLocationChange={location} />
             <p>{location}</p>
           </div>
-          <div className="w-3/4">
+          <div className="w-3/4 gap-5">
             <p className="font-bold">
               Kies het soort rijbewijs wat vereist is:
             </p>
             <Autocomplete
-              className="w-full buurbak-light border-primary-100 rounded border-1"
+              className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
               placeholder="Rijbewijs..."
               aria-label="car_driving_license"
               {...register("car_driving_license")}
@@ -327,7 +327,103 @@ const Verhuren = () => {
           ></Button>
         </form>
       </div>
-      <div className="w-1/3 bg-offWhite-100 min-h-screen"></div>
+
+      <div className="w-1/3 bg-offWhite-100 min-h-screen p-5">
+        <div className="flex flex-row gap-1">
+          <img
+            src="/img/verhuurfoto.png"
+            alt="Verhuurde Aanhanger"
+            className="w-2/4 h-auto rounded-lg"
+          />
+          <div className="w-2/4 flex flex-col gap-1">
+            <div className=" w-2/4 flex flex-row gap-1">
+              <img
+                src="/img/verhuurfoto.png"
+                alt="Verhuurde Aanhanger"
+                className="w-full h-auto rounded-lg"
+              />{" "}
+              <img
+                src="/img/verhuurfoto.png"
+                alt="Verhuurde Aanhanger"
+                className="w-full h-auto rounded-lg"
+              />{" "}
+            </div>
+            <div className="w-2/4 flex flex-row gap-1">
+              <img
+                src="/img/verhuurfoto.png"
+                alt="Verhuurde Aanhanger"
+                className="w-full h-auto rounded-lg"
+              />{" "}
+              <img
+                src="/img/verhuurfoto.png"
+                alt="Verhuurde Aanhanger"
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="mt-2">
+          <h6 className="flex flex-row text-primary-100 font-bold">
+            Gesloten Aanhanger
+          </h6>
+          <p className="text-gray-100">Omschrijving:</p>
+        </div>
+        <div className="flex flex-col p-2 gap-3 items-center">
+          <hr className="w-full h-0.5 bg-black-100 "></hr>
+          <h4 className="font-bold">Locatie</h4>
+          <h6>Hilversum</h6>
+          <h4 className="font-bold">Prijs</h4>
+          <h6>€100 per dag</h6>
+          <hr className="w-full h-0.5 bg-black-100 "></hr>
+        </div>
+        <div className="flex mt-2 justify-center">
+          <h4 className="font-bold">Details</h4>
+        </div>
+        <div className="flex flex-col justify-start">
+          <p className="font-bold mt-5">Benodigd Rijbewijs</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="bg-gray-100 mt-3">Rijbewijs</p>
+          <p className="mt-3 bg-gray-100 pl-20">B</p>
+        </div>
+        <div className="flex flex-col justify-start">
+          <p className="font-bold mt-5">Afmetingen</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="bg-gray-100 mt-3">Lengte</p>
+          <p className="mt-3 bg-gray-100 pl-20">2 meter</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="mt-3">Breedte</p>
+          <p className="mt-3 pl-20">6 meter</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="bg-gray-100 mt-3">Hoogte</p>
+          <p className="mt-3 bg-gray-100 pl-20">1 meter</p>
+        </div>
+        <div className="flex flex-col justify-start">
+          <p className="font-bold mt-5">Accessoires</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="bg-gray-100 mt-3">Dissel Slot</p>
+          <p className="mt-3 bg-gray-100 pl-20">Ja</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="mt-3">Reserve Wiel</p>
+          <p className="mt-3 pl-20">Nee</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="bg-gray-100 mt-3">Net</p>
+          <p className="mt-3 bg-gray-100 pl-20">Ja</p>
+        </div>
+        <div className="flex flex-col justify-start">
+          <p className="font-bold mt-5">Overige Kenmerken</p>
+        </div>
+        <div className="flex flex-row">
+          <p className="bg-gray-100 mt-3">Opvouwbaar</p>
+          <p className="mt-3 bg-gray-100 pl-20">Nee</p>
+        </div>
+      </div>
     </div>
   );
 };
