@@ -252,7 +252,7 @@ const Verhuren = () => {
               className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
               placeholder="Accesoires..."
               aria-label="accessories"
-              {...register("accessories")}
+              {...register("accessories.0")}
             >
               {accesoires.map((item, index) => (
                 <AutocompleteItem
