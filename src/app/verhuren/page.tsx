@@ -2,11 +2,15 @@
 
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { Check, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { postImages } from "../api/Images-controller";
+import { postTrailer } from "../api/Trailer-controller";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
+import LocationInput from "../Components/LocationInput";
 import FileUpload from "../Components/UploadFile";
+import { PostImageRes } from "../Types/Image";
 import { PostTrailer } from "../Types/TrailerType";
 
 const getDayAbbreviation = (day: keyof PostTrailer["availability"]) => {
@@ -30,22 +34,19 @@ const getDayAbbreviation = (day: keyof PostTrailer["availability"]) => {
   }
 };
 
-type DayState = {
-  [key in
-    | "monday"
-    | "tuesday"
-    | "wednesday"
-    | "thursday"
-    | "friday"
-    | "saturday"
-    | "sunday"]: boolean;
-};
-
 const Verhuren = () => {
+  const [files, setFiles] = useState<File[]>([]);
+  const [location, setLocation] = useState<string>("");
+
   const form = useForm<PostTrailer>({
     defaultValues: {
-      accessories: [],
-      address: { city: "", house_number: "", postal_code: "", street_name: "" },
+      accessories: [""],
+      address: {
+        city: "",
+        house_number: "",
+        postal_code: "",
+        street_name: "",
+      },
       availability: {
         monday: false,
         tuesday: false,
@@ -57,28 +58,29 @@ const Verhuren = () => {
       },
       car_driving_license: "",
       description: "",
-      dimensions: { height: 0, length: 0, width: 0 },
+      dimensions: { height: undefined, length: undefined, width: undefined },
       images: [],
-      location: { latitude: 0, longitude: 0 },
-      rental_price: 0,
+      location: { latitude: undefined, longitude: undefined },
+      rental_price: undefined,
       title: "",
       trailer_type: "",
     },
   });
-  const { register, handleSubmit, formState, setValue, watch, getValues } =
-    form;
-  const { errors } = formState;
+  const {
+    register,
+    handleSubmit,
+    formState,
+    setValue,
+    watch,
+    getValues,
+    reset,
+  } = form;
+  const { errors, isSubmitSuccessful, isSubmitting } = formState;
 
-  const [days, setDays] = useState<DayState>({
-    monday: false,
-    tuesday: false,
-    wednesday: false,
-    thursday: false,
-    friday: false,
-    saturday: false,
-    sunday: false,
-  });
-  const dagen: string[] = ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
+  useEffect(() => {
+    reset();
+  }, [isSubmitSuccessful]);
+
   const license: string[] = ["A", "B", "C"];
   const soortAanhanger: string[] = [
     "Open Aanhanger",
@@ -104,8 +106,32 @@ const Verhuren = () => {
     setValue(`availability.${day}`, !watch(`availability.${day}`));
   };
 
+  useEffect(() => {
+    const imageUuidArray = async () => {
+      const imageUUID: string[] = [];
+      const res = await postImages(files);
+
+      if (res) {
+        res.forEach((item: PostImageRes) => {
+          imageUUID.push(item.uuid);
+        });
+        setValue("images", imageUUID);
+      }
+    };
+
+    if (files.length > 0) {
+      imageUuidArray();
+    }
+  }, [files]);
+
   const onSubmit = (data: PostTrailer) => {
-    console.log(data);
+    const addTrailer = async () => {
+      console.log(data);
+      const resPost = await postTrailer(data);
+      console.log("resPost:", resPost);
+    };
+
+    addTrailer();
   };
 
   return (
@@ -126,7 +152,7 @@ const Verhuren = () => {
             <p className="font-bold">
               Kies de foto's die jouw aanhanger het beste representeren:
             </p>
-            <FileUpload />
+            <FileUpload onFilesChange={setFiles} />
           </div>
           <div className="w-3/4">
             <p className="font-bold ">Kies je soort aanhanger:</p>
@@ -184,6 +210,8 @@ const Verhuren = () => {
             <p className="font-bold">
               Kies de locatie waar je je aanhanger vanaf verhuurd:
             </p>
+            <LocationInput outputValue={location} />
+            <p>{location}</p>
           </div>
           <div className="w-3/4">
             <p className="font-bold">
@@ -292,7 +320,11 @@ const Verhuren = () => {
               ))}
             </div>
           </div>
-          <Button label="Voeg jouw trailer toe" submit></Button>
+          <Button
+            label="Voeg jouw trailer toe"
+            submit
+            disabled={isSubmitting}
+          ></Button>
         </form>
       </div>
       <div className="w-1/3 bg-offWhite-100 min-h-screen"></div>

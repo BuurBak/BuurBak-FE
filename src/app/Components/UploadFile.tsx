@@ -2,13 +2,22 @@
 
 import { AlertCircle, ImageIcon, Upload } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "./Button";
 
-export default function FileUpload() {
+type FileUploadProps = {
+  onFilesChange: (files: File[]) => void; // Callback to notify parent of file changes
+};
+
+export default function FileUpload({ onFilesChange }: FileUploadProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const maxFiles = 5;
+
+  // Notify the parent component when files change
+  useEffect(() => {
+    onFilesChange(files);
+  }, [files, onFilesChange]);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -20,17 +29,20 @@ export default function FileUpload() {
     }
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragging(false);
 
-    const droppedFiles = Array.from(e.dataTransfer.files);
-    const imageFiles = droppedFiles.filter((file) =>
-      file.type.startsWith("image/")
-    );
-    setFiles((prev) => [...prev, ...imageFiles].slice(0, maxFiles));
-  }, []);
+      const droppedFiles = Array.from(e.dataTransfer.files);
+      const imageFiles = droppedFiles.filter((file) =>
+        file.type.startsWith("image/")
+      );
+      setFiles((prev) => [...prev, ...imageFiles].slice(0, maxFiles));
+    },
+    [maxFiles]
+  );
 
   const handleFileInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +54,7 @@ export default function FileUpload() {
         setFiles((prev) => [...prev, ...imageFiles].slice(0, maxFiles));
       }
     },
-    []
+    [maxFiles]
   );
 
   const removeFile = useCallback((index: number) => {
@@ -52,12 +64,9 @@ export default function FileUpload() {
   return (
     <div className="w-full">
       <div
-        className={`
-          border-2 border-dashed rounded-lg p-6 cursor-pointer transition-colors
-          ${isDragging ? "border-primary bg-primary/10" : "border-gray-300"} ${
-          files.length >= maxFiles ? "border-green-500" : ""
-        }
-        `}
+        className={`border-2 border-dashed rounded-lg p-6 cursor-pointer transition-colors ${
+          isDragging ? "border-primary bg-primary/10" : "border-gray-300"
+        } ${files.length >= maxFiles ? "border-green-500" : ""}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
