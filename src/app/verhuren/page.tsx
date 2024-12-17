@@ -391,6 +391,16 @@ const Verhuren = () => {
           <p className="bg-gray-100 mt-3">Opvouwbaar</p>
           <p className="mt-3 bg-gray-100 pl-20">Nee</p>
         </div>
+        <div className="flex flex-col mt-5 items-center">
+          <Button
+            styling="rounded-5 w-3/4"
+            label="Creëer Advertentie"
+            type="primary"
+          />
+          <p className="underline italic text-black-100 ">
+            Algemene Voorwaarden
+          </p>
+        </div>
       </div>
     </div>
   );
