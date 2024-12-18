@@ -198,19 +198,19 @@ const Verhuren = () => {
   };
 
   return (
-    <div className="w-full min-h-screen h-fit flex flex-col sm:flex-row pt-32 gap-5">
-      <div className="w-2/3">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full min-h-screen h-fit flex flex-col sm:flex-row pt-32 gap-5"
+      noValidate
+    >
+      <div className="w-full lg:w-2/3">
         <h1 className="text-center text-h3 font-bold mt-2">
           Maak jouw advertentie compleet
         </h1>
         <div className="flex flex-col mt-5 items-center gap-5">
           <hr className="w-11/12 h-0.5 bg-black-200 " />
         </div>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-center pt-5 gap-5"
-          noValidate
-        >
+        <div className="flex flex-col items-center pt-5 gap-5">
           <div className="w-3/4 flex flex-col gap-5">
             <p className="font-bold">
               Kies de foto's die jouw aanhanger het beste representeren:
@@ -449,15 +449,10 @@ const Verhuren = () => {
               ))}
             </div>
           </div>
-          <Button
-            label="Voeg jouw trailer toe"
-            submit
-            disabled={isSubmitting}
-          ></Button>
-        </form>
+        </div>
       </div>
 
-      <div className="w-1/3 bg-offWhite-100 min-h-screen p-5">
+      <div className="w-full lg:w-1/3 bg-offWhite-100 min-h-screen p-5">
         <div className=" bg-white w-full h-fit sm:sticky sm:top-32 p-5 rounded">
           <div className="flex flex-row gap-1">
             {pictures[0] && (
@@ -530,19 +525,19 @@ const Verhuren = () => {
             <hr className="w-full h-0.5 bg-black-100 "></hr>
           </div>
           <Details trailerOffer={watch()} />
-        </div>
-        <div className="flex flex-col mt-5 items-center">
-          <Button
-            styling="rounded-5 w-3/4"
-            label="Creëer Advertentie"
-            type="primary"
-          />
-          <p className="underline italic text-black-100 ">
-            Algemene Voorwaarden
-          </p>
+          <div className="flex flex-col mt-5 items-center">
+            <Button
+              label="Voeg jouw trailer toe"
+              submit
+              disabled={isSubmitting || isSubmitSuccessful}
+            />
+            <p className="underline italic text-black-100 ">
+              Algemene Voorwaarden
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

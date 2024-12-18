@@ -23,7 +23,7 @@ const Details = ({
   };
 
   return (
-    <div className="relative mb-[3rem]">
+    <div className="relative mb-[4rem]">
       <div
         className={`flex flex-col gap-5 overflow-hidden transition-[height] ease-in-out duration-300 ${
           collapsed && "h-[20vh]"
