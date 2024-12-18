@@ -1,12 +1,12 @@
 "use client";
 
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { Select, SelectItem } from "@nextui-org/select";
 import { Check, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { postImages } from "../api/Images-controller";
 import { postTrailer } from "../api/Trailer-controller";
-import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import LocationInput from "../Components/LocationInput";
@@ -81,6 +81,7 @@ const Verhuren = () => {
     watch,
     getValues,
     reset,
+    control,
   } = form;
   const { errors, isSubmitSuccessful, isSubmitting } = formState;
 
@@ -212,7 +213,16 @@ const Verhuren = () => {
             <p className="font-bold">
               Kies de foto's die jouw aanhanger het beste representeren:
             </p>
-            <FileUpload onFilesChange={setFiles} />
+            <FileUpload
+              onFilesChange={setFiles}
+              {...register("images", {
+                required: "Voeg 5 fotos toe",
+                validate: (fieldValue) => {
+                  return fieldValue.length === 5 ? true : "Voeg 5 fotos toe";
+                },
+              })}
+            />
+            <p className="text-error-100">{errors.images?.message}</p>
           </div>
           <div className="w-3/4 ">
             <p className="font-bold">Kies je soort aanhanger:</p>
@@ -220,7 +230,9 @@ const Verhuren = () => {
               className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
               placeholder="Soort..."
               aria-label="trailer_type"
-              {...register("trailer_type")}
+              {...register("trailer_type", {
+                required: "Kies jouw soort aanhanger",
+              })}
             >
               {soortAanhanger.map((item, index) => (
                 <AutocompleteItem
@@ -233,6 +245,7 @@ const Verhuren = () => {
                 </AutocompleteItem>
               ))}
             </Autocomplete>
+            <p className="text-error-100">{errors.trailer_type?.message}</p>
           </div>
           <div className="w-3/4">
             <p className="font-bold">Geef een beschrijving voor de huurder:</p>
@@ -241,37 +254,64 @@ const Verhuren = () => {
               className="flex flex-row mt-5 p-2.5 w-full h-32 rounded border-1 border-primary-100"
               placeholder="Typ een kleine beschrijving over je aanhanger..."
               aria-label="description"
-              {...register("description")}
+              {...register("description", {
+                required: "Vul een korste beschrijving in voor jouw aanhanger",
+              })}
             />
+            <p className="text-error-100">{errors.description?.message}</p>
           </div>
           <div className="w-3/4">
             <p className="font-bold">
               Kies de accesoires die je bij je aanhanger wilt verhuren:
             </p>
-            <Autocomplete
-              className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
-              placeholder="Accesoires..."
-              aria-label="accessories"
-              {...register("accessories.0")}
-            >
-              {accesoires.map((item, index) => (
-                <AutocompleteItem
-                  key={index}
-                  value={item}
-                  aria-label={item}
-                  className="buurbak-light "
+            <Controller
+              name="accessories"
+              control={control}
+              rules={{ required: "Kies tenminste 1 accessoire" }}
+              defaultValue={[]}
+              render={({ field, fieldState: { error } }) => (
+                <Select
+                  aria-label="Kies jouw accessoires"
+                  selectionMode="multiple"
+                  placeholder="Kies jouw accessoires"
+                  className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
+                  selectedKeys={new Set(field.value)}
+                  onSelectionChange={(keys) => {
+                    const selectedValues = Array.from(keys) as string[];
+                    field.onChange(selectedValues);
+                  }}
                 >
-                  {item}
-                </AutocompleteItem>
-              ))}
-            </Autocomplete>
+                  {accesoires.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+            <p className="text-error-100">{errors.accessories?.message}</p>
           </div>
           <div className="w-3/4 gap-5">
             <p className="font-bold">
               Kies de locatie waar je je aanhanger vanaf verhuurd:
             </p>
-            <LocationInput onLocationChange={handleLocationChange} />
-            <p>{location}</p>
+            <LocationInput
+              onLocationChange={handleLocationChange}
+              {...register("location", {
+                required: "Vul jouw locatie in",
+                validate: (__fieldValue) => {
+                  return watch("location.latitude") !== undefined &&
+                    watch("location.longitude") !== undefined &&
+                    watch("address.city") !== "" &&
+                    watch("address.house_number") !== "" &&
+                    watch("address.postal_code") !== "" &&
+                    watch("address.street_name") !== ""
+                    ? true
+                    : "Vul jouw locatie in";
+                },
+              })}
+            />
+            <p className="text-error-100">{errors.location?.message}</p>
           </div>
           <div className="w-3/4 gap-5">
             <p className="font-bold">
@@ -281,7 +321,9 @@ const Verhuren = () => {
               className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
               placeholder="Rijbewijs..."
               aria-label="car_driving_license"
-              {...register("car_driving_license")}
+              {...register("car_driving_license", {
+                required: "Vul het rijbewijs in dat nodig is voor jouw trailer",
+              })}
             >
               {license.map((item, index) => (
                 <AutocompleteItem
@@ -294,6 +336,9 @@ const Verhuren = () => {
                 </AutocompleteItem>
               ))}
             </Autocomplete>
+            <p className="text-error-100">
+              {errors.car_driving_license?.message}
+            </p>
           </div>
           <div className="flex flex-col w-3/4 gap-5">
             <p className="font-bold">Vul de afmetingen van je aanhanger in:</p>
@@ -307,8 +352,14 @@ const Verhuren = () => {
                 iconName="L"
                 outline
                 className="w-full"
-                {...register("dimensions.length", { valueAsNumber: true })}
+                {...register("dimensions.length", {
+                  valueAsNumber: true,
+                  required: "Vul de lengte in van jou aanhanger",
+                })}
               />
+              <p className="text-error-100">
+                {errors.dimensions?.length?.message}
+              </p>
               <InputField
                 inputType="text"
                 label="Vul de breedte van je aanhanger in "
@@ -318,8 +369,14 @@ const Verhuren = () => {
                 iconName="B"
                 outline
                 className="w-full"
-                {...register("dimensions.width", { valueAsNumber: true })}
+                {...register("dimensions.width", {
+                  valueAsNumber: true,
+                  required: "Vul de breedte in van jou aanhanger",
+                })}
               />
+              <p className="text-error-100">
+                {errors.dimensions?.width?.message}
+              </p>
               <InputField
                 inputType="text"
                 label="Vul de hoogte van je aanhanger in "
@@ -329,8 +386,14 @@ const Verhuren = () => {
                 iconName="H"
                 outline
                 className="w-full"
-                {...register("dimensions.height", { valueAsNumber: true })}
+                {...register("dimensions.height", {
+                  valueAsNumber: true,
+                  required: "Vul de hoogte in van jou aanhanger",
+                })}
               />
+              <p className="text-error-100">
+                {errors.dimensions?.height?.message}
+              </p>
             </div>
           </div>
           <div className="flex flex-col w-3/4 gap-5">
@@ -346,8 +409,12 @@ const Verhuren = () => {
               outline
               className="w-full"
               type="number"
-              {...register("rental_price", { valueAsNumber: true })}
+              {...register("rental_price", {
+                valueAsNumber: true,
+                required: "Vul de prijs in van jou aanhanger",
+              })}
             />
+            <p className="text-error-100">{errors.rental_price?.message}</p>
           </div>
           <div className="flex flex-col gap-5 w-3/4">
             <p className="font-bold">
@@ -436,7 +503,7 @@ const Verhuren = () => {
           <h6>€100 per dag</h6>
           <hr className="w-full h-0.5 bg-black-100 "></hr>
         </div>
-        <Details trailerOffer={watch()} />
+        {/* <Details trailerOffer={watch()} /> */}
       </div>
     </div>
   );
