@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"; // Import useRouter
 import { useEffect, useState } from "react";
 import profielfoto from "../../../public/img/verhuurfoto.png";
 import { GetUser } from "../Types/User";
-import { linkToStripe } from "../api/Payment-controller";
+import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
 import { getUser, signOut } from "../api/auth/Register";
 import GegevensModal from "./GegevensModal";
 
@@ -40,6 +40,14 @@ export default function Profiel() {
     const res = await linkToStripe();
     window.open(res?.url, "_blank");
   };
+
+  useEffect(() => {
+    const checkStripe = async () => {
+      let res = await checkStripeConnection();
+      console.log("res", res?.ready_for_payments);
+    };
+    checkStripe();
+  }, []);
 
   return (
     <>
