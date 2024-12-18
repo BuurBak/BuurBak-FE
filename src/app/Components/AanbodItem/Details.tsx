@@ -40,13 +40,17 @@ const Details = ({
               >
                 <p>{dutchLabel}:</p>
                 <p>
-                  {convertMeterToCentimeter(
-                    trailerOffer.dimensions[
-                      dimensionLabels[
-                        dutchLabel
-                      ] as keyof TrailerData["dimensions"]
-                    ]
-                  ) + " "}
+                  {trailerOffer.dimensions.height ||
+                  trailerOffer.dimensions.length ||
+                  trailerOffer.dimensions.width
+                    ? convertMeterToCentimeter(
+                        trailerOffer.dimensions[
+                          dimensionLabels[
+                            dutchLabel
+                          ] as keyof TrailerData["dimensions"]
+                        ]
+                      ) + " "
+                    : "0 "}
                   meter
                 </p>
               </div>

@@ -3,10 +3,12 @@
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Check, X } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { postImages } from "../api/Images-controller";
 import { postTrailer } from "../api/Trailer-controller";
+import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import LocationInput from "../Components/LocationInput";
@@ -43,7 +45,7 @@ type LocationData = {
 
 const Verhuren = () => {
   const [files, setFiles] = useState<File[]>([]);
-  const [location, setLocation] = useState<any>();
+  const [pictures, setPictures] = useState<string[]>([]);
 
   const form = useForm<PostTrailer>({
     defaultValues: {
@@ -126,6 +128,8 @@ const Verhuren = () => {
       if (res) {
         res.forEach((item: PostImageRes) => {
           imageUUID.push(item.uuid);
+          const prevPictures = pictures;
+          setPictures([...prevPictures, item.url]);
         });
         setValue("images", imageUUID);
       }
@@ -187,16 +191,14 @@ const Verhuren = () => {
 
   const onSubmit = (data: PostTrailer) => {
     const addTrailer = async () => {
-      console.log(data);
-      const resPost = await postTrailer(data);
-      console.log("resPost:", resPost);
+      await postTrailer(data);
     };
 
     addTrailer();
   };
 
   return (
-    <div className="w-full min-h-screen h-fit flex flex-col sm:flex-row pt-20 gap-5">
+    <div className="w-full min-h-screen h-fit flex flex-col sm:flex-row pt-32 gap-5">
       <div className="w-2/3">
         <h1 className="text-center text-h3 font-bold mt-2">
           Maak jouw advertentie compleet
@@ -456,54 +458,79 @@ const Verhuren = () => {
       </div>
 
       <div className="w-1/3 bg-offWhite-100 min-h-screen p-5">
-        <div className="flex flex-row gap-1">
-          <img
-            src="/img/verhuurfoto.png"
-            alt="Verhuurde Aanhanger"
-            className="w-2/4 h-auto rounded-lg"
-          />
-          <div className="w-2/4 flex flex-col gap-1">
-            <div className=" w-2/4 flex flex-row gap-1">
-              <img
-                src="/img/verhuurfoto.png"
-                alt="Verhuurde Aanhanger"
-                className="w-full h-auto rounded-lg"
-              />{" "}
-              <img
-                src="/img/verhuurfoto.png"
-                alt="Verhuurde Aanhanger"
-                className="w-full h-auto rounded-lg"
-              />{" "}
-            </div>
-            <div className="w-2/4 flex flex-row gap-1">
-              <img
-                src="/img/verhuurfoto.png"
-                alt="Verhuurde Aanhanger"
-                className="w-full h-auto rounded-lg"
-              />{" "}
-              <img
-                src="/img/verhuurfoto.png"
-                alt="Verhuurde Aanhanger"
-                className="w-full h-auto rounded-lg"
+        <div className=" bg-white w-full h-fit sm:sticky sm:top-32 p-5 rounded">
+          <div className="flex flex-row gap-1">
+            {pictures[0] && (
+              <Image
+                src={pictures[0]}
+                alt=""
+                className="w-2/4 h-auto rounded-lg"
+                width={200}
+                height={200}
               />
+            )}
+            <div className="w-2/4 flex flex-col gap-1">
+              <div className=" w-2/4 flex flex-row gap-1">
+                {pictures[1] && (
+                  <Image
+                    src={pictures[1]}
+                    alt=""
+                    className="w-full h-auto rounded-lg"
+                    width={200}
+                    height={200}
+                  />
+                )}
+                {pictures[2] && (
+                  <Image
+                    src={pictures[2]}
+                    alt=""
+                    className="w-full h-auto rounded-lg"
+                    width={200}
+                    height={200}
+                  />
+                )}
+              </div>
+              <div className="w-2/4 flex flex-row gap-1">
+                {pictures[3] && (
+                  <Image
+                    src={pictures[3]}
+                    alt=""
+                    className="w-full h-auto rounded-lg"
+                    width={200}
+                    height={200}
+                  />
+                )}
+                {pictures[4] && (
+                  <Image
+                    src={pictures[4]}
+                    alt=""
+                    className="w-full h-auto rounded-lg"
+                    width={200}
+                    height={200}
+                  />
+                )}
+              </div>
             </div>
           </div>
+          <div className="mt-2">
+            <h6 className="flex flex-row text-primary-100 font-bold">
+              {watch("trailer_type")}
+            </h6>
+            <p className="text-gray-100">Omschrijving:</p>
+            <p>{watch("description")}</p>
+          </div>
+          <div className="flex flex-col p-2 gap-3 items-center">
+            <hr className="w-full h-0.5 bg-black-100 "></hr>
+            <h4 className="font-bold">Locatie</h4>
+            <h6>{watch("address.city")}</h6>
+            <h4 className="font-bold">Prijs</h4>
+            <h6>
+              €{watch("rental_price") ? watch("rental_price") : 0} per dag
+            </h6>
+            <hr className="w-full h-0.5 bg-black-100 "></hr>
+          </div>
+          <Details trailerOffer={watch()} />
         </div>
-        <div className="mt-2">
-          <h6 className="flex flex-row text-primary-100 font-bold">
-            Gesloten Aanhanger
-          </h6>
-          <p className="text-gray-100">Omschrijving:</p>
-        </div>
-        <div className="flex flex-col p-2 gap-3 items-center">
-          <hr className="w-full h-0.5 bg-black-100 "></hr>
-          <h4 className="font-bold">Locatie</h4>
-          <h6>Hilversum</h6>
-          <h4 className="font-bold">Prijs</h4>
-          <h6>€100 per dag</h6>
-          <hr className="w-full h-0.5 bg-black-100 "></hr>
-        </div>
-        {/* <Details trailerOffer={watch()} /> */}
       </div>
     </div>
   );

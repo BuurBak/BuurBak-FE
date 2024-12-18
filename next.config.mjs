@@ -14,6 +14,12 @@ const nextConfig = {
         port: "",
         pathname: "/images/**",
       },
+      {
+        protocol: "http",
+        hostname: "api.buurbak.nl",
+        port: "",
+        pathname: "/images/**",
+      },
     ],
   },
 };
