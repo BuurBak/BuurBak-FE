@@ -36,8 +36,8 @@ const Page = () => {
           outline
           className="w-full"
           type="email"
-          inputValue={mail}
-          setInputValue={setMail}
+          value={mail}
+          onChange={(e) => setMail(e.target.value)}
           required
         />
         <a className="cursor-pointer text-secondary-100" href="/">

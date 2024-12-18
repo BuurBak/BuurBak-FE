@@ -31,7 +31,7 @@ export const logIn = async (data: Login): Promise<LoginResponse> => {
   return redirect("");
 };
 
-export const register = async (data: Login) => {
+export const registerAccount = async (data: Login) => {
   const email = data.username;
   const password = data.password;
   const supabase = createClient();

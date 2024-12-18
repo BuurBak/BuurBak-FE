@@ -2,50 +2,55 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Login } from "../Types/User";
-import { logIn, register } from "../api/auth/Register";
+import { logIn, registerAccount } from "../api/auth/Register";
 import Button from "./Button";
 import InputField from "./InputField";
 
 const Register = () => {
+  const form = useForm<Login>({
+    defaultValues: {
+      name: "",
+      password: "",
+      phoneNumber: undefined,
+      username: "",
+    },
+  });
+  const { register, handleSubmit, getValues } = form;
+
   const [showPassword, setShowPassword] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [name, setName] = useState();
-  const [mobile, setMobile] = useState();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const onSubmit = async (data: Login) => {
     if (!hasAccount) {
-      if (email && password) {
-        let loginCredentials: Login = {
-          username: email,
-          password: password,
-        };
-        await logIn(loginCredentials);
-        window.location.reload();
-      }
-    } else if (email && password && name && mobile) {
-      let registerCredentials: Login = {
-        username: email,
-        password: password,
-        name: name,
-        phoneNumber: mobile,
+      let loginCredentials: Login = {
+        username: getValues("username"),
+        password: getValues("password"),
       };
-      await register(registerCredentials);
+      await logIn(loginCredentials);
+      window.location.reload();
+    } else {
+      let registerCredentials: Login = {
+        username: getValues("username"),
+        password: getValues("password"),
+        name: getValues("name"),
+        phoneNumber: getValues("phoneNumber"),
+      };
+      await registerAccount(registerCredentials);
       window.location.reload();
     }
   };
 
   return (
-    <form className="w-full flex flex-col gap-4 pb-4" onSubmit={handleSubmit}>
+    <form
+      className="w-full flex flex-col gap-4 pb-4"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       {hasAccount && (
         <div className="w-full">
           <label>Naam</label>
           <InputField
-            setInputValue={setName}
             type="text"
             // pattern="^(?:[A-Z]|[a-z])[a-z ]+(?: [A-Z]?[a-z ]*)*$"
             className="!w-full"
@@ -53,13 +58,13 @@ const Register = () => {
             inputType="text"
             outline={true}
             required={hasAccount}
+            {...register("name")}
           />
         </div>
       )}
       <div className="w-full">
         <label>Email</label>
         <InputField
-          setInputValue={setEmail}
           type="email"
           className="!w-full"
           // pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -67,13 +72,13 @@ const Register = () => {
           inputType="text"
           outline={true}
           required={true}
+          {...register("username")}
         />
       </div>
       {hasAccount && (
         <div className="w-full">
           <label>Telefoon nummer</label>
           <InputField
-            setInputValue={setMobile}
             type="tel"
             // pattern="^(06|00316|\+316|0031 6|\+31 6)(?:\s?)(?:[0-9]{2}\s?){4}$"
             className="!w-full"
@@ -81,13 +86,13 @@ const Register = () => {
             inputType="text"
             outline={true}
             required={hasAccount}
+            {...register("phoneNumber")}
           />
         </div>
       )}
       <div>
         <label>Wachtwoord</label>
         <InputField
-          setInputValue={setPassword}
           type={showPassword ? "text" : "passWord"}
           className="!w-full"
           label="Wachtwoord"
@@ -97,6 +102,7 @@ const Register = () => {
           icon={true}
           iconName={showPassword ? "Eye" : "EyeOff"}
           iconClick={() => setShowPassword(!showPassword)}
+          {...register("password")}
         />
       </div>
       <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
