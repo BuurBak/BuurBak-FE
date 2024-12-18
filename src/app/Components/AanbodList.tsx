@@ -179,6 +179,7 @@ const AanbodList = () => {
             styling="border"
             label="Filter"
             icon={true}
+            IconName="Filter"
             type="secondary"
             buttonAction={() => setShowFilters(!showFilters)}
           />

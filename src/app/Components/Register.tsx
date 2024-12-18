@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Login } from "../Types/User";
@@ -28,6 +29,7 @@ const Register = () => {
         password: getValues("password"),
       };
       await logIn(loginCredentials);
+      window.location.reload();
     } else {
       let registerCredentials: Login = {
         username: getValues("username"),
@@ -36,6 +38,7 @@ const Register = () => {
         phoneNumber: getValues("phoneNumber"),
       };
       await registerAccount(registerCredentials);
+      window.location.reload();
     }
   };
 
@@ -102,6 +105,7 @@ const Register = () => {
           {...register("password")}
         />
       </div>
+      <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
       <Button label={hasAccount ? "Registreer" : "Log in"} submit={true} />
       {!hasAccount && (
         <p>

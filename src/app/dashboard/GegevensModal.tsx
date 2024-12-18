@@ -77,7 +77,7 @@ export default function GegevensModal() {
       profile_picture: "",
     };
     updateUser(data);
-    console.log("poep", data);
+    console.log("", data);
   };
 
   return (
