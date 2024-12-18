@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     label: "primary",
-    inputValue: "",
+    value: "",
     inputType: "text",
   },
 };
@@ -32,7 +32,7 @@ export const Primary: Story = {
 export const Secondary: Story = {
   args: {
     label: "secondary",
-    inputValue: 0,
+    value: 0,
     inputType: "star",
   },
 };

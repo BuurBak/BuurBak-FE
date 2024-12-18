@@ -213,7 +213,7 @@ const Verhuren = () => {
         <div className="flex flex-col items-center pt-5 gap-5">
           <div className="w-3/4 flex flex-col gap-5">
             <p className="font-bold">
-              Kies de foto's die jouw aanhanger het beste representeren:
+              Kies de fotos die jouw aanhanger het beste representeren:
             </p>
             <FileUpload
               onFilesChange={setFiles}

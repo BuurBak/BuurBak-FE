@@ -34,8 +34,8 @@ const Page = () => {
           outline
           className="w-full"
           type="password"
-          inputValue={pass}
-          setInputValue={setPass}
+          value={pass}
+          onChange={(e) => setPass(e.target.value)}
           required
         />
         <InputField
@@ -44,8 +44,8 @@ const Page = () => {
           outline
           className="w-full"
           type="password"
-          inputValue={secPass}
-          setInputValue={setSecPass}
+          value={secPass}
+          onChange={(e) => setSecPass(e.target.value)}
           required
         />
         <Button label="Verstuur" submit type="primary" />

@@ -8,10 +8,12 @@ import { getTrailer } from "@/app/api/Trailer-controller";
 import { hasToken } from "@/app/api/auth/Cookies";
 import { getUserSupaBase } from "@/app/api/auth/Register";
 import {
+  CalendarDate,
   fromDate,
   getLocalTimeZone,
   toCalendarDate,
 } from "@internationalized/date";
+import { RangeValue } from "@nextui-org/calendar";
 import { Checkbox } from "@nextui-org/checkbox";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { format, parseISO } from "date-fns";
@@ -45,7 +47,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   const [reqLoading, setReqLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [checked, setChecked] = useState<boolean>(false);
-  const [date, setDate] = useState({
+  const [date, setDate] = useState<RangeValue<CalendarDate> | null>({
     start: toCalendarDate(
       fromDate(new Date(newDate.start || ""), getLocalTimeZone())
     ),
@@ -83,16 +85,18 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   }, []);
 
   useEffect(() => {
-    setValue("dateStart", date.start.toString(), {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
-    setValue("dateEnd", date.end.toString(), {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
+    if (date) {
+      setValue("dateStart", date.start.toString(), {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+      setValue("dateEnd", date.end.toString(), {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
   }, [date]);
 
   const formatDate = (date: Date) => {
