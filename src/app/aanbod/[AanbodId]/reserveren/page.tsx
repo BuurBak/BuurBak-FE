@@ -5,6 +5,7 @@ import { PostReservations, TrailerData } from "@/app/Types/Reservation";
 import { SupaUser } from "@/app/Types/User";
 import { postReservations } from "@/app/api/Reservations-controller";
 import { getTrailer } from "@/app/api/Trailer-controller";
+import { hasToken } from "@/app/api/auth/Cookies";
 import { getUserSupaBase } from "@/app/api/auth/Register";
 import {
   fromDate,
@@ -53,7 +54,8 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     ),
   });
   const [user, setUser] = useState<SupaUser>();
-  const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
+  const { register, handleSubmit, setValue, getValues, watch } =
+    useForm<Inputs>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,8 +71,12 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     fetchData();
 
     const account = async () => {
-      const data = await getUserSupaBase();
-      setUser(data.data.user);
+      if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
+        const data = await getUserSupaBase();
+        setUser(data.data.user);
+      } else {
+        console.log(user);
+      }
     };
 
     account();
@@ -98,6 +104,8 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
       String(date.getDate()).padStart(2, "0")
     );
   };
+
+  const terms = watch("terms");
 
   const onSubmit: SubmitHandler<Inputs> = async () => {
     if (trailerOffer && user) {
@@ -197,22 +205,28 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               buttonAction={() => setChangeTime(!changeTime)}
             />
           </div> */}
-          <div className="flex justify-between items-center">
-            <div className="flex flex-col gap-1">
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
-                <p className="sm:w-8 text-h6">Naam:</p>
-                <p className="text-normal">{user?.user_metadata.name}</p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
-                <p className="sm:w-8 text-h6">Mail:</p>
-                <p className="text-normal">{user?.email}</p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
-                <p className="sm:w-8 text-h6">Tel:</p>
-                <p className="text-normal">{user?.user_metadata.phoneNumber}</p>
+          {user ? (
+            <div className="flex justify-between items-center">
+              <div className="flex flex-col gap-1">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
+                  <p className="sm:w-8 text-h6">Naam:</p>
+                  <p className="text-normal">{user?.user_metadata.name}</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
+                  <p className="sm:w-8 text-h6">Mail:</p>
+                  <p className="text-normal">{user?.email}</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
+                  <p className="sm:w-8 text-h6">Tel:</p>
+                  <p className="text-normal">
+                    {user?.user_metadata.phoneNumber}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
           <textarea
             placeholder="Bericht aan verhuurder"
             className="w-full h-20 p-2 border border-gray-100 resize-y"
@@ -239,6 +253,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               label="Reserveer jouw aanhanger"
               styling="w-full"
               submit={true}
+              disabled={user === undefined || !terms}
             />
           </div>
         </div>

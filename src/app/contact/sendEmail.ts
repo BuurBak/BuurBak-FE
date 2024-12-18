@@ -12,7 +12,7 @@ export const sendEmail = async (formData: FormData) => {
   try {
     await resend.emails.send({
       from: "info@buurbak.nl",
-      to: "jesse.elbertsen@gmail.com",
+      to: "info@buurbak.nl",
       subject: `Nieuw bericht van ${name}`,
       text: `Naam: ${name}\nE-mail: ${email}\nBericht:\n${message}`,
     });

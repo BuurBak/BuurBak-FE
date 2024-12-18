@@ -32,6 +32,7 @@ const ContactPage: React.FC = () => {
       console.log("E-mail succesvol verzonden!");
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
+      setFormData({ name: "", email: "", message: "" });
     } catch (error) {
       console.error("Fout bij verzenden e-mail:", error);
       alert("Er is een probleem opgetreden bij het verzenden van de e-mail.");
