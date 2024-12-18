@@ -347,7 +347,7 @@ const Verhuren = () => {
             <div className="flex flex-col gap-3 w-full">
               <InputField
                 inputType="text"
-                label="Vul de lengte van je aanhanger in "
+                label="Vul de lengte van je aanhanger in, in CM "
                 icon
                 iconLeft
                 type="number"
@@ -364,7 +364,7 @@ const Verhuren = () => {
               </p>
               <InputField
                 inputType="text"
-                label="Vul de breedte van je aanhanger in "
+                label="Vul de breedte van je aanhanger in, in CM"
                 icon
                 iconLeft
                 type="number"
@@ -381,7 +381,7 @@ const Verhuren = () => {
               </p>
               <InputField
                 inputType="text"
-                label="Vul de hoogte van je aanhanger in "
+                label="Vul de hoogte van je aanhanger in, in CM "
                 icon
                 iconLeft
                 type="number"
@@ -530,6 +530,16 @@ const Verhuren = () => {
             <hr className="w-full h-0.5 bg-black-100 "></hr>
           </div>
           <Details trailerOffer={watch()} />
+        </div>
+        <div className="flex flex-col mt-5 items-center">
+          <Button
+            styling="rounded-5 w-3/4"
+            label="Creëer Advertentie"
+            type="primary"
+          />
+          <p className="underline italic text-black-100 ">
+            Algemene Voorwaarden
+          </p>
         </div>
       </div>
     </div>
