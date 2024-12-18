@@ -2,13 +2,13 @@
 
 import { ChevronRight, DoorClosed } from "lucide-react";
 import Image from "next/image";
-import profielfoto from "../../../public/img/verhuurfoto.png";
-import GegevensModal from "./GegevensModal";
-import { useEffect, useState } from "react";
-import { getUser } from "../api/auth/Register";
-import { signOut } from "../api/auth/Register"; // Import signOut-functie
 import { useRouter } from "next/navigation"; // Import useRouter
+import { useEffect, useState } from "react";
+import profielfoto from "../../../public/img/verhuurfoto.png";
 import { GetUser } from "../Types/User";
+import { linkToStripe } from "../api/Payment-controller";
+import { getUser, signOut } from "../api/auth/Register";
+import GegevensModal from "./GegevensModal";
 
 export default function Profiel() {
   const [user, setUser] = useState<GetUser>();
@@ -36,6 +36,11 @@ export default function Profiel() {
     }
   };
 
+  const connectStripe = async () => {
+    const res = await linkToStripe();
+    window.open(res?.url, "_blank");
+  };
+
   return (
     <>
       <div className="flex flex-col rounded-md">
@@ -59,6 +64,14 @@ export default function Profiel() {
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
         <a className="font-semibold flex-row inline-flex items-center" href="">
           Mijn Trailers
+          <ChevronRight className="h-4 w-4 ml-2 align-middle" />
+        </a>
+        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+        <a
+          className="font-semibold flex-row inline-flex items-center"
+          onClick={() => connectStripe()}
+        >
+          Connect stripe
           <ChevronRight className="h-4 w-4 ml-2 align-middle" />
         </a>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
