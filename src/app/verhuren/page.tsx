@@ -220,7 +220,9 @@ const Verhuren = () => {
               {...register("images", {
                 required: "Voeg 5 fotos toe",
                 validate: (fieldValue) => {
-                  return fieldValue.length === 5 ? true : "Voeg 5 fotos toe";
+                  return fieldValue.length === 5
+                    ? true
+                    : `Voeg ${5 - fieldValue.length} fotos toe`;
                 },
               })}
             />
