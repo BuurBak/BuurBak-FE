@@ -12,6 +12,7 @@ import GegevensModal from "./GegevensModal";
 
 export default function Profiel() {
   const [user, setUser] = useState<GetUser>();
+  const [stripe, setStripe] = useState<boolean>();
   const router = useRouter(); // Gebruik de router om te navigeren
 
   useEffect(() => {
@@ -44,7 +45,7 @@ export default function Profiel() {
   useEffect(() => {
     const checkStripe = async () => {
       let res = await checkStripeConnection();
-      console.log("res", res?.ready_for_payments);
+      setStripe(res?.ready_for_payments);
     };
     checkStripe();
   }, []);
@@ -63,6 +64,15 @@ export default function Profiel() {
           />
         </div>
         <p className="text-center text-2xl font-bold m-4">{user?.name}</p>
+        {stripe ? (
+          <p className="text-success-400 text-center bg-offWhite-100 p-3 rounded">
+            Je account is verbonden met stripe
+          </p>
+        ) : (
+          <p className="text-error-100 text-center bg-offWhite-100 p-3 rounded">
+            Verbind jouw account met stripe
+          </p>
+        )}
       </div>
       <div className="flex flex-col mt-8">
         <div className="font-semibold flex-row inline-flex items-center">
@@ -75,14 +85,18 @@ export default function Profiel() {
           <ChevronRight className="h-4 w-4 ml-2 align-middle" />
         </a>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        <a
-          className="font-semibold flex-row inline-flex items-center"
-          onClick={() => connectStripe()}
-        >
-          Connect stripe
-          <ChevronRight className="h-4 w-4 ml-2 align-middle" />
-        </a>
-        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+        {!stripe && (
+          <a
+            className="font-semibold flex-row inline-flex items-center"
+            onClick={() => connectStripe()}
+          >
+            Connect stripe
+            <ChevronRight className="h-4 w-4 ml-2 align-middle" />
+          </a>
+        )}
+        {!stripe && (
+          <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+        )}
         <a
           className="font-semibold flex-row inline-flex items-center"
           href="/wachtwoord_vergeten"
