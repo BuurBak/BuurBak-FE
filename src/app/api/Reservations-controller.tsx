@@ -29,7 +29,7 @@ export const getReservationsRequests = async () => {
 };
 
 // Console.log no return yet and any type of return
-export const cancelTrailer: any = async (trailer: CancelTrailer) => {
+export const cancelTrailer = async (trailer: CancelTrailer) => {
   const sessionToken: Session | null = await getSession();
 
   try {

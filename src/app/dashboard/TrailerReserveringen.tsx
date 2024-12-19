@@ -1,9 +1,13 @@
 "use client";
 import { Calendar, ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { getReservationsRequests } from "../api/Reservations-controller";
+import {
+  cancelTrailer,
+  getReservationsRequests,
+} from "../api/Reservations-controller";
 
 import { useEffect, useState } from "react";
+import { CancelTrailer } from "../Types/Reservation";
 
 // const reserveringen: any[] = [
 //   {
@@ -67,6 +71,20 @@ export default function TrailerReserveringen() {
 
     fetchReservations();
   }, []);
+
+  const cancelTrailerReservation = async (
+    reason: string,
+    reservation_id: number
+  ) => {
+    const trailer: CancelTrailer = {
+      reason: reason,
+      reservation_id: reservation_id,
+    };
+
+    const res = await cancelTrailer(trailer);
+    console.log(res);
+  };
+
   return (
     <div className="flex flex-col md:max-h-[700px] ">
       <div className="flex flex-col">
@@ -130,7 +148,15 @@ export default function TrailerReserveringen() {
                       </button>
                     </div>
                     <div className="p-2 flex items-center justify-center">
-                      <button className="text-white border-1 rounded-xl p-2 bg-error-100">
+                      <button
+                        onClick={() =>
+                          cancelTrailerReservation(
+                            "Wil hem niet",
+                            reservering.id
+                          )
+                        }
+                        className="text-white border-1 rounded-xl p-2 bg-error-100"
+                      >
                         weigeren
                       </button>
                     </div>
