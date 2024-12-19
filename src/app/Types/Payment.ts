@@ -5,8 +5,6 @@ export type LinkToStripe = {
   object: string;
 };
 
-export type PayWithStripe = {
-  additionalProp1: boolean;
-  additionalProp2: boolean;
-  additionalProp3: boolean;
+export type CheckStripe = {
+  ready_for_payments: boolean;
 };
