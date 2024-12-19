@@ -2,7 +2,6 @@
 import { Session } from "@supabase/supabase-js";
 import { TrailerData } from "../Types/Reservation";
 import { PostTrailer } from "../Types/TrailerType";
-import { getToken } from "./auth/Cookies";
 import { getSession } from "./auth/Register";
 
 export const getAllTrailers = async () => {
@@ -86,7 +85,7 @@ export const getTrailer = async (uuid: string) => {
 
 // Console.log no return yet and any type of return
 export const getTrailerOfLocation = async (address: string, city: string) => {
-  const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+  const sessionToken: Session | null = await getSession();
 
   try {
     const response = await fetch(
@@ -94,11 +93,7 @@ export const getTrailerOfLocation = async (address: string, city: string) => {
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${
-            token
-              ? token.replace("base64-", "")
-              : process.env.NEXT_PUBLIC_JWT_TOKEN
-          }`,
+          Authorization: `Bearer ${sessionToken?.access_token}`,
         },
       }
     );
