@@ -1,6 +1,10 @@
 "use server";
 import { Session } from "@supabase/supabase-js";
-import { PostReservations } from "../Types/Reservation";
+import {
+  CancelTrailer,
+  CancelTrailerRes,
+  PostReservations,
+} from "../Types/Reservation";
 import { getSession } from "./auth/Register";
 
 //Any type of return
@@ -25,22 +29,19 @@ export const getReservationsRequests = async () => {
 };
 
 // Console.log no return yet and any type of return
-export const putReservations: any = async (id: number, confirmed: boolean) => {
+export const cancelTrailer: any = async (trailer: CancelTrailer) => {
   const sessionToken: Session | null = await getSession();
 
   try {
-    const response = await fetch(
-      `https://api.buurbak.nl/reservations?id=${id}&confirmed=${confirmed}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${sessionToken?.access_token}`,
-        },
-      }
-    );
+    const response = await fetch(`https://api.buurbak.nl/reservations`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${sessionToken?.access_token}`,
+      },
+      body: JSON.stringify(trailer),
+    });
 
-    const data: any = await response.json();
-    console.log(data);
+    const data: CancelTrailerRes = await response.json();
   } catch (error) {
     console.warn(error);
   }

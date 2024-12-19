@@ -141,7 +141,6 @@ const Verhuren = () => {
   }, [files]);
 
   const handleLocationChange = (locationData: LocationData) => {
-    console.log("Selected location:", locationData);
     setValue("location.latitude", locationData.lat);
     setValue("location.longitude", locationData.lng);
 

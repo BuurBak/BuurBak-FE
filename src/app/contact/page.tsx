@@ -29,7 +29,6 @@ const ContactPage: React.FC = () => {
 
     try {
       await sendEmail(data);
-      console.log("E-mail succesvol verzonden!");
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
       setFormData({ name: "", email: "", message: "" });

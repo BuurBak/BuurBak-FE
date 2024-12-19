@@ -21,7 +21,7 @@ export default function Profiel() {
         const data = await getUser();
         setUser(data);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
 

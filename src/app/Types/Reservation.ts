@@ -1,3 +1,12 @@
+export type CancelTrailer = {
+  reason: string;
+  reservation_id: number;
+};
+
+export type CancelTrailerRes = {
+  message: string;
+};
+
 export type PostReservations = {
   message: string;
   trailer_uuid: string;
