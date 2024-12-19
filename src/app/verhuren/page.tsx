@@ -6,7 +6,7 @@ import { Check, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { postImages } from "../api/Images-controller";
+import { getImage, postImages } from "../api/Images-controller";
 import { postTrailer } from "../api/Trailer-controller";
 import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
@@ -138,6 +138,7 @@ const Verhuren = () => {
     if (files.length > 0) {
       imageUuidArray();
     }
+    getImageById(watch("images.0"));
   }, [files]);
 
   const handleLocationChange = (locationData: LocationData) => {
@@ -186,6 +187,12 @@ const Verhuren = () => {
     };
 
     extractAddress(locationData.address);
+  };
+
+  const getImageById = async (id: string) => {
+    const res = await getImage(id);
+    console.log("res", res);
+    return res;
   };
 
   const onSubmit = (data: PostTrailer) => {

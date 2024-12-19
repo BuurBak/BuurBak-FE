@@ -14,9 +14,7 @@ export const putImage = async (uuid: string) => {
       {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${
-            sessionToken ? sessionToken : process.env.NEXT_PUBLIC_JWT_TOKEN
-          }`,
+          Authorization: `Bearer ${sessionToken?.access_token}`,
           "Content-Type": "application/json",
         },
       }
@@ -37,9 +35,7 @@ export const getAllImages = async () => {
     const response = await fetch(`https://api.buurbak.nl/images`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${
-          sessionToken ? sessionToken : process.env.NEXT_PUBLIC_JWT_TOKEN
-        }`,
+        Authorization: `Bearer ${sessionToken?.access_token}`,
         "Content-Type": "application/json",
       },
     });
@@ -84,9 +80,7 @@ export const getImage = async (file_name: string) => {
     const response = await fetch(`https://api.buurbak.nl/images/${file_name}`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${
-          sessionToken ? sessionToken : process.env.NEXT_PUBLIC_JWT_TOKEN
-        }`,
+        Authorization: `Bearer ${sessionToken?.access_token}`,
         "Content-Type": "application/json",
       },
     });
@@ -106,9 +100,7 @@ export const deleteImage = async (uuid: string) => {
     const response = await fetch(`https://api.buurbak.nl/images/${uuid}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${
-          sessionToken ? sessionToken : process.env.NEXT_PUBLIC_JWT_TOKEN
-        }`,
+        Authorization: `Bearer ${sessionToken?.access_token}`,
         "Content-Type": "application/json",
       },
     });
