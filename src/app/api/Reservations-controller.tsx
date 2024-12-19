@@ -6,19 +6,14 @@ import { getSession } from "./auth/Register";
 
 //Any type of return
 export const getReservationsRequests = async () => {
-  const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
-
+  const sessionToken: Session | null = await getSession();
   try {
     const response = await fetch(
       `https://api.buurbak.nl/reservations`, // Id van de reservering
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${
-            token
-              ? token.replace("base64-", "")
-              : process.env.NEXT_PUBLIC_JWT_TOKEN
-          }`,
+          Authorization: `Bearer ${sessionToken?.access_token}`,
         },
       }
     );
