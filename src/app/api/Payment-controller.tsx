@@ -1,5 +1,5 @@
 import { Session } from "@supabase/supabase-js";
-import { LinkToStripe, PayWithStripe } from "../Types/Payment";
+import { CheckStripe, LinkToStripe } from "../Types/Payment";
 import { getSession } from "./auth/Register";
 
 export const linkToStripe = async () => {
@@ -21,7 +21,7 @@ export const linkToStripe = async () => {
   }
 };
 
-export const payWithStripe = async () => {
+export const checkStripeConnection = async () => {
   const sessionToken: Session | null = await getSession();
 
   try {
@@ -33,7 +33,7 @@ export const payWithStripe = async () => {
       },
     });
 
-    const data: PayWithStripe = await response.json();
+    const data: CheckStripe = await response.json();
     return data;
   } catch (error) {
     console.warn(error);
