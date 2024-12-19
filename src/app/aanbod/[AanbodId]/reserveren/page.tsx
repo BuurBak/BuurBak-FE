@@ -128,7 +128,8 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
         message: getValues("message"),
         pick_up_time: "14:30:00",
       };
-      await postReservations(data);
+      const res = await postReservations(data);
+      window.open(res?.session, "_blank");
     }
   };
 
