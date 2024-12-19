@@ -31,6 +31,7 @@ export default function Profiel() {
     try {
       await signOut(); // Roep de signOut-functie aan
       router.push("/"); // Navigeer naar de startpagina na uitloggen
+      window.location.reload();
     } catch (error) {
       console.error("Error during sign-out:", error);
     }
