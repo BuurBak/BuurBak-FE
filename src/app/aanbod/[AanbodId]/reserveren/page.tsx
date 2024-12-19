@@ -77,7 +77,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
         const data = await getUserSupaBase();
         setUser(data.data.user);
       } else {
-        console.log(user);
+        console.error(user);
       }
     };
 
@@ -119,8 +119,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
       const formattedStartDate = formatDate(startDate);
       const formattedEndDate = formatDate(endDate);
 
-      console.log(formattedStartDate);
-
       const data: PostReservations = {
         trailer_uuid: trailerOffer.uuid,
         start_date: formattedStartDate,
@@ -128,7 +126,8 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
         message: getValues("message"),
         pick_up_time: "14:30:00",
       };
-      await postReservations(data);
+      const res = await postReservations(data);
+      window.open(res?.session, "_blank");
     }
   };
 

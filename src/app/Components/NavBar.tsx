@@ -112,7 +112,6 @@ const Navbar = () => {
   useEffect(() => {
     if (singedIn) {
       onClose();
-      console.log("fired");
     }
   }, [singedIn]);
 
