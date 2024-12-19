@@ -200,9 +200,9 @@ export const deleteUser = async () => {
     if (error) {
       console.warn(error);
     } else {
-      console.log("unkown error");
+      console.error("unkown error");
     }
   } else {
-    console.log("User token not found");
+    console.error("User token not found");
   }
 };

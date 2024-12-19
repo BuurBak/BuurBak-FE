@@ -43,7 +43,6 @@ export const cancelTrailer: any = async (trailer: CancelTrailer) => {
     });
 
     const data: CancelTrailerRes = await response.json();
-    console.log(data);
   } catch (error) {
     console.warn(error);
   }

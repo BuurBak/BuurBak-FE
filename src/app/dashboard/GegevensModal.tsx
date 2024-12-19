@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import { getUser, updateUser } from "../api/auth/Register";
-import { GetUser } from "../Types/User";
+import { Button } from "@nextui-org/button";
 import {
   Modal,
   ModalBody,
@@ -9,8 +7,10 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { Button } from "@nextui-org/button";
 import { PencilLine } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getUser, updateUser } from "../api/auth/Register";
+import { GetUser } from "../Types/User";
 
 export default function GegevensModal() {
   const [user, setUser] = useState<GetUser>();
@@ -30,7 +30,7 @@ export default function GegevensModal() {
         const data = await getUser();
         setUser(data);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
 
@@ -77,7 +77,6 @@ export default function GegevensModal() {
       profile_picture: "",
     };
     updateUser(data);
-    console.log("", data);
   };
 
   return (
