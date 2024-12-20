@@ -6,7 +6,8 @@ import { Check, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { postImages } from "../api/Images-controller";
+import { hasToken } from "../api/auth/Cookies";
+import { getImage, postImages } from "../api/Images-controller";
 import { postTrailer } from "../api/Trailer-controller";
 import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
@@ -46,6 +47,7 @@ type LocationData = {
 const Verhuren = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [pictures, setPictures] = useState<string[]>([]);
+  const [isSignd, setIsSignd] = useState<boolean>(false);
 
   const form = useForm<PostTrailer>({
     defaultValues: {
@@ -138,6 +140,7 @@ const Verhuren = () => {
     if (files.length > 0) {
       imageUuidArray();
     }
+    getImageById(watch("images.0"));
   }, [files]);
 
   const handleLocationChange = (locationData: LocationData) => {
@@ -187,6 +190,22 @@ const Verhuren = () => {
 
     extractAddress(locationData.address);
   };
+
+  const getImageById = async (id: string) => {
+    const res = await getImage(id);
+    console.log("res", res);
+    return res;
+  };
+
+  useEffect(() => {
+    const loginRequired = async () => {
+      if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
+        setIsSignd(true);
+      }
+    };
+
+    loginRequired();
+  });
 
   const onSubmit = (data: PostTrailer) => {
     const addTrailer = async () => {
@@ -530,7 +549,7 @@ const Verhuren = () => {
             <Button
               label="Voeg jouw trailer toe"
               submit
-              disabled={isSubmitting || isSubmitSuccessful}
+              disabled={isSubmitting || isSubmitSuccessful || !isSignd}
             />
             <p className="underline italic text-black-100 ">
               Algemene Voorwaarden

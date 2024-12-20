@@ -93,7 +93,7 @@ const AanbodPreview: React.FC = () => {
           {dataToRender.length === 0 ? (
             <p>No data available</p>
           ) : (
-            <div className="flex flex-row flex-wrap md:flex-nowrap w-full gap-4 justify-center lg:justify-between overflow-hidden">
+            <div className="flex flex-row flex-wrap md:flex-nowrap w-full gap-4 justify-center lg:justify-start overflow-hidden">
               {dataToRender.slice(0, 5).map((item) => (
                 <Card
                   key={item.uuid}
