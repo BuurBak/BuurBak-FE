@@ -1,20 +1,20 @@
 "use client";
 
+import { getTrailer } from "@/app/api/Trailer-controller";
 import Carousel from "@/app/Components/AanbodItem/Carousel";
 import Details from "@/app/Components/AanbodItem/Details";
 import DialogComponent from "@/app/Components/AanbodItem/Dialog";
 import ImageGallery from "@/app/Components/AanbodItem/ImageGallery";
 import ProfileDisplay from "@/app/Components/AanbodItem/ProfileDisplay";
 import Reserveren from "@/app/Components/AanbodItem/Reserveren";
-import Footer from "@/app/Components/Footer";
 import { GoogleMaps } from "@/app/Components/GoogleMaps";
 import { GoogleMapsWrapper } from "@/app/Components/GoogleMapsWrapper";
 import PageBackButton from "@/app/Components/PageBackButton";
-import { TrailerList } from "@/app/Types/TrailerList";
+import { TrailerData } from "@/app/Types/Reservation";
 import { useEffect, useState } from "react";
 
 const Page = ({ params }: { params: { AanbodId: string } }) => {
-  const [trailerOffer, setTrailerOffer] = useState<TrailerList>();
+  const [trailerOffer, setTrailerOffer] = useState<TrailerData>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
@@ -22,30 +22,25 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `https://pilot.buurbak.nl/api/v1/traileroffers/${params.AanbodId}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data: TrailerList = await response.json();
+        const data = await getTrailer(params.AanbodId);
         setTrailerOffer(data);
         setLoading(false);
       } catch (error: any) {
-        setError(error.message);
-        setLoading(false);
+        console.warn(error.message);
       }
     };
 
     fetchData();
   }, []);
 
-  const trailerLocations: readonly google.maps.LatLngLiteral[] = [
-    {
-      lat: trailerOffer?.nearbyLatitude,
-      lng: trailerOffer?.nearbyLongitude,
-    },
-  ];
+  const trailerLocations: readonly google.maps.LatLngLiteral[] = trailerOffer
+    ? [
+        {
+          lat: trailerOffer.location.latitude,
+          lng: trailerOffer.location.longitude,
+        },
+      ]
+    : [];
 
   if (loading) {
     return <div>Loading...</div>;
@@ -62,16 +57,11 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
       {trailerOffer && (
         <>
           <div className="sm:hidden w-full h-fit ">
-            <Carousel
-              params={[trailerOffer.coverImage, ...trailerOffer.images]}
-            />
+            <Carousel params={trailerOffer.images} />
           </div>
 
           <DialogComponent
-            trailerImageArray={[
-              trailerOffer.coverImage,
-              ...trailerOffer.images,
-            ]}
+            trailerImageArray={trailerOffer.images}
             open={open}
             setOpen={setOpen}
           />
@@ -79,7 +69,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
           <div className="flex justify-center gap-4 relative w-full sm:px-8">
             <div className="flex flex-col gap-8 w-11/12 sm:w-full">
               <h1 className="text-primary-100 text-h4 ">
-                {trailerOffer.trailerType.name}
+                {trailerOffer.trailer_type}
               </h1>
 
               <ProfileDisplay trailerOffer={trailerOffer} />
@@ -99,10 +89,10 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
                   <GoogleMapsWrapper>
                     <GoogleMaps
                       locations={trailerLocations}
-                      price={[trailerOffer.price]}
+                      price={[trailerOffer.rental_price]}
                       zoomOnLocation={{
-                        lat: trailerOffer.nearbyLatitude,
-                        lng: trailerOffer.nearbyLongitude,
+                        lat: trailerOffer.location.latitude,
+                        lng: trailerOffer.location.longitude,
                       }}
                     />
                   </GoogleMapsWrapper>
@@ -113,7 +103,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
           </div>
         </>
       )}
-
     </div>
   );
 };

@@ -1,9 +1,11 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { TrailerList } from '../Types/TrailerList';
-import Card from './Card';
-import Button from './Button';
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { getAllTrailers } from "../api/Trailer-controller";
+import { TrailerData } from "../Types/Reservation";
+import Button from "./Button";
+import Card from "./Card";
 
 const DEFAULT_CENTER = {
   lat: 52.131401,
@@ -11,9 +13,9 @@ const DEFAULT_CENTER = {
 };
 
 const AanbodPreview: React.FC = () => {
-  const [data, setData] = useState<TrailerList[]>([]);
+  const [data, setData] = useState<TrailerData[]>([]);
   const [isLoading, setLoading] = useState(true);
-  const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER)
+  const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER);
 
   const haversineDistance = (coords1: any, coords2: any) => {
     const R = 6371; // Radius of the Earth in km
@@ -31,17 +33,18 @@ const AanbodPreview: React.FC = () => {
   };
 
   useEffect(() => {
-    fetch("https://pilot.buurbak.nl/api/v1/traileroffers/", { mode: 'cors'})
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.content);
+    const fetchData = async () => {
+      const trailerData = await getAllTrailers();
+      if (trailerData) {
+        setData(trailerData);
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      })
+      }
+    };
+
+    fetchData();
   }, []);
+
+  const dataToRender = Array.isArray(data) ? data : [];
 
   const TrailerDistance = (nearbyLatitude: any, nearbyLongitude: any) => {
     if (navigator.geolocation) {
@@ -53,43 +56,72 @@ const AanbodPreview: React.FC = () => {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
       setCenterCoordinates({ lat: latitude, lng: longitude });
-    }    
+    }
     function error() {
-      console.log("Unable to retrieve your location");
+      console.error("Unable to retrieve your location");
       return undefined;
     }
-    if(centerCoordinates.lat !== DEFAULT_CENTER.lat ||
-      centerCoordinates.lng !== DEFAULT_CENTER.lng){
-        const distance = haversineDistance(
-          { lat: nearbyLatitude, lng: nearbyLongitude },
-          centerCoordinates
-        );
-        return distance;
-      }
-
-  }
+    if (
+      centerCoordinates.lat !== DEFAULT_CENTER.lat ||
+      centerCoordinates.lng !== DEFAULT_CENTER.lng
+    ) {
+      const distance = haversineDistance(
+        { lat: nearbyLatitude, lng: nearbyLongitude },
+        centerCoordinates
+      );
+      return distance;
+    }
+  };
 
   return (
-    <div className='w-full sm:px-20 py-4 flex flex-col bg-offWhite-100 justify-center items-center'>
-        <div className='w-full justify-center md:justify-between items-center flex flex-row mb-4'><h3 className='font-bold'>Aanbod</h3><Button type='secondary' styling='hidden md:flex' label={'Bekijk ons hele aanbod'} /></div>
+    <div className="w-full sm:px-20 py-4 flex flex-col bg-offWhite-100 justify-center items-center">
+      <div className="w-full justify-center md:justify-between items-center flex flex-row mb-4">
+        <h3 className="font-bold">Aanbod</h3>
+        <Link href={"/aanbod"}>
+          <Button
+            type="secondary"
+            styling="hidden md:flex"
+            label={"Bekijk ons hele aanbod"}
+          />
+        </Link>
+      </div>
 
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <>
-            {data.length === 0 ? (
-              <p>No data available</p>
-            ) : (
-              <div className='flex flex-row flex-wrap md:flex-nowrap w-full gap-4 justify-center lg:justify-between overflow-hidden'>
-                {data.slice(0, 5).map((item) => (
-                  <Card key={item.id} title={item.name} type={'overview'} img={item.coverImage} link={''} location={item.cityAddress.city} price={item.price.toString()} distance={TrailerDistance(item.nearbyLatitude, item.nearbyLongitude)}/>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-      <div className='w-full flex justify-center mt-4'><Button type='secondary' styling='flex md:hidden' label={'Bekijk ons hele aanbod'} /></div>
-
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          {dataToRender.length === 0 ? (
+            <p>No data available</p>
+          ) : (
+            <div className="flex flex-row flex-wrap md:flex-nowrap w-full gap-4 justify-center lg:justify-start overflow-hidden">
+              {dataToRender.slice(0, 5).map((item) => (
+                <Card
+                  key={item.uuid}
+                  title={item.trailer_type}
+                  type={"overview"}
+                  img={item.images[0]}
+                  link={"aanbod/" + item.uuid}
+                  location={item.address.city}
+                  price={item.rental_price.toString()}
+                  distance={TrailerDistance(
+                    item.location.latitude,
+                    item.location.longitude
+                  )}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      )}
+      <div className="w-full flex justify-center mt-4">
+        <Link href="/aanbod">
+          <Button
+            type="secondary"
+            styling="flex md:hidden"
+            label={"Bekijk ons hele aanbod"}
+          />
+        </Link>
+      </div>
     </div>
   );
 };

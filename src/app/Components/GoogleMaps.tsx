@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { addClusterMarkers } from "./MapsMarkerCluster";
 
-const DEFAULT_CENTER = { lat: 48.8566, lng: 2.3522 };
+const DEFAULT_CENTER = { lat: 52.1552, lng: 5.3872 };
 const DEFAULT_ZOOM = 9;
 
 export const GoogleMaps = ({
@@ -32,7 +32,7 @@ export const GoogleMaps = ({
     setCenterCoordinates({ lat: latitude, lng: longitude });
   }
   function error() {
-    console.log("Unable to retrieve your location");
+    console.error("Unable to retrieve your location");
   }
   const ref = useRef<HTMLDivElement | null>(null);
 

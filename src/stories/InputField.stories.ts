@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import InputField from "../app/Components/InputField";
-import { useState } from "react";
 
 const meta = {
   title: "InputsAndSelection/InputField",
@@ -25,15 +24,15 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     label: "primary",
-    inputValue: '',
-    type: "text"
+    value: "",
+    inputType: "text",
   },
 };
 
 export const Secondary: Story = {
   args: {
     label: "secondary",
-    inputValue: 0,
-    type: "star"
+    value: 0,
+    inputType: "star",
   },
 };

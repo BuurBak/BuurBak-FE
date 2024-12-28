@@ -1,15 +1,14 @@
-import {
-  ArchiveBoxXMarkIcon,
-  ArrowPathRoundedSquareIcon,
-  ShieldCheckIcon,
-} from "@heroicons/react/24/outline";
+import { Recycle, Shield } from "lucide-react";
+import { OpenTrailer } from "../icons/TrailerIcons";
 
 const Highlights = () => {
   return (
     <div className="flex justify-between w-full p-5 md:px-20 md:py-16 flex-col md:flex-row">
       <div className="w-fit mb-5 md:mb-0 flex flex-col items-center text-center">
         <div className="p-4 mb-3 border-2 border-secondary-100 rounded-full">
-          <ArchiveBoxXMarkIcon className="h-8 w-8 text-secondary-100" />
+          <div className="h-8 w-8 flex justify-center items-center">
+            <OpenTrailer color="#398D89" size={60} />
+          </div>
         </div>
         <h5 className="text-secondary-100 font-bold">Altijd in de buurt</h5>
         <p className="max-w-4/5">
@@ -21,7 +20,7 @@ const Highlights = () => {
       </div>
       <div className="w-full mb-5 md:mb-0 flex flex-col items-center text-center">
         <div className="p-4 mb-3 border-2 border-primary-100 rounded-full">
-          <ArrowPathRoundedSquareIcon className="h-8 w-8 text-primary-100" />
+          <Recycle className="h-8 w-8 text-primary-100" />
         </div>
         <h5 className="text-primary-100 font-bold">Altijd duurzaam</h5>
         <p className="max-w-4/5">
@@ -34,7 +33,7 @@ const Highlights = () => {
       </div>
       <div className="w-full mb-5 md:mb-0 flex flex-col items-center text-center">
         <div className="p-4 mb-3 border-2 border-secondary-100 rounded-full">
-          <ShieldCheckIcon className="h-8 w-8 text-secondary-100" />
+          <Shield className="h-8 w-8 text-secondary-100" />
         </div>
         <h5 className="text-secondary-100 font-bold">Altijd eenvoudig</h5>
         <p className="max-w-4/5">

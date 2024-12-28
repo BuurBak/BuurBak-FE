@@ -1,6 +1,7 @@
 import { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
-import { TrailerList } from "../Types/TrailerList";
+import { getAllTrailers } from "../api/Trailer-controller";
+import { TrailerData } from "../Types/Reservation";
 import { TrailerType } from "../Types/TrailerType";
 const DEFAULT_CENTER = {
   lat: 52.131401,
@@ -30,10 +31,10 @@ const SearchOrFilter = ({
   filterWhere,
   ...props
 }: SearchOrFilter) => {
-  const [data, setData] = useState<TrailerList[]>([]);
+  const [data, setData] = useState<TrailerData[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [centerCoordinates, setCenterCoordinates] = useState(DEFAULT_CENTER);
-  const [filteredTrailers, setFilteredTrailers] = useState<TrailerList[]>([]);
+  const [filteredTrailers, setFilteredTrailers] = useState<TrailerData[]>([]);
 
   // Berekent de afstand van de aanhangwagen vanaf jou locatie
   const haversineDistance = (coords1: any, coords2: any) => {
@@ -43,21 +44,23 @@ const SearchOrFilter = ({
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((coords1.lat * Math.PI) / 180) *
-      Math.cos((coords2.lat * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+        Math.cos((coords2.lat * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     return distance;
   };
 
   useEffect(() => {
-    fetch("https://pilot.buurbak.nl/api/v1/traileroffers")
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.content);
+    const fetchData = async () => {
+      const trailerData = await getAllTrailers();
+      if (trailerData) {
+        setData(trailerData);
         setLoading(false);
-      });
+      }
+    };
+    fetchData();
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     }
@@ -70,7 +73,7 @@ const SearchOrFilter = ({
       setCenterCoordinates({ lat: latitude, lng: longitude });
     }
     function error() {
-      console.log("Unable to retrieve your location");
+      console.error("Unable to retrieve your location");
     }
   }, []);
 
@@ -87,24 +90,28 @@ const SearchOrFilter = ({
     }
   };
   useEffect(() => {
-    let filteredAndReordered = [...data].filter((trailer) => {
-      return (
-        (!searchTerm ||
-          trailer.cityAddress.city
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          trailer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        trailer.trailerType.name?.toLowerCase().includes(searchTerm.toLowerCase())) &&
-        (!filterType ||
-          filterType === "Alle" ||
-          trailer.trailerType.name === filterType) &&
-        (!filterPrice || trailer.price <= filterPrice) &&
-        (!filterWhere ||
-          trailer.cityAddress.city
-            ?.toLowerCase()
-            .includes(filterWhere.toLowerCase()))
-      );
-    });
+    let filteredAndReordered = Array.isArray(data)
+      ? [...data].filter((trailer) => {
+          return (
+            (!searchTerm ||
+              trailer.address.city
+                ?.toLowerCase()
+                .includes(searchTerm.toLowerCase()) ||
+              trailer.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              trailer.trailer_type
+                ?.toLowerCase()
+                .includes(searchTerm.toLowerCase())) &&
+            (!filterType ||
+              filterType === "Alle" ||
+              trailer.trailer_type === filterType) &&
+            (!filterPrice || trailer.rental_price <= filterPrice) &&
+            (!filterWhere ||
+              trailer.address.city
+                ?.toLowerCase()
+                .includes(filterWhere.toLowerCase()))
+          );
+        })
+      : [];
 
     if (
       centerCoordinates.lat !== DEFAULT_CENTER.lat ||
@@ -112,19 +119,22 @@ const SearchOrFilter = ({
     ) {
       filteredAndReordered = filteredAndReordered.sort((a, b) => {
         const distanceA = haversineDistance(
-          { lat: a.nearbyLatitude, lng: a.nearbyLongitude },
+          { lat: a.location.latitude, lng: a.location.longitude },
           centerCoordinates
         );
         const distanceB = haversineDistance(
-          { lat: b.nearbyLatitude, lng: b.nearbyLongitude },
+          { lat: b.location.latitude, lng: b.location.longitude },
           centerCoordinates
         );
         return distanceA - distanceB;
       });
       filteredAndReordered.forEach((element) => {
         const distance =
-          TrailerDistance(element.nearbyLatitude, element.nearbyLongitude) || 0;
-        element.distance = Math.round(distance);
+          TrailerDistance(
+            element.location.latitude,
+            element.location.longitude
+          ) || 0;
+        Math.round(distance);
       });
     }
 

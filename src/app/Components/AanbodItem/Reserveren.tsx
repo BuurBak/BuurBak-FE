@@ -1,7 +1,6 @@
-import { TrailerList } from "@/app/Types/TrailerList";
-import { getLocalTimeZone, today } from "@internationalized/date";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
-import { RangeCalendar } from "@nextui-org/calendar";
+import { TrailerData } from "@/app/Types/Reservation";
+import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
+import { RangeCalendar, RangeValue } from "@nextui-org/calendar";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -15,39 +14,35 @@ type Inputs = {
   time: string;
 };
 
-const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
+const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
   const router = useRouter();
   const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
-
-  const pickUpTime = [
-    { start: "9:00", end: "10:00" },
-    { start: "18:00", end: "19:00" },
-  ];
 
   const merche = (item: { start: string; end: string }) =>
     item.start + " - " + item.end;
 
   const [collapsed, setCollapsed] = useState(false);
-  const [date, setDate] = useState({
+  const [date, setDate] = useState<RangeValue<CalendarDate> | null>({
     start: today(getLocalTimeZone()),
     end: today(getLocalTimeZone()),
   });
 
   useEffect(() => {
-    setValue("dateStart", new Date(date.start.toString()), {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
-    setValue("dateEnd", new Date(date.end.toString()), {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
+    if (date) {
+      setValue("dateStart", new Date(date.start.toString()), {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+      setValue("dateEnd", new Date(date.end.toString()), {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
   }, [date]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
     const URLParams = (
       "time=" +
       data.time +
@@ -55,7 +50,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
       ("dateStart=" + data.dateStart + "&") +
       ("dateEnd=" + data.dateEnd)
     ).toString();
-    router.push(`/Aanbod/${trailerOffer.id}/Reserveren` + "?" + URLParams);
+    router.push(`/aanbod/${trailerOffer.uuid}/reserveren` + "?" + URLParams);
     setCollapsed(false);
   };
   return (
@@ -68,12 +63,15 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
       )}
 
       <div
-        className={`h-fit min-w-fit w-full sm:w-fit p-4 bg-offWhite-100 fixed bottom-0 sm:sticky sm:top-5 flex justify-between gap-4 ${collapsed && "flex-col"} z-40`}
+        className={`h-fit min-w-fit w-full sm:w-fit p-4 bg-offWhite-100 fixed bottom-0 sm:sticky sm:top-24 flex justify-between gap-4 ${
+          collapsed && "flex-col"
+        } z-40`}
       >
         {!collapsed && (
           <div className="flex flex-col justify-between sm:hidden ">
             <p>
-              <span className="font-bold">€{trailerOffer.price}</span> per dag
+              <span className="font-bold">€{trailerOffer.rental_price}</span>{" "}
+              per dag
             </p>
             <p>
               {new Date(getValues("dateStart")).toLocaleDateString(undefined, {
@@ -110,8 +108,8 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
                 onChange={setDate}
               />
 
-              <Autocomplete
-                label="Op haal tijd"
+              {/* <Autocomplete
+                label="ophaaltijd"
                 className="w-full buurbak-light"
                 labelPlacement="outside"
                 placeholder=" "
@@ -127,12 +125,12 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
                     {merche(item)}
                   </AutocompleteItem>
                 ))}
-              </Autocomplete>
+              </Autocomplete> */}
               <hr className="w-full h-1 bg-offWhite-100" />
               <div className="w-full flex justify-between">
                 <p className="text-h6 text-primary-100">Totaal</p>
                 <p className="text-h6 text-primary-100">
-                  € {trailerOffer.price}
+                  € {trailerOffer.rental_price}
                 </p>
               </div>
             </div>
@@ -147,7 +145,9 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerList }) => {
           {(collapsed || window.innerWidth > 639) && (
             <Button
               label="Reserveer nu"
-              styling={`min-w-fit ${(collapsed || window.innerWidth > 639) && "w-full"}`}
+              styling={`min-w-fit ${
+                (collapsed || window.innerWidth > 639) && "w-full"
+              }`}
               submit={true}
             />
           )}

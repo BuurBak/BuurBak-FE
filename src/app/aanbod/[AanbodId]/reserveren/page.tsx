@@ -1,14 +1,19 @@
 "use client";
 
 import Button from "@/app/Components/Button";
-import Footer from "@/app/Components/Footer";
-import { TrailerList } from "@/app/Types/TrailerList";
+import { PostReservations, TrailerData } from "@/app/Types/Reservation";
+import { SupaUser } from "@/app/Types/User";
+import { postReservations } from "@/app/api/Reservations-controller";
+import { getTrailer } from "@/app/api/Trailer-controller";
+import { hasToken } from "@/app/api/auth/Cookies";
+import { getUserSupaBase } from "@/app/api/auth/Register";
 import {
+  CalendarDate,
   fromDate,
   getLocalTimeZone,
   toCalendarDate,
 } from "@internationalized/date";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { RangeValue } from "@nextui-org/calendar";
 import { Checkbox } from "@nextui-org/checkbox";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { format, parseISO } from "date-fns";
@@ -37,12 +42,12 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     end: searchParams.get("dateEnd"),
   });
 
-  const [trailerOffer, setTrailerOffer] = useState<TrailerList>();
+  const [trailerOffer, setTrailerOffer] = useState<TrailerData>();
   const [loading, setLoading] = useState<boolean>(true);
   const [reqLoading, setReqLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [checked, setChecked] = useState<boolean>(false);
-  const [date, setDate] = useState({
+  const [date, setDate] = useState<RangeValue<CalendarDate> | null>({
     start: toCalendarDate(
       fromDate(new Date(newDate.start || ""), getLocalTimeZone())
     ),
@@ -50,95 +55,84 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
       fromDate(new Date(newDate.end || ""), getLocalTimeZone())
     ),
   });
-  const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
-
-  const pickUpTime = [
-    { start: "9:00", end: "10:00" },
-    { start: "18:00", end: "19:00" },
-  ];
-
-  const time = searchParams.get("time");
+  const [user, setUser] = useState<SupaUser>();
+  const { register, handleSubmit, setValue, getValues, watch } =
+    useForm<Inputs>();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `https://pilot.buurbak.nl/api/v1/traileroffers/${params.AanbodId}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data: TrailerList = await response.json();
+        const data = await getTrailer(params.AanbodId);
         setTrailerOffer(data);
-        if (time) {
-          setValue("time", time);
-        }
         setLoading(false);
-      } catch (error: any) {
-        setError(error.message);
-        setLoading(false);
+      } catch (error) {
+        console.warn(error);
       }
     };
 
     fetchData();
-  }, []);
 
-  useEffect(() => {
-    setValue("dateStart", date.start.toString(), {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
-    setValue("dateEnd", date.end.toString(), {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
-  }, [date]);
-
-  const merche = (item: { start: string; end: string }) =>
-    item.start + " - " + item.end;
-
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
-    setReqLoading(true);
-    const reserve = async () => {
-      try {
-        const res = await fetch("https://beta.buurbak.nl/api/v1/reservations", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            trailerId: trailerOffer?.id,
-            startTime: getValues("dateStart"),
-            endTime: getValues("dateEnd"),
-            message: getValues("message"),
-            name: "Test name",
-            email: "Test mail",
-            number: "Test number",
-          }),
-        });
-
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const result = await res.json();
-        alert(result.message);
-      } catch (err) {
-        if (err instanceof Error) {
-          alert(err.message);
-        } else {
-          alert("An unknown error occurred");
-        }
-      } finally {
-        setReqLoading(false);
+    const account = async () => {
+      if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
+        const data = await getUserSupaBase();
+        setUser(data.data.user);
+      } else {
+        console.error(user);
       }
     };
 
-    reserve();
+    account();
+  }, []);
+
+  useEffect(() => {
+    if (date) {
+      setValue("dateStart", date.start.toString(), {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+      setValue("dateEnd", date.end.toString(), {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  }, [date]);
+
+  const formatDate = (date: Date) => {
+    return (
+      date.getFullYear() +
+      "-" +
+      String(date.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(date.getDate()).padStart(2, "0")
+    );
+  };
+
+  const terms = watch("terms");
+
+  const onSubmit: SubmitHandler<Inputs> = async () => {
+    if (trailerOffer && user) {
+      const startDate = new Date(getValues("dateStart"));
+      const endDate = new Date(getValues("dateEnd"));
+
+      const formattedStartDate = formatDate(startDate);
+      const formattedEndDate = formatDate(endDate);
+
+      const data: PostReservations = {
+        trailer_uuid: trailerOffer.uuid,
+        start_date: formattedStartDate,
+        end_date: formattedEndDate,
+        message: getValues("message"),
+        pick_up_time: "14:30:00",
+      };
+      const res = await postReservations(data);
+      if (res.session) {
+        window.open(res.session, "_blank");
+      } else {
+        console.error(res.message);
+      }
+    }
   };
 
   return (
@@ -184,15 +178,15 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               buttonAction={() => setChangeDate(!changeDate)}
             />
           </div>
-          <div className="flex justify-between items-center">
+          {/* <div className="flex justify-between items-center">
             <div className="flex flex-col gap-1">
-              <p className="text-h6">Op haal tijd</p>
+              <p className="text-h6">Ophaaltijd</p>
               {!changeTime && (
                 <p className="text-normal">{getValues("time")}</p>
               )}
               {changeTime && (
                 <Autocomplete
-                  aria-label="op haal tijd"
+                  aria-label="ophaaltijd"
                   className="w-full buurbak-light"
                   labelPlacement="outside"
                   placeholder=" "
@@ -217,23 +211,29 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               type="secondary"
               buttonAction={() => setChangeTime(!changeTime)}
             />
-          </div>
-          <div className="flex justify-between items-center">
-            <div className="flex flex-col gap-1">
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
-                <p className="sm:w-8 text-h6">Naam:</p>
-                <p className="text-normal">Comming soon</p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
-                <p className="sm:w-8 text-h6">Mail:</p>
-                <p className="text-normal">Comming soon</p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
-                <p className="sm:w-8 text-h6">Tel:</p>
-                <p className="text-normal">Comming soon</p>
+          </div> */}
+          {user ? (
+            <div className="flex justify-between items-center">
+              <div className="flex flex-col gap-1">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
+                  <p className="sm:w-8 text-h6">Naam:</p>
+                  <p className="text-normal">{user?.user_metadata.name}</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
+                  <p className="sm:w-8 text-h6">Mail:</p>
+                  <p className="text-normal">{user?.email}</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
+                  <p className="sm:w-8 text-h6">Tel:</p>
+                  <p className="text-normal">
+                    {user?.user_metadata.phoneNumber}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
           <textarea
             placeholder="Bericht aan verhuurder"
             className="w-full h-20 p-2 border border-gray-100 resize-y"
@@ -260,16 +260,17 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               label="Reserveer jouw aanhanger"
               styling="w-full"
               submit={true}
+              disabled={user === undefined || !terms}
             />
           </div>
         </div>
         <div className="flex flex-1 bg-offWhite-100">
-          <div className="flex flex-col gap-3 h-fit w-full bg-white p-8 m-8 rounded-md sticky top-8">
+          <div className="flex flex-col gap-3 h-fit w-full bg-white p-8 m-8 rounded-md sticky top-24">
             <div className="flex gap-2 w-full h-fit ">
               <div className="relative aspect-square h-32">
-                {trailerOffer?.coverImage && (
+                {trailerOffer?.images[0] && (
                   <Image
-                    src={trailerOffer?.coverImage}
+                    src={trailerOffer?.images[0]}
                     alt="Trailer image 1"
                     fill
                     sizes="100% 100%"
@@ -280,7 +281,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               </div>
               <div className="flex flex-col gap-2">
                 <p className="text-primary-100 text-h5">
-                  {trailerOffer?.trailerType.name}
+                  {trailerOffer?.trailer_type}
                 </p>
                 <p className="text-normal">{trailerOffer?.address.city}</p>
               </div>
@@ -291,12 +292,14 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               <div className="flex flex-col gap-2 w-full h-fit">
                 <div className="flex justify-between">
                   <p className="text-small">Aanhanger</p>
-                  <p className="text-small">€ {trailerOffer?.price}</p>
+                  <p className="text-small">€ {trailerOffer?.rental_price}</p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-small">services kosten</p>
-                  {trailerOffer?.price && (
-                    <p className="text-small">€ {trailerOffer?.price * 0.1}</p>
+                  {trailerOffer?.rental_price && (
+                    <p className="text-small">
+                      € {trailerOffer?.rental_price * 0.1}
+                    </p>
                   )}
                 </div>
                 <div className="flex justify-between">
@@ -309,9 +312,12 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             <div>
               <div className="flex justify-between">
                 <p className="text-normal">Totaal</p>
-                {trailerOffer?.price && (
+                {trailerOffer?.rental_price && (
                   <p className="text-normal">
-                    € {trailerOffer?.price + trailerOffer?.price * 0.1 + 2}
+                    €{" "}
+                    {trailerOffer?.rental_price +
+                      trailerOffer?.rental_price * 0.1 +
+                      2}
                   </p>
                 )}
               </div>

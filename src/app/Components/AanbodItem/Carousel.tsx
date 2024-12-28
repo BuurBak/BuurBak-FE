@@ -25,8 +25,6 @@ const Carousel = ({ params }: { params: string[] | undefined }) => {
     const touchEndX = event.touches[0].clientX;
     const diffX = touchStartX.current - touchEndX;
 
-    console.log(diffX);
-
     if (diffX > 5) {
       nextSlide();
     } else if (diffX < -5) {
@@ -66,7 +64,10 @@ const Carousel = ({ params }: { params: string[] | undefined }) => {
           return (
             <div
               key={index}
-              className={`h-full w-32 relative ${index === currentSlide && "border-primary-100 border-4 rounded-md"}`}
+              className={`h-full w-32 relative ${
+                index === currentSlide &&
+                "border-primary-100 border-4 rounded-md"
+              }`}
             >
               <Image
                 src={item}
