@@ -127,7 +127,11 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
         pick_up_time: "14:30:00",
       };
       const res = await postReservations(data);
-      window.open(res?.session, "_blank");
+      if (res.session) {
+        window.open(res.session, "_blank");
+      } else {
+        console.error(res.message);
+      }
     }
   };
 

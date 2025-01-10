@@ -84,6 +84,16 @@ const Navbar = () => {
 
       loginRequired();
     }
+
+    if (currentRoute === "/verhuren") {
+      const loginRequired = async () => {
+        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
+          onOpen();
+        }
+      };
+
+      loginRequired();
+    }
   }, [currentRoute]);
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
