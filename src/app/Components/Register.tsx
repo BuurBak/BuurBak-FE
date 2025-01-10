@@ -5,10 +5,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Login } from "../Types/User";
 import { logIn, registerAccount } from "../api/auth/Register";
+import { useToast } from "../hooks/use-toast";
 import Button from "./Button";
 import InputField from "./InputField";
 
 const Register = () => {
+  const { toast } = useToast();
+
   const form = useForm<Login>({
     defaultValues: {
       name: "",
@@ -22,13 +25,14 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
 
-  const onSubmit = async (data: Login) => {
+  const onSubmit = async (__data: Login) => {
     if (!hasAccount) {
       let loginCredentials: Login = {
         username: getValues("username"),
         password: getValues("password"),
       };
       await logIn(loginCredentials);
+
       window.location.reload();
     } else {
       let registerCredentials: Login = {

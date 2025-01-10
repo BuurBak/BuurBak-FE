@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { postImages } from "../api/Images-controller";
+import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
 import { postTrailer } from "../api/Trailer-controller";
 import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
@@ -44,6 +45,7 @@ type LocationData = {
 };
 
 const Verhuren = () => {
+  const [stripe, setStripe] = useState<boolean>();
   const [files, setFiles] = useState<File[]>([]);
   const [pictures, setPictures] = useState<string[]>([]);
 
@@ -187,6 +189,19 @@ const Verhuren = () => {
 
     extractAddress(locationData.address);
   };
+
+  const connectStripe = async () => {
+    const res = await linkToStripe();
+    window.open(res?.url, "_blank");
+  };
+
+  useEffect(() => {
+    const checkStripe = async () => {
+      let res = await checkStripeConnection();
+      setStripe(res?.ready_for_payments);
+    };
+    checkStripe();
+  }, []);
 
   const onSubmit = (data: PostTrailer) => {
     const addTrailer = async () => {
