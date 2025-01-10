@@ -2,33 +2,32 @@
 import { GetUser, Login } from "@/app/Types/User";
 import { Session } from "@supabase/supabase-js";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { createClient } from "../../../../utils/supabase/server";
 import { encodedRedirect } from "../../../../utils/utils";
 import { deleteToken } from "./Cookies";
 
 type LoginResponse = {
-  status: number;
+  status?: number;
   data?: any;
   error?: string;
 };
 
-export const logIn = async (data: Login): Promise<LoginResponse> => {
-  const email = data.username;
-  const password = data.password;
+export const logIn = async (userData: Login) => {
+  const email = userData.username;
+  const password = userData.password;
   const supabase = createClient();
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
-    console.error("error", "/", error.message);
-    return encodedRedirect("error", "/", error.message);
+    console.error("error", error.status);
+    return error;
   }
 
-  return redirect("");
+  return data;
 };
 
 export const registerAccount = async (data: Login) => {

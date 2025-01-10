@@ -34,8 +34,8 @@ type Inputs = {
 const Page = ({ params }: { params: { AanbodId: string } }) => {
   const searchParams = useSearchParams();
 
-  const [changeDate, setChangeDate] = useState<Boolean>(false);
-  const [changeTime, setChangeTime] = useState<Boolean>(false);
+  const [changeDate, setChangeDate] = useState<boolean>(false);
+  const [changeTime, setChangeTime] = useState<boolean>(false);
 
   const [newDate, setNewDate] = useState({
     start: searchParams.get("dateStart"),
@@ -83,6 +83,16 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
 
     account();
   }, []);
+
+  const calcDate = (): number => {
+    const d1 = new Date(watch("dateStart"));
+    const d2 = new Date(watch("dateEnd"));
+
+    const timeDiff = Math.abs(d2.getTime() - d1.getTime());
+    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    return daysDiff === 0 ? 1 : daysDiff + 1;
+  };
 
   useEffect(() => {
     if (date) {
@@ -292,19 +302,24 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               <div className="flex flex-col gap-2 w-full h-fit">
                 <div className="flex justify-between">
                   <p className="text-small">Aanhanger</p>
-                  <p className="text-small">€ {trailerOffer?.rental_price}</p>
+                  <p className="text-small">
+                    €
+                    {trailerOffer
+                      ? (trailerOffer?.rental_price * calcDate()).toFixed(2)
+                      : ""}
+                  </p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-small">services kosten</p>
                   {trailerOffer?.rental_price && (
                     <p className="text-small">
-                      € {trailerOffer?.rental_price * 0.1}
+                      € {(trailerOffer?.rental_price * 0.1).toFixed(2)}
                     </p>
                   )}
                 </div>
                 <div className="flex justify-between">
                   <p className="text-small">Huurder bescherming</p>
-                  <p className="text-small">€ 2</p>
+                  <p className="text-small">€ {(2).toFixed(2)}</p>
                 </div>
               </div>
             </div>
@@ -315,9 +330,11 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
                 {trailerOffer?.rental_price && (
                   <p className="text-normal">
                     €{" "}
-                    {trailerOffer?.rental_price +
+                    {(
+                      trailerOffer?.rental_price * calcDate() +
                       trailerOffer?.rental_price * 0.1 +
-                      2}
+                      2
+                    ).toFixed(2)}
                   </p>
                 )}
               </div>

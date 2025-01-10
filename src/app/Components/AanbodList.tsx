@@ -235,7 +235,7 @@ const AanbodList = () => {
                 location={item.address.city}
                 price={item.rental_price.toString()}
                 link={"aanbod/" + item.uuid}
-                accesoires=""
+                accessoires=""
                 distance={2}
                 type="overview"
               />

@@ -104,7 +104,7 @@ const Verhuren = () => {
     "Fietsen Aanhanger",
     "Overig",
   ];
-  const accesoires: string[] = [
+  const accessoires: string[] = [
     "Disselslot",
     "Oprijplaten",
     "7 naar 13 polige adapter",
@@ -298,7 +298,7 @@ const Verhuren = () => {
           </div>
           <div className="w-3/4">
             <p className="font-bold">
-              Kies de accesoires die je bij je aanhanger wilt verhuren:
+              Kies de accessoires die je bij je aanhanger wilt verhuren:
             </p>
             <Controller
               name="accessories"
@@ -317,7 +317,7 @@ const Verhuren = () => {
                     field.onChange(selectedValues);
                   }}
                 >
-                  {accesoires.map((item) => (
+                  {accessoires.map((item) => (
                     <SelectItem key={item} value={item}>
                       {item}
                     </SelectItem>
@@ -563,7 +563,9 @@ const Verhuren = () => {
             <Button
               label="Voeg jouw trailer toe"
               submit
-              disabled={isSubmitting || isSubmitSuccessful || !isSignd}
+              disabled={
+                isSubmitting || isSubmitSuccessful || !isSignd || !stripe
+              }
             />
             <p className="underline italic text-black-100 ">
               Algemene Voorwaarden

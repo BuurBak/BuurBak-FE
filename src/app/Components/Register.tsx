@@ -109,7 +109,11 @@ const Register = () => {
           {...register("password")}
         />
       </div>
-      <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
+      {!hasAccount ? (
+        <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
+      ) : (
+        ""
+      )}
       <Button label={hasAccount ? "Registreer" : "Log in"} submit={true} />
       {!hasAccount && (
         <p>
