@@ -6,9 +6,6 @@ import AanbodPreview from "./Components/AanbodPreview";
 import Highlights from "./Components/Highlights";
 import Landing from "./Components/Landing";
 
-const siteId = 5263325; // Vervang met je Hotjar Site ID
-const hotjarVersion = 6; // Vervang met je Hotjar versie
-
 export default function Home() {
   useEffect(() => {
     // Hotjar Initialisatie
@@ -20,7 +17,7 @@ export default function Home() {
           function () {
             (h.hj.q = h.hj.q || []).push(arguments);
           };
-        h._hjSettings = { hjid: siteId, hjsv: hotjarVersion }; // Gebruik de variabelen hier
+        h._hjSettings = { hjid: 5263325, hjsv: 6 }; // Gebruik de variabelen hier
         a = o.getElementsByTagName("head")[0];
         r = o.createElement("script");
         r.async = 1;
