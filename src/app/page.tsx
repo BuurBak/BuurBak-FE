@@ -17,7 +17,7 @@ export default function Home() {
           function () {
             (h.hj.q = h.hj.q || []).push(arguments);
           };
-        h._hjSettings = { hjid: 5263325, hjsv: 6 }; // Gebruik de variabelen hier
+        h._hjSettings = { hjid: 5264235, hjsv: 6 }; // Gebruik de variabelen hier
         a = o.getElementsByTagName("head")[0];
         r = o.createElement("script");
         r.async = 1;
