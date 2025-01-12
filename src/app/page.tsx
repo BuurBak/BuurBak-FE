@@ -17,7 +17,7 @@ export default function Home() {
           function () {
             (h.hj.q = h.hj.q || []).push(arguments);
           };
-        h._hjSettings = { hjid: 5241159, hjsv: 6 }; // Gebruik de variabelen hier
+        h._hjSettings = { hjid: 5241159, hjsv: 6 }; // Hotjar settings
         a = o.getElementsByTagName("head")[0];
         r = o.createElement("script");
         r.async = 1;
@@ -27,6 +27,26 @@ export default function Home() {
       console.log("Hotjar initialized successfully.");
     } catch (error) {
       console.error("Error initializing Hotjar:", error);
+    }
+
+    // Microsoft Clarity Initialisatie
+    console.log("Initializing Microsoft Clarity...");
+    try {
+      (function (c: any, l: any, a: any, r: any, i?: any, t?: any, y?: any) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode?.insertBefore(t, y);
+      })(window, document, "clarity", "script", "prudemtx5m");
+      console.log("Microsoft Clarity initialized successfully.");
+    } catch (error) {
+      console.error("Error initializing Microsoft Clarity:", error);
     }
   }, []);
 
