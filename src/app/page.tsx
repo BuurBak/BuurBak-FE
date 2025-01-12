@@ -48,6 +48,21 @@ export default function Home() {
     } catch (error) {
       console.error("Error initializing Microsoft Clarity:", error);
     }
+
+    // Cookiebot Initialisatie
+    console.log("Initializing Cookiebot...");
+    try {
+      const script = document.createElement("script");
+      script.id = "Cookiebot";
+      script.src = "https://consent.cookiebot.com/uc.js";
+      script.setAttribute("data-cbid", "64138b24-59cf-4e36-891f-cd08c83ba9f7");
+      script.type = "text/javascript";
+      document.head.appendChild(script);
+
+      console.log("Cookiebot initialized successfully.");
+    } catch (error) {
+      console.error("Error initializing Cookiebot:", error);
+    }
   }, []);
 
   return (
