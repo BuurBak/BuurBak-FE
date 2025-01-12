@@ -1,0 +1,69 @@
+/* Target the Cookiebot buttons */
+
+/* "Weigeren" button */
+#CybotCookiebotDialogBodyButtonDecline {
+  border-color: #eb672a !important;
+}
+#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection {
+  border-color: #eb672a !important;
+}
+
+#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll {
+  background-color: #eb672a !important; /* Replace with your desired button background color */
+  border-color: #eb672a !important;
+}
+
+/* Toggle switch styling */
+.CybotCookiebotDialogBodyLevelButtonSlider {
+  background-color: gray !important;
+}
+
+/* Active toggle switch */
+input:checked + .CybotCookiebotDialogBodyLevelButtonSlider {
+  background-color: #eb672a !important;
+}
+
+/* Toggle switch border when active */
+.CybotCookiebotDialogBodyLevelButtonSlider::before {
+  border-color: #eb672a !important;
+  color: #ff5733 !important;
+}
+
+/* Change the active tab underline color */
+#CybotCookiebotDialogNav {
+  border-bottom: 1px solid gray;
+}
+
+#CybotCookiebotDialogNav a {
+  text-decoration: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000 !important;
+  position: relative;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  border-bottom: 1px solid gray !important;
+}
+
+/* Default active tab (Consent) */
+#CybotCookiebotDialogNav a.active {
+  color: #ff5733 !important;
+  border-bottom: 3px solid #ff5733 !important;
+  font-weight: bold;
+}
+
+/* Hover and focus effect */
+#CybotCookiebotDialogNav a:focus {
+  color: #ff5733 !important;
+  border-bottom: 2px solid #ff5733 !important;
+  outline: none;
+}
+
+#CybotCookiebotDialogTabContent {
+  color: black !important;
+}
+
+#CybotCookiebotDialogTabContent :hover {
+  color: black !important;
+}

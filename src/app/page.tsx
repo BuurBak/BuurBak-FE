@@ -5,6 +5,7 @@ import AanbodCategorieën from "./Components/AanbodCategorieën";
 import AanbodPreview from "./Components/AanbodPreview";
 import Highlights from "./Components/Highlights";
 import Landing from "./Components/Landing";
+import "./styles.css";
 
 export default function Home() {
   useEffect(() => {
