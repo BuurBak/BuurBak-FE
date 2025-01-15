@@ -8,7 +8,7 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { PencilLine } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { getUser, updateUser } from "../api/auth/Register";
 import { GetUser } from "../Types/User";
 
@@ -104,7 +104,9 @@ export default function GegevensModal() {
                           <input
                             type="text"
                             value={editableValue}
-                            onChange={(e) => setEditableValue(e.target.value)}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                              setEditableValue(e.target.value)
+                            }
                             className="border-b-2 border-primary-100 w-full outline-none"
                           />
                         ) : (
