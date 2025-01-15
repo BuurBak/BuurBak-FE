@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
 import ErrorToast from "./Components/ErrorToast";
 import Footer from "./Components/Footer";
 import Navbar from "./Components/NavBar";
@@ -25,9 +26,11 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
-        <Toaster />
-        <SuccessToast />
-        <ErrorToast />
+        <Suspense>
+          <Toaster />
+          <SuccessToast />
+          <ErrorToast />
+        </Suspense>
       </body>
     </html>
   );
