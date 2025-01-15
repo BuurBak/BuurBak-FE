@@ -5,13 +5,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Login } from "../Types/User";
 import { logIn, registerAccount } from "../api/auth/Register";
-import { useToast } from "../hooks/use-toast";
 import Button from "./Button";
 import InputField from "./InputField";
 
 const Register = () => {
-  const { toast } = useToast();
-
   const form = useForm<Login>({
     defaultValues: {
       name: "",
@@ -31,9 +28,10 @@ const Register = () => {
         username: getValues("username"),
         password: getValues("password"),
       };
-      await logIn(loginCredentials);
-
-      window.location.reload();
+      const res = await logIn(loginCredentials);
+      if (res !== undefined) {
+        window.location.reload();
+      }
     } else {
       let registerCredentials: Login = {
         username: getValues("username"),
@@ -42,7 +40,9 @@ const Register = () => {
         phoneNumber: getValues("phoneNumber"),
       };
       await registerAccount(registerCredentials);
-      window.location.reload();
+      setTimeout(function () {
+        window.location.reload();
+      }, 100);
     }
   };
 

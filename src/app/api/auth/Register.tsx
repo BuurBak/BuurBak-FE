@@ -1,53 +1,56 @@
 "use server";
 import { GetUser, Login } from "@/app/Types/User";
 import { Session } from "@supabase/supabase-js";
-import { headers } from "next/headers";
 import { createClient } from "../../../../utils/supabase/server";
 import { encodedRedirect } from "../../../../utils/utils";
 import { deleteToken } from "./Cookies";
-
-type LoginResponse = {
-  status?: number;
-  data?: any;
-  error?: string;
-};
 
 export const logIn = async (userData: Login) => {
   const email = userData.username;
   const password = userData.password;
   const supabase = createClient();
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
-    console.error("error", error.status);
-    return error;
+    if (error.status === 400) {
+      return encodedRedirect(
+        "error",
+        "/",
+        "Jouw email of wachtwoord is onjuist"
+      );
+    } else {
+      return encodedRedirect(
+        "error",
+        "/",
+        "Er is iets fout gegaan. Probeer het later nog eens"
+      );
+    }
   }
 
-  return data;
+  return encodedRedirect("success", "/", "Je bent ingelogd");
 };
 
-export const registerAccount = async (data: Login) => {
-  const email = data.username;
-  const password = data.password;
+export const registerAccount = async (userData: Login) => {
+  const email = userData.username;
+  const password = userData.password;
   const supabase = createClient();
-  const origin = headers().get("origin");
 
   if (!email || !password) {
     return { error: "Email and password are required" };
   }
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       emailRedirectTo: `/dashboard`,
       data: {
-        name: data.name,
-        phoneNumber: data.phoneNumber,
+        name: userData.name,
+        phoneNumber: userData.phoneNumber,
       },
     },
   });
@@ -59,7 +62,7 @@ export const registerAccount = async (data: Login) => {
     return encodedRedirect(
       "success",
       "/",
-      "Thanks for signing up! Please check your email for a verification link."
+      "Bedankt voor het inloggen! Check je email voor de bevestegings link."
     );
   }
 };

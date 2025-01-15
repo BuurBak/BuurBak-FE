@@ -1,5 +1,3 @@
-"use client";
-
 import AanbodPreview from "./Components/AanbodPreview";
 import Highlights from "./Components/Highlights";
 import Landing from "./Components/Landing";

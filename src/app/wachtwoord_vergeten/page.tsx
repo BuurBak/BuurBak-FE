@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import { forgotPassword } from "../api/auth/Register";
@@ -37,7 +37,9 @@ const Page = () => {
           className="w-full"
           type="email"
           value={mail}
-          onChange={(e) => setMail(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setMail(e.target.value)
+          }
           required
         />
         <a className="cursor-pointer text-secondary-100" href="/">
