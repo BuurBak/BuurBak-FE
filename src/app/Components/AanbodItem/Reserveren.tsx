@@ -1,3 +1,4 @@
+import { getTrailerAvalibility } from "@/app/api/Trailer-controller";
 import { TrailerData } from "@/app/Types/Reservation";
 import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 import { RangeCalendar, RangeValue } from "@nextui-org/calendar";
@@ -21,6 +22,9 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
   const merche = (item: { start: string; end: string }) =>
     item.start + " - " + item.end;
 
+  const [disabledRangesArray, setDisabledRanges] = useState<CalendarDate[][]>(
+    []
+  );
   const [collapsed, setCollapsed] = useState(false);
   const [date, setDate] = useState<RangeValue<CalendarDate> | null>({
     start: today(getLocalTimeZone()),
@@ -40,6 +44,8 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
         shouldTouch: true,
       });
     }
+
+    disabledRanges();
   }, [date]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -55,7 +61,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
   };
 
   const parseToCalendarDate = (dateString: string): CalendarDate => {
-    const [day, month, year] = dateString.split("/").map(Number);
+    const [year, month, day] = dateString.split("-").map(Number);
 
     if (
       !day ||
@@ -72,10 +78,16 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
     return new CalendarDate(year, month, day);
   };
 
-  let disabledRanges = [
-    [parseToCalendarDate("22/11/2024"), parseToCalendarDate("25/11/2024")],
-    [parseToCalendarDate("2/12/2024"), parseToCalendarDate("4/12/2024")],
-  ];
+  const disabledRanges = async () => {
+    const res: string[] = await getTrailerAvalibility(trailerOffer.uuid);
+
+    const parsedRanges = res.map((item: string) => {
+      const parsedDate = parseToCalendarDate(item);
+      return [parsedDate, parsedDate];
+    });
+
+    setDisabledRanges(parsedRanges);
+  };
 
   return (
     <>
@@ -132,7 +144,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
                 onChange={setDate}
                 minValue={today(getLocalTimeZone())}
                 isDateUnavailable={(date) =>
-                  disabledRanges.some(
+                  disabledRangesArray.some(
                     (interval) =>
                       date.compare(interval[0]) >= 0 &&
                       date.compare(interval[1]) <= 0

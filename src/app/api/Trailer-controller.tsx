@@ -104,3 +104,21 @@ export const getTrailerOfLocation = async (address: string, city: string) => {
     console.warn(error);
   }
 };
+
+// TODO any type of return
+export const getTrailerAvalibility = async (uuid: string) => {
+  try {
+    const response = await fetch(
+      `https://api.buurbak.nl/trailers/availability/${uuid}`,
+      {
+        method: "GET",
+      }
+    );
+
+    const data: any = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.warn(error);
+  }
+};
