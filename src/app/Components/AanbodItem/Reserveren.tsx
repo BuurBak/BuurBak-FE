@@ -1,3 +1,4 @@
+import { getTrailerAvalibility } from "@/app/api/Trailer-controller";
 import { TrailerData } from "@/app/Types/Reservation";
 import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 import { RangeCalendar, RangeValue } from "@nextui-org/calendar";
@@ -21,6 +22,9 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
   const merche = (item: { start: string; end: string }) =>
     item.start + " - " + item.end;
 
+  const [disabledRangesArray, setDisabledRanges] = useState<CalendarDate[][]>(
+    []
+  );
   const [collapsed, setCollapsed] = useState(false);
   const [date, setDate] = useState<RangeValue<CalendarDate> | null>({
     start: today(getLocalTimeZone()),
@@ -40,6 +44,8 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
         shouldTouch: true,
       });
     }
+
+    disabledRanges();
   }, [date]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -53,6 +59,36 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
     router.push(`/aanbod/${trailerOffer.uuid}/reserveren` + "?" + URLParams);
     setCollapsed(false);
   };
+
+  const parseToCalendarDate = (dateString: string): CalendarDate => {
+    const [year, month, day] = dateString.split("-").map(Number);
+
+    if (
+      !day ||
+      !month ||
+      !year ||
+      day < 1 ||
+      day > 31 ||
+      month < 1 ||
+      month > 12
+    ) {
+      throw new Error("Invalid date format");
+    }
+
+    return new CalendarDate(year, month, day);
+  };
+
+  const disabledRanges = async () => {
+    const res: string[] = await getTrailerAvalibility(trailerOffer.uuid);
+
+    const parsedRanges = res.map((item: string) => {
+      const parsedDate = parseToCalendarDate(item);
+      return [parsedDate, parsedDate];
+    });
+
+    setDisabledRanges(parsedRanges);
+  };
+
   return (
     <>
       {collapsed && (
@@ -106,6 +142,14 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
                 className="buurbak-light hidden sm:block"
                 value={date}
                 onChange={setDate}
+                minValue={today(getLocalTimeZone())}
+                isDateUnavailable={(date) =>
+                  disabledRangesArray.some(
+                    (interval) =>
+                      date.compare(interval[0]) >= 0 &&
+                      date.compare(interval[1]) <= 0
+                  )
+                }
               />
 
               {/* <Autocomplete
