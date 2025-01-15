@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { hasToken } from "../api/auth/Cookies";
 import { getImage, postImages } from "../api/Images-controller";
+import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
 import { postTrailer } from "../api/Trailer-controller";
 import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
@@ -45,6 +46,7 @@ type LocationData = {
 };
 
 const Verhuren = () => {
+  const [stripe, setStripe] = useState<boolean>();
   const [files, setFiles] = useState<File[]>([]);
   const [pictures, setPictures] = useState<string[]>([]);
   const [isSignd, setIsSignd] = useState<boolean>(false);
@@ -102,7 +104,7 @@ const Verhuren = () => {
     "Fietsen Aanhanger",
     "Overig",
   ];
-  const accesoires: string[] = [
+  const accessoires: string[] = [
     "Disselslot",
     "Oprijplaten",
     "7 naar 13 polige adapter",
@@ -191,6 +193,18 @@ const Verhuren = () => {
     extractAddress(locationData.address);
   };
 
+  const connectStripe = async () => {
+    const res = await linkToStripe();
+    window.open(res?.url, "_blank");
+  };
+
+  useEffect(() => {
+    const checkStripe = async () => {
+      let res = await checkStripeConnection();
+      setStripe(res?.ready_for_payments);
+    };
+    checkStripe();
+  }, []);
   const getImageById = async (id: string) => {
     const res = await getImage(id);
     console.log("res", res);
@@ -284,7 +298,7 @@ const Verhuren = () => {
           </div>
           <div className="w-3/4">
             <p className="font-bold">
-              Kies de accesoires die je bij je aanhanger wilt verhuren:
+              Kies de accessoires die je bij je aanhanger wilt verhuren:
             </p>
             <Controller
               name="accessories"
@@ -303,7 +317,7 @@ const Verhuren = () => {
                     field.onChange(selectedValues);
                   }}
                 >
-                  {accesoires.map((item) => (
+                  {accessoires.map((item) => (
                     <SelectItem key={item} value={item}>
                       {item}
                     </SelectItem>
@@ -549,7 +563,9 @@ const Verhuren = () => {
             <Button
               label="Voeg jouw trailer toe"
               submit
-              disabled={isSubmitting || isSubmitSuccessful || !isSignd}
+              disabled={
+                isSubmitting || isSubmitSuccessful || !isSignd || !stripe
+              }
             />
             <p className="underline italic text-black-100 ">
               Algemene Voorwaarden

@@ -22,14 +22,16 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
 
-  const onSubmit = async (data: Login) => {
+  const onSubmit = async (__data: Login) => {
     if (!hasAccount) {
       let loginCredentials: Login = {
         username: getValues("username"),
         password: getValues("password"),
       };
-      await logIn(loginCredentials);
-      window.location.reload();
+      const res = await logIn(loginCredentials);
+      if (res !== undefined) {
+        window.location.reload();
+      }
     } else {
       let registerCredentials: Login = {
         username: getValues("username"),
@@ -38,7 +40,9 @@ const Register = () => {
         phoneNumber: getValues("phoneNumber"),
       };
       await registerAccount(registerCredentials);
-      window.location.reload();
+      setTimeout(function () {
+        window.location.reload();
+      }, 100);
     }
   };
 
@@ -105,7 +109,11 @@ const Register = () => {
           {...register("password")}
         />
       </div>
-      <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
+      {!hasAccount ? (
+        <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
+      ) : (
+        ""
+      )}
       <Button label={hasAccount ? "Registreer" : "Log in"} submit={true} />
       {!hasAccount && (
         <p>

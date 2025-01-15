@@ -51,7 +51,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [singedIn, setSingendIn] = useState(false);
   const currentRoute = usePathname();
-  const [scrolled, isScrolled] = useState(false);
+  const [scrolled, isScrolled] = useState(true);
   const [user, setUser] = useState<GetUser>();
 
   const isReserverenPage = () => {
@@ -59,21 +59,21 @@ const Navbar = () => {
     return reserverenPattern.test(currentRoute);
   };
 
-  useEffect(() => {
-    function changeCss() {
-      if (currentRoute === "/") {
-        window.scrollY > 500 ? isScrolled(true) : isScrolled(false);
-      }
-    }
+  // useEffect(() => {
+  //   function changeCss() {
+  //     if (currentRoute === "/") {
+  //       window.scrollY > 500 ? isScrolled(true) : isScrolled(false);
+  //     }
+  //   }
 
-    window.addEventListener("scroll", changeCss, false);
-  }, []);
+  //   window.addEventListener("scroll", changeCss, false);
+  // }, []);
 
   useEffect(() => {
-    if (currentRoute !== "/") {
-      isScrolled(true);
-      onClose();
-    }
+    // if (currentRoute !== "/") {
+    //   isScrolled(true);
+    //   onClose();
+    // }
 
     if (isReserverenPage()) {
       const loginRequired = async () => {

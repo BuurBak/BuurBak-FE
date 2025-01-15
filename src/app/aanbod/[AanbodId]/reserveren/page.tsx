@@ -7,6 +7,7 @@ import { postReservations } from "@/app/api/Reservations-controller";
 import { getTrailer } from "@/app/api/Trailer-controller";
 import { hasToken } from "@/app/api/auth/Cookies";
 import { getUserSupaBase } from "@/app/api/auth/Register";
+import { useToast } from "@/app/hooks/use-toast";
 import {
   CalendarDate,
   fromDate,
@@ -32,10 +33,11 @@ type Inputs = {
 };
 
 const Page = ({ params }: { params: { AanbodId: string } }) => {
+  const { toast } = useToast();
   const searchParams = useSearchParams();
 
-  const [changeDate, setChangeDate] = useState<Boolean>(false);
-  const [changeTime, setChangeTime] = useState<Boolean>(false);
+  const [changeDate, setChangeDate] = useState<boolean>(false);
+  const [changeTime, setChangeTime] = useState<boolean>(false);
 
   const [newDate, setNewDate] = useState({
     start: searchParams.get("dateStart"),
@@ -84,6 +86,16 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     account();
   }, []);
 
+  const calcDate = (): number => {
+    const d1 = new Date(watch("dateStart"));
+    const d2 = new Date(watch("dateEnd"));
+
+    const timeDiff = Math.abs(d2.getTime() - d1.getTime());
+    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    return daysDiff === 0 ? 1 : daysDiff + 1;
+  };
+
   useEffect(() => {
     if (date) {
       setValue("dateStart", date.start.toString(), {
@@ -111,6 +123,24 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
 
   const terms = watch("terms");
 
+  const onError = (fieldsErrors: any) => {
+    for (const fieldName in fieldsErrors) {
+      toast({
+        title: `${
+          !user
+            ? "Je moet ingelogd zijn om een trailer te kunnen reserveren"
+            : ""
+        } ${!user && !terms ? "en" : ""}  ${
+          !terms
+            ? "Accepteer nog even de voorwaarden voordat wij je trailer kunnen reserveren"
+            : ""
+        }`,
+        duration: 6000,
+        variant: "error",
+      });
+    }
+  };
+
   const onSubmit: SubmitHandler<Inputs> = async () => {
     if (trailerOffer && user) {
       const startDate = new Date(getValues("dateStart"));
@@ -129,14 +159,29 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
       const res = await postReservations(data);
       if (res.session) {
         window.open(res.session, "_blank");
+        setTimeout(function () {
+          toast({
+            title: "Dit duurd wat langer dan verwacht",
+            description:
+              "Wij zijn bezig met het klaar zetten van de betaal link zodra deze klaar is wordt hij automatisch geopend",
+          });
+        }, 2000);
       } else {
         console.error(res.message);
+        if (
+          res.message ===
+          "Another reservation is already scheduled at that time!"
+        )
+          toast({
+            title: "Deze aanhanger is helaas al gerserveerd op deze dag",
+            variant: "error",
+          });
       }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit, onError)}>
       <div className="flex flex-col-reverse sm:flex-row w-dvw h-fit min-h-dvh mt-[88px]">
         <div className="flex flex-col justify-center gap-10 flex-1 px-4 py-4">
           <h1 className="text-primary-100 text-h4">Reserveer uw aanhanger</h1>
@@ -292,19 +337,24 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               <div className="flex flex-col gap-2 w-full h-fit">
                 <div className="flex justify-between">
                   <p className="text-small">Aanhanger</p>
-                  <p className="text-small">€ {trailerOffer?.rental_price}</p>
+                  <p className="text-small">
+                    €
+                    {trailerOffer
+                      ? (trailerOffer?.rental_price * calcDate()).toFixed(2)
+                      : ""}
+                  </p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-small">services kosten</p>
                   {trailerOffer?.rental_price && (
                     <p className="text-small">
-                      € {trailerOffer?.rental_price * 0.1}
+                      € {(trailerOffer?.rental_price * 0.1).toFixed(2)}
                     </p>
                   )}
                 </div>
                 <div className="flex justify-between">
                   <p className="text-small">Huurder bescherming</p>
-                  <p className="text-small">€ 2</p>
+                  <p className="text-small">€ {(2).toFixed(2)}</p>
                 </div>
               </div>
             </div>
@@ -315,9 +365,11 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
                 {trailerOffer?.rental_price && (
                   <p className="text-normal">
                     €{" "}
-                    {trailerOffer?.rental_price +
+                    {(
+                      trailerOffer?.rental_price * calcDate() +
                       trailerOffer?.rental_price * 0.1 +
-                      2}
+                      2
+                    ).toFixed(2)}
                   </p>
                 )}
               </div>
