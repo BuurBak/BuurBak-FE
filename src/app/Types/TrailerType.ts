@@ -20,7 +20,7 @@ export type PostTrailer = {
   car_driving_license: string;
   trailer_type: string;
   rental_price: number;
-  images: any[];
+  images: string[];
 };
 
 type Address = {

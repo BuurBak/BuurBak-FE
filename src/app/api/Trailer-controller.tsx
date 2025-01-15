@@ -1,7 +1,8 @@
 "use server";
+import { Session } from "@supabase/supabase-js";
 import { TrailerData } from "../Types/Reservation";
 import { PostTrailer } from "../Types/TrailerType";
-import { getToken } from "./auth/Cookies";
+import { getSession } from "./auth/Register";
 
 export const getAllTrailers = async () => {
   // const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
@@ -27,7 +28,7 @@ export const getAllTrailers = async () => {
 };
 
 export const getTrailers = async () => {
-  const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+  const sessionToken: Session | null = await getSession();
 
   try {
     const response = await fetch(
@@ -35,11 +36,7 @@ export const getTrailers = async () => {
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${
-            token
-              ? token.replace("base64-", "")
-              : process.env.NEXT_PUBLIC_JWT_TOKEN
-          }`,
+          Authorization: `Bearer ${sessionToken?.access_token}`,
           "Content-Type": "application/json",
         },
       }
@@ -54,17 +51,13 @@ export const getTrailers = async () => {
 
 // Console.log no return yet
 export const postTrailer = async (data: PostTrailer) => {
-  const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+  const sessionToken: Session | null = await getSession();
 
   try {
     const response = await fetch(`https://api.buurbak.nl/trailers`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${
-          token
-            ? token.replace("base64-", "")
-            : process.env.NEXT_PUBLIC_JWT_TOKEN
-        }`,
+        Authorization: `Bearer ${sessionToken?.access_token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
@@ -92,7 +85,7 @@ export const getTrailer = async (uuid: string) => {
 
 // Console.log no return yet and any type of return
 export const getTrailerOfLocation = async (address: string, city: string) => {
-  const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+  const sessionToken: Session | null = await getSession();
 
   try {
     const response = await fetch(
@@ -100,11 +93,7 @@ export const getTrailerOfLocation = async (address: string, city: string) => {
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${
-            token
-              ? token.replace("base64-", "")
-              : process.env.NEXT_PUBLIC_JWT_TOKEN
-          }`,
+          Authorization: `Bearer ${sessionToken?.access_token}`,
         },
       }
     );

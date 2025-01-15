@@ -44,6 +44,8 @@ const AanbodPreview: React.FC = () => {
     fetchData();
   }, []);
 
+  const dataToRender = Array.isArray(data) ? data : [];
+
   const TrailerDistance = (nearbyLatitude: any, nearbyLongitude: any) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
@@ -56,7 +58,7 @@ const AanbodPreview: React.FC = () => {
       setCenterCoordinates({ lat: latitude, lng: longitude });
     }
     function error() {
-      console.log("Unable to retrieve your location");
+      console.error("Unable to retrieve your location");
       return undefined;
     }
     if (
@@ -88,11 +90,11 @@ const AanbodPreview: React.FC = () => {
         <p>Loading...</p>
       ) : (
         <>
-          {data.length === 0 ? (
+          {dataToRender.length === 0 ? (
             <p>No data available</p>
           ) : (
-            <div className="flex flex-row flex-wrap md:flex-nowrap w-full gap-4 justify-center lg:justify-between overflow-hidden">
-              {data.slice(0, 5).map((item) => (
+            <div className="flex flex-row flex-wrap md:flex-nowrap w-full gap-4 justify-center lg:justify-start overflow-hidden">
+              {dataToRender.slice(0, 5).map((item) => (
                 <Card
                   key={item.uuid}
                   title={item.trailer_type}

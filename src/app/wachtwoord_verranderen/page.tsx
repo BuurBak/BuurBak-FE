@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import { resetPassword } from "../api/auth/Register";
@@ -34,8 +34,10 @@ const Page = () => {
           outline
           className="w-full"
           type="password"
-          inputValue={pass}
-          setInputValue={setPass}
+          value={pass}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setPass(e.target.value)
+          }
           required
         />
         <InputField
@@ -44,8 +46,10 @@ const Page = () => {
           outline
           className="w-full"
           type="password"
-          inputValue={secPass}
-          setInputValue={setSecPass}
+          value={secPass}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setSecPass(e.target.value)
+          }
           required
         />
         <Button label="Verstuur" submit type="primary" />

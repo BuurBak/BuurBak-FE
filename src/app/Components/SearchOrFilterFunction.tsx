@@ -73,7 +73,7 @@ const SearchOrFilter = ({
       setCenterCoordinates({ lat: latitude, lng: longitude });
     }
     function error() {
-      console.log("Unable to retrieve your location");
+      console.error("Unable to retrieve your location");
     }
   }, []);
 

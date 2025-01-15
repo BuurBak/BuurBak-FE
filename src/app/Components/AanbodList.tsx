@@ -9,7 +9,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { TrailerType } from "../Types/TrailerType";
 import Button from "./Button";
 import Card from "./Card";
@@ -23,9 +23,63 @@ type FilterOption = {
   setInputValue: any;
 };
 
+export const customTheme = (outerTheme: Theme) =>
+  createTheme({
+    palette: {
+      mode: outerTheme.palette.mode,
+    },
+    components: {
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            "--TextField-brandBorderColor": "#EE7B46",
+            "--TextField-brandBorderHoverColor": "#EE7B46",
+            "--TextField-brandBorderFocusedColor": "#EE7B46",
+            "& label.Mui-focused": {
+              color: "var(--TextField-brandBorderFocusedColor)",
+            },
+
+            minWidth: "150px",
+          },
+        },
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          notchedOutline: {
+            borderColor: "var(--TextField-brandBorderColor)",
+          },
+          root: {
+            [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
+              borderColor: "var(--TextField-brandBorderHoverColor)",
+            },
+            [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
+              borderColor: "var(--TextField-brandBorderFocusedColor)",
+            },
+          },
+        },
+      },
+      MuiInput: {
+        styleOverrides: {
+          root: {
+            "&::before": {
+              borderBottom: "2px solid var(--TextField-brandBorderColor)",
+            },
+            "&:hover:not(.Mui-disabled, .Mui-error):before": {
+              borderBottom: "2px solid var(--TextField-brandBorderHoverColor)",
+            },
+            "&.Mui-focused:after": {
+              borderBottom:
+                "2px solid var(--TextField-brandBorderFocusedColor)",
+            },
+          },
+        },
+      },
+    },
+  });
+
 const AanbodList = () => {
   const [showFilters, setShowFilters] = useState(false);
-  const [inputValueSearch, setInputValueSearch] = useState("");
+  const [inputValueSearch, setInputValueSearch] = useState<string>("");
   const [inputValueType, setInputValueType] =
     useState<TrailerType["name"]>("Alle");
   const [inputValueWhere, setInputValueWhere] = useState("");
@@ -110,61 +164,6 @@ const AanbodList = () => {
     },
   ];
 
-  const customTheme = (outerTheme: Theme) =>
-    createTheme({
-      palette: {
-        mode: outerTheme.palette.mode,
-      },
-      components: {
-        MuiTextField: {
-          styleOverrides: {
-            root: {
-              "--TextField-brandBorderColor": "#EE7B46",
-              "--TextField-brandBorderHoverColor": "#EE7B46",
-              "--TextField-brandBorderFocusedColor": "#EE7B46",
-              "& label.Mui-focused": {
-                color: "var(--TextField-brandBorderFocusedColor)",
-              },
-
-              minWidth: "150px",
-            },
-          },
-        },
-        MuiOutlinedInput: {
-          styleOverrides: {
-            notchedOutline: {
-              borderColor: "var(--TextField-brandBorderColor)",
-            },
-            root: {
-              [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
-                borderColor: "var(--TextField-brandBorderHoverColor)",
-              },
-              [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
-                borderColor: "var(--TextField-brandBorderFocusedColor)",
-              },
-            },
-          },
-        },
-        MuiInput: {
-          styleOverrides: {
-            root: {
-              "&::before": {
-                borderBottom: "2px solid var(--TextField-brandBorderColor)",
-              },
-              "&:hover:not(.Mui-disabled, .Mui-error):before": {
-                borderBottom:
-                  "2px solid var(--TextField-brandBorderHoverColor)",
-              },
-              "&.Mui-focused:after": {
-                borderBottom:
-                  "2px solid var(--TextField-brandBorderFocusedColor)",
-              },
-            },
-          },
-        },
-      },
-    });
-
   return (
     <div className="flex flex-col h-full max-h-screen overflow-auto w-full p-2 bg-offWhite-100 gap-3">
       <div className="flex flex-col w-full h-fit gap-3">
@@ -174,13 +173,16 @@ const AanbodList = () => {
             label="Zoeken"
             inputType="text"
             icon={true}
-            inputValue={inputValueSearch}
-            setInputValue={setInputValueSearch}
+            value={inputValueSearch}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setInputValueSearch(event.target.value)
+            }
           />
           <Button
             styling="border"
             label="Filter"
             icon={true}
+            IconName="Filter"
             type="secondary"
             buttonAction={() => setShowFilters(!showFilters)}
           />
@@ -236,7 +238,7 @@ const AanbodList = () => {
                 location={item.address.city}
                 price={item.rental_price.toString()}
                 link={"aanbod/" + item.uuid}
-                accesoires=""
+                accessoires=""
                 distance={2}
                 type="overview"
               />

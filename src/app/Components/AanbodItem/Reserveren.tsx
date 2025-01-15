@@ -1,6 +1,6 @@
 import { TrailerData } from "@/app/Types/Reservation";
 import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
-import { RangeCalendar } from "@nextui-org/calendar";
+import { RangeCalendar, RangeValue } from "@nextui-org/calendar";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,24 +22,24 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
     item.start + " - " + item.end;
 
   const [collapsed, setCollapsed] = useState(false);
-  const [date, setDate] = useState({
+  const [date, setDate] = useState<RangeValue<CalendarDate> | null>({
     start: today(getLocalTimeZone()),
     end: today(getLocalTimeZone()),
   });
 
   useEffect(() => {
-    setValue("dateStart", new Date(date.start.toString()), {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
-    setValue("dateEnd", new Date(date.end.toString()), {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
-
-    console.log(parseToCalendarDate("19/11/2024"));
+    if (date) {
+      setValue("dateStart", new Date(date.start.toString()), {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+      setValue("dateEnd", new Date(date.end.toString()), {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
   }, [date]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {

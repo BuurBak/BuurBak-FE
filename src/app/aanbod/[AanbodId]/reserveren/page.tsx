@@ -5,12 +5,16 @@ import { PostReservations, TrailerData } from "@/app/Types/Reservation";
 import { SupaUser } from "@/app/Types/User";
 import { postReservations } from "@/app/api/Reservations-controller";
 import { getTrailer } from "@/app/api/Trailer-controller";
+import { hasToken } from "@/app/api/auth/Cookies";
 import { getUserSupaBase } from "@/app/api/auth/Register";
+import { useToast } from "@/app/hooks/use-toast";
 import {
+  CalendarDate,
   fromDate,
   getLocalTimeZone,
   toCalendarDate,
 } from "@internationalized/date";
+import { RangeValue } from "@nextui-org/calendar";
 import { Checkbox } from "@nextui-org/checkbox";
 import { DateRangePicker } from "@nextui-org/date-picker";
 import { format, parseISO } from "date-fns";
@@ -29,10 +33,11 @@ type Inputs = {
 };
 
 const Page = ({ params }: { params: { AanbodId: string } }) => {
+  const { toast } = useToast();
   const searchParams = useSearchParams();
 
-  const [changeDate, setChangeDate] = useState<Boolean>(false);
-  const [changeTime, setChangeTime] = useState<Boolean>(false);
+  const [changeDate, setChangeDate] = useState<boolean>(false);
+  const [changeTime, setChangeTime] = useState<boolean>(false);
 
   const [newDate, setNewDate] = useState({
     start: searchParams.get("dateStart"),
@@ -44,7 +49,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   const [reqLoading, setReqLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [checked, setChecked] = useState<boolean>(false);
-  const [date, setDate] = useState({
+  const [date, setDate] = useState<RangeValue<CalendarDate> | null>({
     start: toCalendarDate(
       fromDate(new Date(newDate.start || ""), getLocalTimeZone())
     ),
@@ -53,7 +58,8 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     ),
   });
   const [user, setUser] = useState<SupaUser>();
-  const { register, handleSubmit, setValue, getValues } = useForm<Inputs>();
+  const { register, handleSubmit, setValue, getValues, watch } =
+    useForm<Inputs>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,24 +75,40 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     fetchData();
 
     const account = async () => {
-      const data = await getUserSupaBase();
-      setUser(data.data.user);
+      if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
+        const data = await getUserSupaBase();
+        setUser(data.data.user);
+      } else {
+        console.error(user);
+      }
     };
 
     account();
   }, []);
 
+  const calcDate = (): number => {
+    const d1 = new Date(watch("dateStart"));
+    const d2 = new Date(watch("dateEnd"));
+
+    const timeDiff = Math.abs(d2.getTime() - d1.getTime());
+    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    return daysDiff === 0 ? 1 : daysDiff + 1;
+  };
+
   useEffect(() => {
-    setValue("dateStart", date.start.toString(), {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
-    setValue("dateEnd", date.end.toString(), {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    });
+    if (date) {
+      setValue("dateStart", date.start.toString(), {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+      setValue("dateEnd", date.end.toString(), {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
   }, [date]);
 
   const formatDate = (date: Date) => {
@@ -99,6 +121,26 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
     );
   };
 
+  const terms = watch("terms");
+
+  const onError = (fieldsErrors: any) => {
+    for (const fieldName in fieldsErrors) {
+      toast({
+        title: `${
+          !user
+            ? "Je moet ingelogd zijn om een trailer te kunnen reserveren"
+            : ""
+        } ${!user && !terms ? "en" : ""}  ${
+          !terms
+            ? "Accepteer nog even de voorwaarden voordat wij je trailer kunnen reserveren"
+            : ""
+        }`,
+        duration: 6000,
+        variant: "error",
+      });
+    }
+  };
+
   const onSubmit: SubmitHandler<Inputs> = async () => {
     if (trailerOffer && user) {
       const startDate = new Date(getValues("dateStart"));
@@ -107,8 +149,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
       const formattedStartDate = formatDate(startDate);
       const formattedEndDate = formatDate(endDate);
 
-      console.log(formattedStartDate);
-
       const data: PostReservations = {
         trailer_uuid: trailerOffer.uuid,
         start_date: formattedStartDate,
@@ -116,12 +156,32 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
         message: getValues("message"),
         pick_up_time: "14:30:00",
       };
-      await postReservations(data);
+      const res = await postReservations(data);
+      if (res.session) {
+        window.open(res.session, "_blank");
+        setTimeout(function () {
+          toast({
+            title: "Dit duurd wat langer dan verwacht",
+            description:
+              "Wij zijn bezig met het klaar zetten van de betaal link zodra deze klaar is wordt hij automatisch geopend",
+          });
+        }, 2000);
+      } else {
+        console.error(res.message);
+        if (
+          res.message ===
+          "Another reservation is already scheduled at that time!"
+        )
+          toast({
+            title: "Deze aanhanger is helaas al gerserveerd op deze dag",
+            variant: "error",
+          });
+      }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit, onError)}>
       <div className="flex flex-col-reverse sm:flex-row w-dvw h-fit min-h-dvh mt-[88px]">
         <div className="flex flex-col justify-center gap-10 flex-1 px-4 py-4">
           <h1 className="text-primary-100 text-h4">Reserveer uw aanhanger</h1>
@@ -197,22 +257,28 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               buttonAction={() => setChangeTime(!changeTime)}
             />
           </div> */}
-          <div className="flex justify-between items-center">
-            <div className="flex flex-col gap-1">
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
-                <p className="sm:w-8 text-h6">Naam:</p>
-                <p className="text-normal">{user?.user_metadata.name}</p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
-                <p className="sm:w-8 text-h6">Mail:</p>
-                <p className="text-normal">{user?.email}</p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
-                <p className="sm:w-8 text-h6">Tel:</p>
-                <p className="text-normal">{user?.user_metadata.phoneNumber}</p>
+          {user ? (
+            <div className="flex justify-between items-center">
+              <div className="flex flex-col gap-1">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
+                  <p className="sm:w-8 text-h6">Naam:</p>
+                  <p className="text-normal">{user?.user_metadata.name}</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
+                  <p className="sm:w-8 text-h6">Mail:</p>
+                  <p className="text-normal">{user?.email}</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-10 sm:items-center">
+                  <p className="sm:w-8 text-h6">Tel:</p>
+                  <p className="text-normal">
+                    {user?.user_metadata.phoneNumber}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
           <textarea
             placeholder="Bericht aan verhuurder"
             className="w-full h-20 p-2 border border-gray-100 resize-y"
@@ -239,6 +305,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               label="Reserveer jouw aanhanger"
               styling="w-full"
               submit={true}
+              disabled={user === undefined || !terms}
             />
           </div>
         </div>
@@ -270,19 +337,24 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               <div className="flex flex-col gap-2 w-full h-fit">
                 <div className="flex justify-between">
                   <p className="text-small">Aanhanger</p>
-                  <p className="text-small">€ {trailerOffer?.rental_price}</p>
+                  <p className="text-small">
+                    €
+                    {trailerOffer
+                      ? (trailerOffer?.rental_price * calcDate()).toFixed(2)
+                      : ""}
+                  </p>
                 </div>
                 <div className="flex justify-between">
                   <p className="text-small">services kosten</p>
                   {trailerOffer?.rental_price && (
                     <p className="text-small">
-                      € {trailerOffer?.rental_price * 0.1}
+                      € {(trailerOffer?.rental_price * 0.1).toFixed(2)}
                     </p>
                   )}
                 </div>
                 <div className="flex justify-between">
                   <p className="text-small">Huurder bescherming</p>
-                  <p className="text-small">€ 2</p>
+                  <p className="text-small">€ {(2).toFixed(2)}</p>
                 </div>
               </div>
             </div>
@@ -293,9 +365,11 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
                 {trailerOffer?.rental_price && (
                   <p className="text-normal">
                     €{" "}
-                    {trailerOffer?.rental_price +
+                    {(
+                      trailerOffer?.rental_price * calcDate() +
                       trailerOffer?.rental_price * 0.1 +
-                      2}
+                      2
+                    ).toFixed(2)}
                   </p>
                 )}
               </div>

@@ -51,22 +51,48 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [singedIn, setSingendIn] = useState(false);
   const currentRoute = usePathname();
-  const [scrolled, isScrolled] = useState(false);
+  const [scrolled, isScrolled] = useState(true);
   const [user, setUser] = useState<GetUser>();
 
+  const isReserverenPage = () => {
+    const reserverenPattern = /^\/aanbod\/[^/]+\/reserveren$/;
+    return reserverenPattern.test(currentRoute);
+  };
+
+  // useEffect(() => {
+  //   function changeCss() {
+  //     if (currentRoute === "/") {
+  //       window.scrollY > 500 ? isScrolled(true) : isScrolled(false);
+  //     }
+  //   }
+
+  //   window.addEventListener("scroll", changeCss, false);
+  // }, []);
+
   useEffect(() => {
-    function changeCss() {
-      if (currentRoute === "/") {
-        window.scrollY > 500 ? isScrolled(true) : isScrolled(false);
-      }
+    // if (currentRoute !== "/") {
+    //   isScrolled(true);
+    //   onClose();
+    // }
+
+    if (isReserverenPage()) {
+      const loginRequired = async () => {
+        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
+          onOpen();
+        }
+      };
+
+      loginRequired();
     }
 
-    window.addEventListener("scroll", changeCss, false);
-  }, []);
+    if (currentRoute === "/verhuren") {
+      const loginRequired = async () => {
+        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
+          onOpen();
+        }
+      };
 
-  useEffect(() => {
-    if (currentRoute !== "/") {
-      isScrolled(true);
+      loginRequired();
     }
   }, [currentRoute]);
 
@@ -78,9 +104,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const checkToken = async () => {
-      let token = await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
-
-      if (token) {
+      if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
         setSingendIn(true);
         const getApi = async () => {
           const userData = await getUser();
@@ -94,6 +118,12 @@ const Navbar = () => {
 
     checkToken();
   }, [onOpenChange, open]);
+
+  useEffect(() => {
+    if (singedIn) {
+      onClose();
+    }
+  }, [singedIn]);
 
   return (
     <main>

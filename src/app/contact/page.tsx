@@ -1,6 +1,6 @@
 // src/app/contact/page.tsx
 "use client";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { sendEmail } from "./sendEmail";
 import SuccessPopup from "./SuccesPopup";
 
@@ -13,12 +13,6 @@ const ContactPage: React.FC = () => {
 
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -29,9 +23,9 @@ const ContactPage: React.FC = () => {
 
     try {
       await sendEmail(data);
-      console.log("E-mail succesvol verzonden!");
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
+      setFormData({ name: "", email: "", message: "" });
     } catch (error) {
       console.error("Fout bij verzenden e-mail:", error);
       alert("Er is een probleem opgetreden bij het verzenden van de e-mail.");
@@ -59,7 +53,9 @@ const ContactPage: React.FC = () => {
               id="name"
               name="name"
               value={formData.name}
-              onChange={handleChange}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setFormData({ ...formData, [e.target.name]: e.target.value })
+              }
               className="w-full px-3 py-2 border border-primary-100 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-200"
               placeholder="Uw naam"
               required
@@ -77,7 +73,9 @@ const ContactPage: React.FC = () => {
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setFormData({ ...formData, [e.target.name]: e.target.value })
+              }
               className="w-full px-3 py-2 border border-primary-100 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-200"
               placeholder="Uw email"
               required
@@ -94,7 +92,9 @@ const ContactPage: React.FC = () => {
               id="message"
               name="message"
               value={formData.message}
-              onChange={handleChange}
+              onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                setFormData({ ...formData, [e.target.name]: e.target.value })
+              }
               className="w-full px-3 py-2 border border-primary-100 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-200"
               placeholder="Uw bericht"
               rows={4}
