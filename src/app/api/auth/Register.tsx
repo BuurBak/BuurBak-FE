@@ -117,12 +117,7 @@ export const getUser = async () => {
     const response = await fetch(`https://api.buurbak.nl/accounts/info`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${
-          sessionToken
-            ? sessionToken.access_token
-            : process.env.NEXT_PUBLIC_JWT_TOKEN
-        }`,
-        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionToken?.access_token}`,
       },
     });
 
@@ -133,6 +128,7 @@ export const getUser = async () => {
   }
 };
 
+//TODO remove any
 export const updateUser = async (data: GetUser) => {
   const sessionToken: Session | null = await getSession();
 
@@ -140,15 +136,15 @@ export const updateUser = async (data: GetUser) => {
     const response = await fetch(`https://api.buurbak.nl/accounts/info`, {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${
-          sessionToken ? sessionToken : process.env.NEXT_PUBLIC_JWT_TOKEN
-        }`,
-        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionToken?.access_token}`,
       },
       body: JSON.stringify(data),
     });
 
-    console.log(await response.json());
+    const res: any = await response.json();
+    console.log("user", res);
+
+    return res;
   } catch (error) {
     console.warn(error);
   }

@@ -1,10 +1,8 @@
 "use client";
 
-import { ChevronRight, DoorClosed } from "lucide-react";
-import Image from "next/image";
+import { ChevronRight, CircleUserRound, DoorClosed } from "lucide-react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { useEffect, useState } from "react";
-import profielfoto from "../../../public/img/verhuurfoto.png";
 import { GetUser } from "../Types/User";
 import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
 import { getUser, signOut } from "../api/auth/Register";
@@ -54,15 +52,12 @@ export default function Profiel() {
     <>
       <div className="flex flex-col rounded-md">
         <div className="relative aspect-square">
-          <Image
-            src={profielfoto}
-            alt="Trailer image 1"
-            fill
-            sizes="100% 100%"
-            priority={true}
-            className="sm:rounded-md object-cover"
+          <CircleUserRound
+            className="w-full h-auto text-secondary-100"
+            strokeWidth={1}
           />
         </div>
+        {user?.name || "werkt nie"}
         <p className="text-center text-2xl font-bold m-4">{user?.name}</p>
         {stripe ? (
           <p className="text-success-400 text-center bg-offWhite-100 p-3 rounded">

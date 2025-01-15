@@ -105,7 +105,6 @@ export const getTrailerOfLocation = async (address: string, city: string) => {
   }
 };
 
-// TODO any type of return
 export const getTrailerAvalibility = async (uuid: string) => {
   try {
     const response = await fetch(
@@ -115,8 +114,7 @@ export const getTrailerAvalibility = async (uuid: string) => {
       }
     );
 
-    const data: any = await response.json();
-    console.log(data);
+    const data: string[] = await response.json();
     return data;
   } catch (error) {
     console.warn(error);
