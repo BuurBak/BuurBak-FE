@@ -65,3 +65,26 @@ type Owner = {
   profile_picture: string;
   name: string;
 };
+
+export type ResReservations = {
+  id: number;
+  message: string;
+  start_date: string;
+  end_date: string;
+  canceled_message: any; //TODO any
+  created_at: string;
+  trailer: {
+    images: string[];
+    title: string;
+    uuid: string;
+  };
+  renter: {
+    name: string;
+    phone_number: string;
+    profile_picture: any; //TODO any
+  };
+  reservation_status: {
+    description: string;
+    enum: string;
+  };
+};

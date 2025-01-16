@@ -26,7 +26,7 @@ export default function AanbodPage() {
     <div>
       <PanelGroup
         direction={mobile ? "vertical" : "horizontal"}
-        className="min-h-dvh h-fit w-dvw mt-[88px]"
+        className="min-h-dvh h-fit w-dvw mt-[110px]"
       >
         <Panel defaultSize={40} minSize={20}>
           {!mobile ? (

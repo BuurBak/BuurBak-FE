@@ -1,36 +1,33 @@
 "use server";
 import { Session } from "@supabase/supabase-js";
+import { encodedRedirect } from "../../../utils/utils";
 import {
   CancelTrailer,
   CancelTrailerRes,
   PostReservations,
+  ResReservations,
 } from "../Types/Reservation";
 import { getSession } from "./auth/Register";
 
-//Any type of return
 export const getReservationsRequests = async () => {
   const sessionToken: Session | null = await getSession();
 
   try {
-    const response = await fetch(
-      `https://api.buurbak.nl/reservations`, // Id van de reservering
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${sessionToken?.access_token}`,
-        },
-      }
-    );
+    const response = await fetch(`https://api.buurbak.nl/reservations`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${sessionToken?.access_token}`,
+      },
+    });
 
-    const data: any[] = await response.json();
+    const data: ResReservations[] = await response.json();
     return data;
   } catch (error) {
     console.warn(error);
   }
 };
 
-// Console.log no return yet and any type of return
-export const cancelTrailer: any = async (trailer: CancelTrailer) => {
+export const cancelTrailer = async (trailer: CancelTrailer) => {
   const sessionToken: Session | null = await getSession();
 
   try {
@@ -38,13 +35,19 @@ export const cancelTrailer: any = async (trailer: CancelTrailer) => {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${sessionToken?.access_token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(trailer),
     });
 
-    const data: CancelTrailerRes = await response.json();
+    const res: CancelTrailerRes = await response.json();
+    return res;
   } catch (error) {
-    console.warn(error);
+    return encodedRedirect(
+      "error",
+      "",
+      "Er is helaas iets mis gegaan met het weigeren van deze trailer."
+    );
   }
 };
 
@@ -56,17 +59,14 @@ export const postReservations = async (data: PostReservations) => {
     const response = await fetch(`https://api.buurbak.nl/reservations`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${
-          sessionToken
-            ? sessionToken.access_token
-            : process.env.NEXT_PUBLIC_JWT_TOKEN
-        }`,
+        Authorization: `Bearer ${sessionToken?.access_token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
 
-    return await response.json();
+    const res = await response.json();
+    return res;
   } catch (error) {
     console.warn(error);
   }
@@ -83,13 +83,18 @@ export const getReservations = async () => {
         method: "GET",
         headers: {
           Authorization: `Bearer ${sessionToken?.access_token}`,
+          "Content-Type": "application/json",
         },
       }
     );
 
-    const data: any = await response.json();
-    console.log(data);
+    const res: ResReservations[] = await response.json();
+    return res;
   } catch (error) {
-    console.warn(error);
+    return encodedRedirect(
+      "error",
+      "",
+      "Er is helaas wat mis gegaan met het ophalen van de aanhangers."
+    );
   }
 };

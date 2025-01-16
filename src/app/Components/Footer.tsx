@@ -15,10 +15,8 @@ const Footer = () => {
   const pages: Link[] = [
     { title: "Home", link: "/" },
     { title: "Aanbod", link: "/aanbod" },
-    { title: "Verhuren", link: "/Verhuren" },
-    { title: "Contact", link: "/Contact" },
-    { title: "FAQ", link: "/Faq" },
-    { title: "Inloggen", link: "/Inloggen" },
+    { title: "Verhuren", link: "/verhuren" },
+    { title: "Contact", link: "/contact" },
   ];
   const subPages: Link[] = [
     {
@@ -33,12 +31,14 @@ const Footer = () => {
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row lg:justify-center gap-8 px-20 w-full pb-8 mt-16">
-      <Image
-        alt="Buurbak logo"
-        src={LogoBig}
-        className="w-fit h-fit hidden lg:block"
-      />
+    <div className="flex flex-col lg:flex-row justify-around px-20 w-full pb-8 mt-16">
+      <Link href={"/"}>
+        <Image
+          alt="Buurbak logo"
+          src={LogoBig}
+          className="w-fit h-fit hidden lg:block"
+        />
+      </Link>
       <div className="lg:max-w-[50vw] lg:w-full flex flex-col items-centers">
         <div className="w-full">
           <ul className="flex flex-col lg:flex-row lg:justify-evenly gap-3 text-center">

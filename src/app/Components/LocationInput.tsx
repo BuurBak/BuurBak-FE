@@ -46,7 +46,9 @@ const loadGoogleMapsAPI = (): Promise<void> => {
 
 const LocationInput = ({ onLocationChange }: PropType) => {
   const outerTheme = useTheme();
-  const [addresses, setAddresses] = useState<string[]>([]);
+  const [addresses, setAddresses] = useState<string[]>([
+    "Begin met typen voor suggesties",
+  ]);
   const [inputValueWhere, setInputValueWhere] = useState("");
   const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
   const autocompleteServiceRef =
