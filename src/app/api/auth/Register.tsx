@@ -181,27 +181,52 @@ export const getSession = async () => {
 
 export const signOut = async () => {
   await deleteToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+  await deleteToken("sb-tnffbjgnzpqsjlaumogv-auth-token-code-verifier");
 };
 
-export const deleteUser = async () => {
-  const supabase = createClient();
+// export const deleteUser = async () => {
+//   const supabase = createClient();
 
+//   const sessionToken: Session | null = await getSession();
+
+//   if (sessionToken) {
+//     const { data, error } = await supabase.auth.admin.deleteUser(
+//       sessionToken.toString()
+//     );
+
+//     if (data) {
+//       console.log(data);
+//     }
+//     if (error) {
+//       console.warn(error);
+//     } else {
+//       console.error("unkown error");
+//     }
+//   } else {
+//     console.error("User token not found");
+//   }
+// };
+
+export const deleteUser = async () => {
   const sessionToken: Session | null = await getSession();
 
-  if (sessionToken) {
-    const { data, error } = await supabase.auth.admin.deleteUser(
-      sessionToken.toString()
-    );
+  try {
+    const response = await fetch(`https://api.buurbak.nl/accounts`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${sessionToken?.access_token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-    if (data) {
-      console.log(data);
-    }
-    if (error) {
-      console.warn(error);
-    } else {
-      console.error("unkown error");
-    }
-  } else {
-    console.error("User token not found");
+    await response.json();
+    await signOut();
+    return encodedRedirect("success", "/", "Wij hebben je account verwijderd");
+  } catch (error) {
+    return encodedRedirect(
+      "error",
+      "",
+      "Er is helaas wat mis gegaan met het verwijderen van je account."
+    );
   }
 };

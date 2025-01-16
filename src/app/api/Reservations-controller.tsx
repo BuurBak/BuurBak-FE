@@ -35,6 +35,7 @@ export const cancelTrailer = async (trailer: CancelTrailer) => {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${sessionToken?.access_token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(trailer),
     });
