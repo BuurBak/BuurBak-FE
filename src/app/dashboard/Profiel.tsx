@@ -21,6 +21,7 @@ import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
 import { hasToken } from "../api/auth/Cookies";
 import { deleteUser, getUser, signOut } from "../api/auth/Register";
 import GegevensModal from "./GegevensModal";
+import TrailerModal from "./TrailerModal";
 
 export default function Profiel() {
   const [user, setUser] = useState<GetUser>();
@@ -101,10 +102,10 @@ export default function Profiel() {
           <ChevronRight className="h-4 w-4 ml-2 align-middle" />
         </div>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        <a className="font-semibold flex-row inline-flex items-center" href="">
-          Mijn Trailers
+        <div className="font-semibold flex-row inline-flex items-center">
+          <TrailerModal />
           <ChevronRight className="h-4 w-4 ml-2 align-middle" />
-        </a>
+        </div>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
         {!stripe && (
           <a
