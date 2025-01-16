@@ -114,6 +114,7 @@ export const getTrailerAvalibility = async (uuid: string) => {
       }
     );
 
+
     const data: string[] = await response.json();
     return data;
   } catch (error) {
