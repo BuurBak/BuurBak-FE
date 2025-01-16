@@ -1,4 +1,3 @@
-import { Button } from "@nextui-org/button";
 import {
   Modal,
   ModalBody,
@@ -7,22 +6,20 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { PencilLine } from "lucide-react";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { getUser, updateUser } from "../api/auth/Register";
+import Button from "../Components/Button";
+import InputField from "../Components/InputField";
 import { GetUser } from "../Types/User";
+
+type Info = {
+  name: string;
+  phone_number: string;
+};
 
 export default function GegevensModal() {
   const [user, setUser] = useState<GetUser>();
-  const [gegevens, setGegevens] = useState([
-    { label: "Naam", value: "" },
-    { label: "Telefoon", value: "" },
-    { label: "E-mail", value: "" },
-  ]);
-
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [editableIndex, setEditableIndex] = useState<number | null>(null);
-  const [editableValue, setEditableValue] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -37,46 +34,41 @@ export default function GegevensModal() {
     fetchUser();
   }, []);
 
+  const form = useForm<Info>({
+    defaultValues: {
+      name: user?.name,
+      phone_number: user?.phone_number,
+    },
+  });
+  const {
+    register,
+    handleSubmit,
+    formState,
+    setValue,
+    watch,
+    getValues,
+    reset,
+    control,
+  } = form;
+  const { errors, isSubmitSuccessful, isSubmitting } = formState;
+
   useEffect(() => {
-    if (user) {
-      setGegevens((prevGegevens) => [
-        { label: "Naam", value: user.name },
-        { label: "Telefoon", value: user.phone_number },
-        { label: "E-mail", value: user.email },
-      ]);
-    }
-  }, [user]);
+    reset();
+  }, [isSubmitSuccessful]);
 
-  // useEffect(() => {
-  //   const data: GetUser = {
-  //     name: gegevens[0].value,
-  //     phone_number: gegevens[1].value,
-  //     email: gegevens[2].value,
-  //     profile_picture: "",
-  //   };
-  //   updateUser(data);
-  // }, [gegevens]);
+  const [gegevens, setGegevens] = useState<(keyof Info)[]>([
+    "name",
+    "phone_number",
+  ] as const);
 
-  const handleEditClick = (index: number, value: string) => {
-    setEditableIndex(index);
-    setEditableValue(value);
-  };
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const handleSave = (index: number) => {
-    const updatedGegevens = [...gegevens];
-    updatedGegevens[index].value = editableValue;
-    setGegevens(updatedGegevens);
-    setEditableIndex(null);
-  };
-
-  const save = () => {
-    const data: GetUser = {
-      name: gegevens[0].value,
-      phone_number: gegevens[1].value,
-      email: gegevens[2].value,
-      profile_picture: "",
+  const onSubmit = (data: Info) => {
+    const updateInfo = async () => {
+      await updateUser(data);
     };
-    updateUser(data);
+
+    updateInfo();
   };
 
   return (
@@ -85,56 +77,55 @@ export default function GegevensModal() {
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose: () => void) => (
-            <>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <ModalHeader className="flex flex-col gap-1">
                 Mijn Gegevens
               </ModalHeader>
               <ModalBody>
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-4">
                   {gegevens.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-row justify-between mb-4"
-                    >
-                      <div className="max-w-[120px] w-full border-b-2 border-primary-100 mr-2">
-                        {item.label}
-                      </div>
-                      <div className="max-w-[225px] w-full border-b-2 border-primary-100 mr-2">
-                        {editableIndex === index ? (
-                          <input
-                            type="text"
-                            value={editableValue}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                              setEditableValue(e.target.value)
-                            }
-                            className="border-b-2 border-primary-100 w-full outline-none"
-                          />
-                        ) : (
-                          item.value
-                        )}
-                      </div>
-                      <button
-                        onClick={() => {
-                          if (editableIndex === index) {
-                            handleSave(index);
-                          } else {
-                            handleEditClick(index, item.value);
-                          }
-                        }}
-                        className="focus:outline-none"
-                      >
-                        <PencilLine className="h-4 w-4" />
-                      </button>
+                    <div key={index} className="flex flex-col justify-between">
+                      <InputField
+                        inputType={"text"}
+                        label={
+                          item === "name"
+                            ? "Naam"
+                            : item === "phone_number"
+                            ? "Telefoonnummer"
+                            : ""
+                        }
+                        type={
+                          item === "name"
+                            ? "text"
+                            : item === "phone_number"
+                            ? "tel"
+                            : ""
+                        }
+                        outline
+                        className="w-full"
+                        {...register(`${item}`, {
+                          required:
+                            item === "name"
+                              ? "Vul een nieuwe naam in"
+                              : item === "phone_number"
+                              ? "Voeg een geldig telefoonnummer in"
+                              : "",
+                        })}
+                      />
+                      <p className="text-error-100">{errors[item]?.message}</p>
                     </div>
                   ))}
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button variant="light" onClick={() => save()}>
-                  Opslaan
-                </Button>
+                <Button
+                  label="Opslaan"
+                  submit
+                  buttonAction={isSubmitSuccessful && onClose()}
+                  disabled={isSubmitting || isSubmitSuccessful}
+                />
               </ModalFooter>
-            </>
+            </form>
           )}
         </ModalContent>
       </Modal>

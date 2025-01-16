@@ -81,12 +81,14 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
   const disabledRanges = async () => {
     const res = await getTrailerAvalibility(trailerOffer.uuid);
 
-    const parsedRanges = res.map((item: string) => {
-      const parsedDate = parseToCalendarDate(item);
-      return [parsedDate, parsedDate];
-    });
+    if (res) {
+      const parsedRanges = res.map((item: string) => {
+        const parsedDate = parseToCalendarDate(item);
+        return [parsedDate, parsedDate];
+      });
 
-    setDisabledRanges(parsedRanges);
+      setDisabledRanges(parsedRanges);
+    }
   };
 
   return (
