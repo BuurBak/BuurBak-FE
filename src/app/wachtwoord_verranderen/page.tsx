@@ -23,7 +23,7 @@ const Page = () => {
   return (
     <div className="w-dvw h-dvh flex justify-center items-center">
       <form
-        className="p-5 border-1 border-gray-100 rounded flex flex-col gap-5 w-[35vw]"
+        className="p-5 border-1 border-gray-100 rounded flex flex-col gap-5 w-[90vw] md:w-[35vw]"
         onSubmit={handleSubmit}
       >
         <h3>Verrander wachtwoord</h3>

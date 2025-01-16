@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"; // Import useRouter
 import { useEffect, useState } from "react";
 import { GetUser } from "../Types/User";
 import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
+import { hasToken } from "../api/auth/Cookies";
 import { getUser, signOut } from "../api/auth/Register";
 import GegevensModal from "./GegevensModal";
 
@@ -22,14 +23,20 @@ export default function Profiel() {
         console.error(error);
       }
     };
-
     fetchUser();
+
+    const checkToken = async () => {
+      if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
+        router.push("/");
+      }
+    };
+    checkToken();
   }, []);
 
   const handleSignOut = async () => {
     try {
       await signOut(); // Roep de signOut-functie aan
-      router.push("/"); // Navigeer naar de startpagina na uitloggen
+      window.location.reload();
     } catch (error) {
       console.error("Error during sign-out:", error);
     }
@@ -57,7 +64,6 @@ export default function Profiel() {
             strokeWidth={1}
           />
         </div>
-        {user?.name || "werkt nie"}
         <p className="text-center text-2xl font-bold m-4">{user?.name}</p>
         {stripe ? (
           <p className="text-success-400 text-center bg-offWhite-100 p-3 rounded">

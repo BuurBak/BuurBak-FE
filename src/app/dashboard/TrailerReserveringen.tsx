@@ -1,65 +1,53 @@
 "use client";
-import { Calendar, ChevronDown } from "lucide-react";
+import { Calendar, ChevronDown, EuroIcon, PinIcon } from "lucide-react";
 import Image from "next/image";
-import { getReservationsRequests } from "../api/Reservations-controller";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
-
-// const reserveringen: any[] = [
-//   {
-//     imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
-//     title: "Open aanhanger",
-//     date: "01/01/2024",
-//     location: "utrecht",
-//     price: "50,00",
-//     status: {
-//       label: "In behandeling",
-//       color: "text-primary-100",
-//     },
-//   },
-//   {
-//     imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
-//     title: "Gesloten aanhanger",
-//     date: "02/02/2024",
-//     location: "utrecht",
-//     price: "50,00",
-//     status: {
-//       label: "Voltooid",
-//       color: "text-succes-100",
-//     },
-//   },
-//   {
-//     imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
-//     title: "Kapotte aanhanger",
-//     date: "03/03/2024",
-//     location: "utrecht",
-//     price: "50,00",
-//     status: {
-//       label: "Geweigerd",
-//       color: "text-error-100",
-//     },
-//   },
-//   {
-//     imageSrc: "/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp",
-//     title: "Kapotte aanhanger",
-//     date: "03/03/2024",
-//     location: "utrecht",
-//     price: "50,00",
-//     status: {
-//       label: "Geweigerd",
-//       color: "text-error-100",
-//     },
-//   },
-// ];
+import { cancelTrailer } from "../api/Reservations-controller";
+import { getTrailers } from "../api/Trailer-controller";
+import Button from "../Components/Button";
+import { useToast } from "../hooks/use-toast";
+import { CancelTrailer, TrailerData } from "../Types/Reservation";
 
 export default function TrailerReserveringen() {
-  const [reserveringen, setReserveringen] = useState<any[] | undefined>([]);
+  const [reserveringen, setReserveringen] = useState<TrailerData[]>([]);
+  const [cnlReason, setCnlReason] = useState<string>(
+    "De eigenaar van de trailer heeft helaas deze reservering geweigerd"
+  );
+
+  const { toast } = useToast();
+
+  const handleCancel = async () => {
+    const cancelData: CancelTrailer = {
+      reason: cnlReason,
+      reservation_id: 0,
+    };
+    const res: any = await cancelTrailer(cancelData);
+    if (res.status !== 200) {
+      toast({
+        title: "Er klopt iets niet!",
+        description:
+          "Er is helaas wat mis gegaan met het weigeren van deze trailer.",
+        duration: 5000, // Show for 5 seconds
+        variant: "error",
+      });
+    } else {
+      toast({
+        title: "Gelukt!",
+        description: "De aanhanger is geannuleerd",
+        duration: 5000, // Show for 5 seconds
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const data = await getReservationsRequests();
-        setReserveringen(data); // Zet de ontvangen data in de state
+        const data = await getTrailers();
+        if (data) {
+          setReserveringen(data);
+        }
       } catch (error) {
         console.error("Error fetching reservations:", error);
       }
@@ -67,22 +55,23 @@ export default function TrailerReserveringen() {
 
     fetchReservations();
   }, []);
+
   return (
     <div className="flex flex-col md:max-h-[700px] ">
       <div className="flex flex-col">
-        <p className="text-2xl font-semibold p-2">Trailer reserveringen</p>
+        <p className="text-2xl font-semibold p-2">Aanhanger reserveringen</p>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
       </div>
       <div className="overflow-y-auto">
         {reserveringen && reserveringen.length
-          ? reserveringen.map((reservering, index) => (
+          ? reserveringen.map((reservering: TrailerData, index) => (
               <div
                 key={index}
                 className="flex md:flex-row flex-col mb-8 border-b-2 md:w-[550px]"
               >
                 <div className="relative aspect-square md:w-60 w-full max-h-60 m-2">
                   <Image
-                    src={reservering.imageSrc}
+                    src={reservering.images?.[0] || "/img/placeholder.jpg"}
                     alt={`Trailer image ${index + 1}`}
                     fill
                     sizes="100% 100%"
@@ -97,48 +86,46 @@ export default function TrailerReserveringen() {
                   </div>
                   <div className="mt-1 h-[0.5px] w-full bg-primary-200"></div>
                   <div className="grid grid-cols-2 gap-2 p-2">
-                    <div className=" flex items-center justify-center">
-                      <a
-                        className="font-semibold flex-row inline-flex items-center"
-                        href=""
-                      >
-                        {reservering.date}
+                    <div className="flex items-center justify-center">
+                      <p className="font-semibold flex-row inline-flex items-center">
+                        {reservering.rental_price}
+                        <EuroIcon className="h-4 w-4 ml-2 align-middle text-primary-200" />
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <p className="font-semibold flex-row inline-flex items-center">
+                        {new Date(reservering.created_at).toLocaleDateString()}
                         <Calendar className="h-4 w-4 ml-2 align-middle text-primary-200" />
-                      </a>
+                      </p>
                     </div>
-
-                    <div className=" flex items-center justify-center">
-                      <a
+                    <div className="flex items-center justify-center">
+                      <p className="font-semibold flex-row inline-flex items-center">
+                        {reservering.address.city}
+                        <PinIcon className="h-4 w-4 ml-2 align-middle text-primary-200" />
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <Link
                         className="font-semibold flex-row inline-flex items-center text-md"
-                        href=""
+                        href={`/aanbod/${reservering.uuid}`}
                       >
-                        Bekijk aanhanger{" "}
+                        Bekijk aanhanger
                         <ChevronDown className="h-4 w-4 ml-2 align-middle" />
-                      </a>
-                    </div>
-                    <div className="p-2 flex items-center justify-center">
-                      <button className="text-white border-1 rounded-xl md:p-2 p-1 bg-primary-100">
-                        Contact gegevens
-                      </button>
+                      </Link>
                     </div>
                   </div>
                   <div className="mt-1 h-[0.5px] w-full bg-primary-200"></div>
-                  <div className="grid grid-cols-2 gap-2 p-2">
-                    <div className="p-2 flex items-center justify-center">
-                      <button className="text-white border-1 rounded-xl p-2 bg-succes-100">
-                        Accepteren
-                      </button>
-                    </div>
-                    <div className="p-2 flex items-center justify-center">
-                      <button className="text-white border-1 rounded-xl p-2 bg-error-100">
-                        weigeren
-                      </button>
-                    </div>
+                  <div className="p-2 flex items-center justify-center w-full">
+                    <Button
+                      label="Weigeren"
+                      styling="!bg-error-100 w-full"
+                      buttonAction={handleCancel}
+                    />
                   </div>
                 </div>
               </div>
             ))
-          : "U heeft momenteel geen openstaande reserveringen."}
+          : "Er zijn geen reserveringen beschikbaar."}
       </div>
     </div>
   );

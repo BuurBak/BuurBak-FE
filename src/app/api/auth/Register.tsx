@@ -129,7 +129,7 @@ export const getUser = async () => {
 };
 
 //TODO remove any
-export const updateUser = async (data: GetUser) => {
+export const updateUser = async (data: Partial<GetUser>) => {
   const sessionToken: Session | null = await getSession();
 
   try {
@@ -137,6 +137,7 @@ export const updateUser = async (data: GetUser) => {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${sessionToken?.access_token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });

@@ -28,10 +28,7 @@ const Register = () => {
         username: getValues("username"),
         password: getValues("password"),
       };
-      const res = await logIn(loginCredentials);
-      if (res !== undefined) {
-        window.location.reload();
-      }
+      await logIn(loginCredentials);
     } else {
       let registerCredentials: Login = {
         username: getValues("username"),

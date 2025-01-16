@@ -16,18 +16,28 @@ import { GetUser } from "../Types/User";
 type Info = {
   name: string;
   phone_number: string;
-  email: string;
-  profile_picture: string;
 };
 
 export default function GegevensModal() {
   const [user, setUser] = useState<GetUser>();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await getUser();
+        setUser(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const form = useForm<Info>({
     defaultValues: {
       name: user?.name,
       phone_number: user?.phone_number,
-      email: user?.email,
-      profile_picture: user?.profile_picture,
     },
   });
   const {
@@ -48,29 +58,12 @@ export default function GegevensModal() {
 
   const [gegevens, setGegevens] = useState<(keyof Info)[]>([
     "name",
-    "email",
     "phone_number",
   ] as const);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [editableIndex, setEditableIndex] = useState<number | null>(null);
-  const [editableValue, setEditableValue] = useState("");
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const data = await getUser();
-        setUser(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   const onSubmit = (data: Info) => {
-    console.log(data);
     const updateInfo = async () => {
       await updateUser(data);
     };
@@ -97,8 +90,6 @@ export default function GegevensModal() {
                         label={
                           item === "name"
                             ? "Naam"
-                            : item === "email"
-                            ? "Email"
                             : item === "phone_number"
                             ? "Telefoonnummer"
                             : ""
@@ -106,8 +97,6 @@ export default function GegevensModal() {
                         type={
                           item === "name"
                             ? "text"
-                            : item === "email"
-                            ? "email"
                             : item === "phone_number"
                             ? "tel"
                             : ""
@@ -118,8 +107,6 @@ export default function GegevensModal() {
                           required:
                             item === "name"
                               ? "Vul een nieuwe naam in"
-                              : item === "email"
-                              ? "Vul een correct email adres in"
                               : item === "phone_number"
                               ? "Voeg een geldig telefoonnummer in"
                               : "",

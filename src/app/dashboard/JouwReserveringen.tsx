@@ -1,20 +1,62 @@
 "use client";
-import { Calendar, ChevronDown, EuroIcon, PinIcon } from "lucide-react";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/modal";
+import { Calendar } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { getTrailers } from "../api/Trailer-controller";
-import { TrailerData } from "../Types/Reservation";
+import {
+  cancelTrailer,
+  getReservationsRequests,
+} from "../api/Reservations-controller";
+import Button from "../Components/Button";
+import { useToast } from "../hooks/use-toast";
+import { CancelTrailer, ResReservations } from "../Types/Reservation";
 
 export default function JouwReserveringen() {
-  const [reserveringen, setReserveringen] = useState<TrailerData[] | undefined>(
-    []
+  const [reserveringen, setReserveringen] = useState<ResReservations[]>([]);
+  const [cnlReason, setCnlReason] = useState<string>(
+    "De eigenaar van de trailer heeft helaas deze reservering geweigerd"
   );
+
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  const { toast } = useToast();
+
+  const handleCancel = async () => {
+    const cancelData: CancelTrailer = {
+      reason: cnlReason,
+      reservation_id: reserveringen[0].id,
+    };
+    const res: any = await cancelTrailer(cancelData);
+    if (res.status !== 200) {
+      toast({
+        title: "Er klopt iets niet!",
+        description:
+          "Er is helaas wat mis gegaan met het weigeren van deze trailer.",
+        duration: 5000, // Show for 5 seconds
+        variant: "error",
+      });
+    } else {
+      toast({
+        title: "Gelukt!",
+        description: "De aanhanger is geannuleerd",
+        duration: 5000, // Show for 5 seconds
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const data = await getTrailers();
-        setReserveringen(data);
+        const data = await getReservationsRequests();
+        if (data) {
+          setReserveringen(data);
+        }
       } catch (error) {
         console.error("Error fetching reservations:", error);
       }
@@ -31,14 +73,14 @@ export default function JouwReserveringen() {
       </div>
       <div className="overflow-y-auto">
         {reserveringen && reserveringen.length
-          ? reserveringen.map((reservering: TrailerData, index) => (
+          ? reserveringen.map((reservering, index) => (
               <div
                 key={index}
                 className="flex md:flex-row flex-col mb-8 border-b-2 md:w-[550px]"
               >
                 <div className="relative aspect-square md:w-60 w-full max-h-60 m-2">
                   <Image
-                    src={reservering.images?.[0] || "/img/placeholder.jpg"}
+                    src={reservering.trailer.images[0]}
                     alt={`Trailer image ${index + 1}`}
                     fill
                     sizes="100% 100%"
@@ -49,64 +91,66 @@ export default function JouwReserveringen() {
 
                 <div className="w-full flex flex-col">
                   <div className="font-semibold text-xl p-2">
-                    {reservering.title}
+                    {reservering.trailer.title}
                   </div>
                   <div className="mt-1 h-[0.5px] w-full bg-primary-200"></div>
                   <div className="grid grid-cols-2 gap-2 p-2">
-                    <div className="flex items-center justify-center">
-                      <a
-                        className="font-semibold flex-row inline-flex items-center"
-                        href=""
-                      >
-                        €{reservering.rental_price}
-                        <EuroIcon className="h-4 w-4 ml-2 align-middle text-primary-200" />
-                      </a>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <a
-                        className="font-semibold flex-row inline-flex items-center"
-                        href=""
-                      >
-                        {new Date(reservering.created_at).toLocaleDateString()}
+                    <div className=" flex items-center justify-center">
+                      <p className="font-semibold flex-row inline-flex items-center">
+                        {reservering.start_date}
                         <Calendar className="h-4 w-4 ml-2 align-middle text-primary-200" />
-                      </a>
+                      </p>
                     </div>
-                    <div className="flex items-center justify-center">
-                      <a
-                        className="font-semibold flex-row inline-flex items-center"
-                        href=""
-                      >
-                        {reservering.address.city}
-                        <PinIcon className="h-4 w-4 ml-2 align-middle text-primary-200" />
-                      </a>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <a
-                        className="font-semibold flex-row inline-flex items-center text-md"
-                        href=""
-                      >
-                        Bekijk aanhanger
-                        <ChevronDown className="h-4 w-4 ml-2 align-middle" />
-                      </a>
-                    </div>
+                    <p
+                      className={`font-semibold flex-row inline-flex items-center ${
+                        reservering.reservation_status.enum !== "Confirmed" &&
+                        "text-error-100"
+                      }`}
+                    >
+                      {reservering.reservation_status.enum === "Confirmed"
+                        ? "Gereserveerd"
+                        : "Geannuleerd"}
+                    </p>
                   </div>
                   <div className="mt-1 h-[0.5px] w-full bg-primary-200"></div>
-                  <div className="grid grid-cols-2 gap-2 p-2">
-                    <div className="p-2 flex items-center justify-center">
-                      <button className="text-white border-1 rounded-xl p-2 bg-primary-100">
-                        Contact gegevens
-                      </button>
-                    </div>
-                    {/* <div
-                      className={`rounded-xl p-2 w-32 m-2 mx-auto md:my-auto text-center ${reservering.status?.color || "text-gray-500"}`}
-                    >
-                      {reservering.status?.label || "Status onbekend"}
-                    </div> */}
+                  <div className="py-2 w-full">
+                    <Button
+                      label="Weigeren"
+                      styling="!bg-error-100 w-full"
+                      buttonAction={handleCancel}
+                    />
                   </div>
                 </div>
+                <Modal
+                  isOpen={isOpen}
+                  placement={"center"}
+                  onOpenChange={onOpenChange}
+                >
+                  <ModalContent>
+                    {(onClose) => (
+                      <>
+                        <ModalHeader className="flex flex-col gap-1">
+                          Contact gegevens
+                        </ModalHeader>
+                        <ModalBody>
+                          <div className="flex flex-col gap-4">
+                            <div className="flex gap-2">
+                              <p>Naam:</p>
+                              <p>{reservering.renter.name}</p>
+                            </div>
+                            <div className="flex gap-2">
+                              <p>Telefoon nummer:</p>
+                              <p>{reservering.renter.phone_number}</p>
+                            </div>
+                          </div>
+                        </ModalBody>
+                      </>
+                    )}
+                  </ModalContent>
+                </Modal>
               </div>
             ))
-          : "Er zijn geen reserveringen beschikbaar."}
+          : "Je hebt momenteel geen openstaande reserveringen."}
       </div>
     </div>
   );
