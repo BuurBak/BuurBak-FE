@@ -15,7 +15,7 @@ import { TrailerData } from "../Types/Reservation";
 
 export default function TrailerModal() {
   const [trailers, setTrailers] = useState<TrailerData[]>();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -37,6 +37,7 @@ export default function TrailerModal() {
         description: "Je trailer is succesvol verwijderd",
         duration: 5000, // Show for 5 seconds
       });
+      onClose();
     } else {
       toast({
         title: "Er klopt iets niet!",
