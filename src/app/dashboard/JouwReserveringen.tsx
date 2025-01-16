@@ -6,8 +6,9 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { Calendar } from "lucide-react";
+import { Calendar, ChevronDown } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   cancelTrailer,
@@ -73,7 +74,7 @@ export default function JouwReserveringen() {
       </div>
       <div className="overflow-y-auto">
         {reserveringen && reserveringen.length
-          ? reserveringen.map((reservering, index) => (
+          ? reserveringen.map((reservering: ResReservations, index) => (
               <div
                 key={index}
                 className="flex md:flex-row flex-col mb-8 border-b-2 md:w-[550px]"
@@ -91,32 +92,44 @@ export default function JouwReserveringen() {
 
                 <div className="w-full flex flex-col">
                   <div className="font-semibold text-xl p-2">
-                    {reservering.trailer.title}
+                    <div className="flex justify-between">
+                      <p>{reservering.trailer.title}</p>
+                      <p
+                        className={`font-semibold flex-row inline-flex items-center ${
+                          reservering.reservation_status.enum !== "Confirmed" &&
+                          "text-error-100"
+                        }`}
+                      >
+                        {reservering.reservation_status.enum === "Confirmed"
+                          ? "Gereserveerd"
+                          : "Geannuleerd"}
+                      </p>
+                    </div>
                   </div>
                   <div className="mt-1 h-[0.5px] w-full bg-primary-200"></div>
                   <div className="grid grid-cols-2 gap-2 p-2">
-                    <div className=" flex items-center justify-center">
+                    <div className="flex items-center justify-center">
                       <p className="font-semibold flex-row inline-flex items-center">
                         {reservering.start_date}
                         <Calendar className="h-4 w-4 ml-2 align-middle text-primary-200" />
                       </p>
                     </div>
-                    <p
-                      className={`font-semibold flex-row inline-flex items-center ${
-                        reservering.reservation_status.enum !== "Confirmed" &&
-                        "text-error-100"
-                      }`}
-                    >
-                      {reservering.reservation_status.enum === "Confirmed"
-                        ? "Gereserveerd"
-                        : "Geannuleerd"}
-                    </p>
+                    <div className="flex items-center justify-center">
+                      <Link
+                        className="font-semibold flex-row inline-flex items-center text-md"
+                        href={`/aanbod/${reservering.trailer.uuid}`}
+                      >
+                        Bekijk aanhanger
+                        <ChevronDown className="h-4 w-4 ml-2 align-middle" />
+                      </Link>
+                    </div>
                   </div>
                   <div className="mt-1 h-[0.5px] w-full bg-primary-200"></div>
-                  <div className="py-2 w-full">
+                  <div className="p-2 flex items-center justify-center w-full gap-2">
+                    <Button label="Contact gegevens" buttonAction={onOpen} />
                     <Button
                       label="Weigeren"
-                      styling="!bg-error-100 w-full"
+                      styling="!bg-error-100"
                       buttonAction={handleCancel}
                     />
                   </div>
@@ -150,7 +163,7 @@ export default function JouwReserveringen() {
                 </Modal>
               </div>
             ))
-          : "Je hebt momenteel geen openstaande reserveringen."}
+          : "Er zijn geen reserveringen beschikbaar."}
       </div>
     </div>
   );

@@ -83,13 +83,18 @@ export const getReservations = async () => {
         method: "GET",
         headers: {
           Authorization: `Bearer ${sessionToken?.access_token}`,
+          "Content-Type": "application/json",
         },
       }
     );
 
-    const data: any = await response.json();
-    console.log(data);
+    const res: ResReservations[] = await response.json();
+    return res;
   } catch (error) {
-    console.warn(error);
+    return encodedRedirect(
+      "error",
+      "",
+      "Er is helaas wat mis gegaan met het ophalen van de aanhangers."
+    );
   }
 };
