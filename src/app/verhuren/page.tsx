@@ -310,7 +310,7 @@ const Verhuren = () => {
                   aria-label="Kies jouw accessoires"
                   selectionMode="multiple"
                   placeholder="Kies jouw accessoires"
-                  className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
+                  className="w-full buurbak-light mt-5 border-primary-100 rounded border-1 overflow-hidden"
                   selectedKeys={new Set(field.value)}
                   onSelectionChange={(keys) => {
                     const selectedValues = Array.from(keys) as string[];
@@ -377,11 +377,13 @@ const Verhuren = () => {
             </p>
           </div>
           <div className="flex flex-col w-3/4 gap-5">
-            <p className="font-bold">Vul de afmetingen van je aanhanger in:</p>
+            <p className="font-bold">
+              Vul de afmetingen van je aanhanger in (cm):
+            </p>
             <div className="flex flex-col gap-3 w-full">
               <InputField
                 inputType="text"
-                label="Vul de lengte van je aanhanger in, in CM "
+                label="Vul de lengte van je aanhanger in (cm)"
                 icon
                 iconLeft
                 type="number"
@@ -398,7 +400,7 @@ const Verhuren = () => {
               </p>
               <InputField
                 inputType="text"
-                label="Vul de breedte van je aanhanger in, in CM"
+                label="Vul de breedte van je aanhanger in (cm)"
                 icon
                 iconLeft
                 type="number"
@@ -415,7 +417,7 @@ const Verhuren = () => {
               </p>
               <InputField
                 inputType="text"
-                label="Vul de hoogte van je aanhanger in, in CM "
+                label="Vul de hoogte van je aanhanger in (cm)"
                 icon
                 iconLeft
                 type="number"

@@ -20,6 +20,7 @@ import { DateRangePicker } from "@nextui-org/date-picker";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -294,11 +295,23 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               />
               <p className="">
                 Ik accepteer de{" "}
-                <span className="z-30 text-primary-100">
+                <Link
+                  href={
+                    "https://drive.google.com/file/d/1D9S05Qn7hC3bsEi_ElAqz8uX1s6Se5UZ/view"
+                  }
+                  className="z-30 text-primary-100"
+                >
                   algemene voorwaarden
-                </span>{" "}
+                </Link>{" "}
                 en de{" "}
-                <span className="z-30 text-primary-100">privacy policy</span>
+                <Link
+                  href={
+                    "https://drive.google.com/file/d/12uOHI1prSnsfgaYo3nR8YhIy0UNVzukr/view"
+                  }
+                  className="z-30 text-primary-100"
+                >
+                  privacy policy
+                </Link>
               </p>
             </div>
             <Button
