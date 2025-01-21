@@ -57,7 +57,7 @@ const AanbodCategorieën: React.FC = () => {
         <Link href="/aanbod">
           <Button
             type="secondary"
-            styling="hidden md:flex"
+            className="hidden md:flex"
             label={"Bekijk ons hele aanbod"}
           />
         </Link>
@@ -69,8 +69,8 @@ const AanbodCategorieën: React.FC = () => {
             discription={category.discription}
             type={category.type}
             img={category.img}
-            styling="grow"
-            link={category.link}
+            className="grow"
+            href={category.link}
             key={category.index}
           />
         ))}
@@ -79,7 +79,7 @@ const AanbodCategorieën: React.FC = () => {
         <Link href="/aanbod">
           <Button
             type="secondary"
-            styling="flex md:hidden"
+            className="flex md:hidden"
             label={"Bekijk ons hele aanbod"}
           />
         </Link>

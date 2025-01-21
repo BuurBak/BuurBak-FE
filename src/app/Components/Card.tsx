@@ -9,8 +9,8 @@ type CardType = {
   accessoires?: string;
   price?: string;
   discription?: string;
-  styling?: string;
-  link: string;
+  className?: string;
+  href: string;
 };
 
 const Card = ({
@@ -22,15 +22,15 @@ const Card = ({
   accessoires,
   price,
   discription,
-  styling,
-  link,
+  className,
+  href,
   ...props
 }: CardType) => {
   return (
     <Link
-      href={link}
+      href={href}
       className={
-        (styling != undefined && styling) +
+        (className != undefined && className) +
         (type === "overview"
           ? " w-48 xl:w-64"
           : " max-w-96 w-full max-h-[360px] h-full") +

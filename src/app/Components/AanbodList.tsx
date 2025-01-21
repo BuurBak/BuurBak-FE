@@ -179,12 +179,12 @@ const AanbodList = () => {
             }
           />
           <Button
-            styling="border"
+            className="border"
             label="Filter"
             icon={true}
             IconName="Filter"
             type="secondary"
-            buttonAction={() => setShowFilters(!showFilters)}
+            onClick={() => setShowFilters(!showFilters)}
           />
           <div id="results"></div>
         </div>
@@ -237,7 +237,7 @@ const AanbodList = () => {
                 title={item.trailer_type}
                 location={item.address.city}
                 price={item.rental_price.toString()}
-                link={"aanbod/" + item.uuid}
+                href={"aanbod/" + item.uuid}
                 accessoires=""
                 distance={2}
                 type="overview"

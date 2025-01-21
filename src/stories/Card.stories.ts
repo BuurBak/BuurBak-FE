@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Card from "../app/Components/Card";
 
 const meta = {
-  title: "InputsAndSelection/Card",
+  title: "Molecules/Card",
   component: Card,
   parameters: {
     layout: "centered",
@@ -31,6 +31,6 @@ export const Primary: Story = {
     accessoires: "thing",
     price: "20",
     discription: "very description",
-    link: "",
+    href: "",
   },
 };

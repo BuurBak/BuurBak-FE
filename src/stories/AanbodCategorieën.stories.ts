@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import AanbodCategorieën from "../app/Components/AanbodCategorieën";
 
 const meta = {
-  title: "CombinedComponents/AanbodCategorieën",
+  title: "Organisms/AanbodCategorieën",
   component: AanbodCategorieën,
   parameters: {
     layout: "centered",

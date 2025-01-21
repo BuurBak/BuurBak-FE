@@ -156,10 +156,10 @@ export default function Profiel() {
                 <div className="flex gap-4">
                   <Button
                     label="Ja ik weet het zeker!"
-                    buttonAction={handleDeleteAccout}
-                    styling="!bg-error-100"
+                    onClick={handleDeleteAccout}
+                    className="!bg-error-100"
                   />
-                  <Button label="Nee verwijder niet" buttonAction={onClose} />
+                  <Button label="Nee verwijder niet" onClick={onClose} />
                 </div>
               </ModalBody>
             </>
