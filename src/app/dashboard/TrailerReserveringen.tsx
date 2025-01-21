@@ -127,11 +127,11 @@ export default function TrailerReserveringen() {
                   </div>
                   <div className="mt-1 h-[0.5px] w-full bg-primary-200"></div>
                   <div className="p-2 flex items-center justify-center w-full gap-2">
-                    <Button label="Contact gegevens" buttonAction={onOpen} />
+                    <Button label="Contact gegevens" onClick={onOpen} />
                     <Button
                       label="Weigeren"
-                      styling="!bg-error-100"
-                      buttonAction={handleCancel}
+                      className="!bg-error-100"
+                      onClick={handleCancel}
                     />
                   </div>
                 </div>

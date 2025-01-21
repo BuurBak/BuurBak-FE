@@ -50,8 +50,8 @@ const Carousel = ({ params }: { params: string[] | undefined }) => {
           className="sm:rounded-md object-cover sm:object-contain "
         />
         <div className="absolute inset-0 hidden sm:flex items-end justify-between ">
-          <Button buttonAction={prevSlide} label="Vorige" type="secondary" />
-          <Button buttonAction={nextSlide} label="Volgende" type="secondary" />
+          <Button onClick={prevSlide} label="Vorige" type="secondary" />
+          <Button onClick={nextSlide} label="Volgende" type="secondary" />
         </div>
         <div className="absolute inset-4 flex sm:hidden items-end justify-center">
           <p className="rounded-full py-3 px-6 bg-black-200 text-white">

@@ -87,8 +87,8 @@ export default function TrailerModal() {
                         </div>
                         <Button
                           label="X"
-                          styling="!bg-error-100"
-                          buttonAction={() => handleDelete(item.uuid)}
+                          className="!bg-error-100"
+                          onClick={() => handleDelete(item.uuid)}
                         />
                       </div>
                     );

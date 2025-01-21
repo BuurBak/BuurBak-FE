@@ -31,6 +31,6 @@ export const Primary: Story = {
     accessoires: "thing",
     price: "20",
     discription: "very description",
-    link: "",
+    href: "",
   },
 };

@@ -6,21 +6,21 @@ type ButtonType = {
   label: string;
   submit?: boolean;
   type?: "primary" | "secondary";
-  styling?: string;
+  className?: string;
   icon?: boolean;
   IconName?: IconName;
   disabled?: boolean;
-  buttonAction?: any;
+  onClick?: any;
 };
 
 const Button = ({
   label,
   type,
-  styling,
+  className,
   icon,
   disabled,
   submit,
-  buttonAction,
+  onClick,
   IconName,
   ...props
 }: ButtonType) => {
@@ -28,10 +28,10 @@ const Button = ({
     <>
       <button
         {...props}
-        onClick={buttonAction}
+        onClick={onClick}
         type={submit ? "submit" : "button"}
         className={
-          (styling !== undefined ? styling : "") +
+          (className !== undefined ? className : "") +
           (disabled
             ? type === "secondary"
               ? " text-gray-100 cursor-not-allowed"
