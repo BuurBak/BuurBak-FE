@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Button from "../app/Components/Button";
 
 const meta = {
-  title: "Actions/Button",
+  title: "Atoms/Button",
   component: Button,
   parameters: {
     layout: "centered",
@@ -30,6 +30,6 @@ export const Primary: Story = {
 export const Secondary: Story = {
   args: {
     label: "Test 2",
-    type: "secondary"
+    type: "secondary",
   },
 };
