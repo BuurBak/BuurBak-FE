@@ -121,7 +121,7 @@ export default function GegevensModal() {
                 <Button
                   label="Opslaan"
                   submit
-                  buttonAction={isSubmitSuccessful && onClose()}
+                  onClick={isSubmitSuccessful && onClose()}
                   disabled={isSubmitting || isSubmitSuccessful}
                 />
               </ModalFooter>

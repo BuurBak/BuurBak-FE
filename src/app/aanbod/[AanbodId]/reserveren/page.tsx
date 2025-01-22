@@ -221,7 +221,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             <Button
               label="Aanpassen"
               type="secondary"
-              buttonAction={() => setChangeDate(!changeDate)}
+              onClick={() => setChangeDate(!changeDate)}
             />
           </div>
           {/* <div className="flex justify-between items-center">
@@ -255,7 +255,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             <Button
               label="Aanpassen"
               type="secondary"
-              buttonAction={() => setChangeTime(!changeTime)}
+              onClick={() => setChangeTime(!changeTime)}
             />
           </div> */}
           {user ? (
@@ -316,7 +316,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             </div>
             <Button
               label="Reserveer jouw aanhanger"
-              styling="w-full"
+              className="w-full"
               submit={true}
               disabled={user === undefined || !terms}
             />

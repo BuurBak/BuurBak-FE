@@ -184,14 +184,14 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
           {!collapsed && (
             <Button
               label="Kies jouw datum"
-              styling={`min-w-fit ${collapsed && "w-full"} sm:hidden`}
-              buttonAction={() => setCollapsed(!collapsed)}
+              className={`min-w-fit ${collapsed && "w-full"} sm:hidden`}
+              onClick={() => setCollapsed(!collapsed)}
             />
           )}
           {(collapsed || window.innerWidth > 639) && (
             <Button
               label="Reserveer nu"
-              styling={`min-w-fit ${
+              className={`min-w-fit ${
                 (collapsed || window.innerWidth > 639) && "w-full"
               }`}
               submit={true}

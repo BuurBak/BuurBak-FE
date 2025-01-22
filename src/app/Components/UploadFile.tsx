@@ -112,11 +112,11 @@ export default function FileUpload({ onFilesChange }: FileUploadProps) {
                 label=""
                 icon
                 IconName="X"
-                buttonAction={(e: any) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
                   removeFile(index);
                 }}
-                styling="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity !px-0 !pl-2"
+                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity !px-0 !pl-2"
               />
             </div>
           ))}

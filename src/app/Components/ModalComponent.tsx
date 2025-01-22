@@ -51,10 +51,10 @@ const ModalComponent = ({
               {closeButton && openButton && (
                 <ModalFooter>
                   {closeButton && (
-                    <Button label={closeButton} buttonAction={onClose} />
+                    <Button label={closeButton} onClick={onClose} />
                   )}
                   {openButton && (
-                    <Button label={openButton} buttonAction={onClose} />
+                    <Button label={openButton} onClick={onClose} />
                   )}
                 </ModalFooter>
               )}

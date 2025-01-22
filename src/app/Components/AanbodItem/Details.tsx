@@ -94,11 +94,11 @@ const Details = ({
       </div>
       <Button
         label={collapsed ? "Toon meer" : "Toon minder"}
-        buttonAction={() => setCollapsed(!collapsed)}
+        onClick={() => setCollapsed(!collapsed)}
         icon
         IconName={collapsed ? "ChevronDown" : "ChevronUp"}
         type="secondary"
-        styling={`absolute ${
+        className={`absolute ${
           collapsed ? "bottom-[-1rem]" : "bottom-[-3.5rem]"
         } left-0 right-0 mx-auto w-1/6 min-w-fit bg-white text-black-100 rounded-md border`}
       />
