@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect } from "react";
 import AanbodCategorieën from "./Components/AanbodCategorieën";
 import AanbodPreview from "./Components/AanbodPreview";
@@ -71,7 +69,7 @@ export default function Home() {
       <Landing />
       <AanbodPreview />
       <Highlights />
-      <AanbodCategorieën />
+      {/* <AanbodCategorieën /> */}
     </div>
   );
 }

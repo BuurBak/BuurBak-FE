@@ -1,5 +1,6 @@
 "use server";
 import { Session } from "@supabase/supabase-js";
+import { encodedRedirect } from "../../../utils/utils";
 import { TrailerData } from "../Types/Reservation";
 import { PostTrailer } from "../Types/TrailerType";
 import { getSession } from "./auth/Register";
@@ -102,5 +103,44 @@ export const getTrailerOfLocation = async (address: string, city: string) => {
     console.log(data);
   } catch (error) {
     console.warn(error);
+  }
+};
+
+export const getTrailerAvalibility = async (uuid: string) => {
+  try {
+    const response = await fetch(
+      `https://api.buurbak.nl/trailers/availability/${uuid}`,
+      {
+        method: "GET",
+      }
+    );
+
+    const data: string[] = await response.json();
+    return data;
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+export const deleteTrailer = async (uuid: string) => {
+  const sessionToken: Session | null = await getSession();
+
+  try {
+    const response = await fetch(`https://api.buurbak.nl/trailers/${uuid}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${sessionToken?.access_token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return encodedRedirect(
+      "error",
+      "",
+      "Er is helaas iets mis gegaan met het verwijderen van je trailer."
+    );
   }
 };

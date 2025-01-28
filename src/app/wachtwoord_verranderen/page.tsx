@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import { resetPassword } from "../api/auth/Register";
@@ -23,7 +23,7 @@ const Page = () => {
   return (
     <div className="w-dvw h-dvh flex justify-center items-center">
       <form
-        className="p-5 border-1 border-gray-100 rounded flex flex-col gap-5 w-[35vw]"
+        className="p-5 border-1 border-gray-100 rounded flex flex-col gap-5 w-[90vw] md:w-[35vw]"
         onSubmit={handleSubmit}
       >
         <h3>Verrander wachtwoord</h3>
@@ -35,7 +35,9 @@ const Page = () => {
           className="w-full"
           type="password"
           value={pass}
-          onChange={(e) => setPass(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setPass(e.target.value)
+          }
           required
         />
         <InputField
@@ -45,7 +47,9 @@ const Page = () => {
           className="w-full"
           type="password"
           value={secPass}
-          onChange={(e) => setSecPass(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setSecPass(e.target.value)
+          }
           required
         />
         <Button label="Verstuur" submit type="primary" />

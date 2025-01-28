@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Highlights from "../app/Components/Highlights";
 
 const meta = {
-  title: "CombinedComponents/Highlights",
+  title: "Organisms/Highlights",
   component: Highlights,
   parameters: {
     layout: "centered",

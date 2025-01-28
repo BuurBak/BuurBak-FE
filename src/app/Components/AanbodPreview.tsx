@@ -80,7 +80,7 @@ const AanbodPreview: React.FC = () => {
         <Link href={"/aanbod"}>
           <Button
             type="secondary"
-            styling="hidden md:flex"
+            className="hidden md:flex"
             label={"Bekijk ons hele aanbod"}
           />
         </Link>
@@ -100,7 +100,7 @@ const AanbodPreview: React.FC = () => {
                   title={item.trailer_type}
                   type={"overview"}
                   img={item.images[0]}
-                  link={"aanbod/" + item.uuid}
+                  href={"aanbod/" + item.uuid}
                   location={item.address.city}
                   price={item.rental_price.toString()}
                   distance={TrailerDistance(
@@ -117,7 +117,7 @@ const AanbodPreview: React.FC = () => {
         <Link href="/aanbod">
           <Button
             type="secondary"
-            styling="flex md:hidden"
+            className="flex md:hidden"
             label={"Bekijk ons hele aanbod"}
           />
         </Link>

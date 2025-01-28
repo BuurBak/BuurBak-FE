@@ -1,21 +1,13 @@
 "use server";
 import { GetUser, Login } from "@/app/Types/User";
 import { Session } from "@supabase/supabase-js";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { createClient } from "../../../../utils/supabase/server";
 import { encodedRedirect } from "../../../../utils/utils";
 import { deleteToken } from "./Cookies";
 
-type LoginResponse = {
-  status: number;
-  data?: any;
-  error?: string;
-};
-
-export const logIn = async (data: Login): Promise<LoginResponse> => {
-  const email = data.username;
-  const password = data.password;
+export const logIn = async (userData: Login) => {
+  const email = userData.username;
+  const password = userData.password;
   const supabase = createClient();
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -24,31 +16,41 @@ export const logIn = async (data: Login): Promise<LoginResponse> => {
   });
 
   if (error) {
-    console.error("error", "/", error.message);
-    return encodedRedirect("error", "/", error.message);
+    if (error.status === 400) {
+      return encodedRedirect(
+        "error",
+        "/",
+        "Jouw email of wachtwoord is onjuist"
+      );
+    } else {
+      return encodedRedirect(
+        "error",
+        "/",
+        "Er is iets fout gegaan. Probeer het later nog eens"
+      );
+    }
   }
 
-  return redirect("");
+  return encodedRedirect("success", "/", "Je bent ingelogd");
 };
 
-export const registerAccount = async (data: Login) => {
-  const email = data.username;
-  const password = data.password;
+export const registerAccount = async (userData: Login) => {
+  const email = userData.username;
+  const password = userData.password;
   const supabase = createClient();
-  const origin = headers().get("origin");
 
   if (!email || !password) {
     return { error: "Email and password are required" };
   }
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       emailRedirectTo: `/dashboard`,
       data: {
-        name: data.name,
-        phoneNumber: data.phoneNumber,
+        name: userData.name,
+        phoneNumber: userData.phoneNumber,
       },
     },
   });
@@ -60,7 +62,7 @@ export const registerAccount = async (data: Login) => {
     return encodedRedirect(
       "success",
       "/",
-      "Thanks for signing up! Please check your email for a verification link."
+      "Bedankt voor het inloggen! Check je email voor de bevestegings link."
     );
   }
 };
@@ -115,12 +117,7 @@ export const getUser = async () => {
     const response = await fetch(`https://api.buurbak.nl/accounts/info`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${
-          sessionToken
-            ? sessionToken.access_token
-            : process.env.NEXT_PUBLIC_JWT_TOKEN
-        }`,
-        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionToken?.access_token}`,
       },
     });
 
@@ -131,22 +128,24 @@ export const getUser = async () => {
   }
 };
 
-export const updateUser = async (data: GetUser) => {
+//TODO remove any
+export const updateUser = async (data: Partial<GetUser>) => {
   const sessionToken: Session | null = await getSession();
 
   try {
     const response = await fetch(`https://api.buurbak.nl/accounts/info`, {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${
-          sessionToken ? sessionToken : process.env.NEXT_PUBLIC_JWT_TOKEN
-        }`,
+        Authorization: `Bearer ${sessionToken?.access_token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
 
-    console.log(await response.json());
+    const res: any = await response.json();
+    console.log("user", res);
+
+    return res;
   } catch (error) {
     console.warn(error);
   }
@@ -182,27 +181,52 @@ export const getSession = async () => {
 
 export const signOut = async () => {
   await deleteToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+  await deleteToken("sb-tnffbjgnzpqsjlaumogv-auth-token-code-verifier");
 };
 
-export const deleteUser = async () => {
-  const supabase = createClient();
+// export const deleteUser = async () => {
+//   const supabase = createClient();
 
+//   const sessionToken: Session | null = await getSession();
+
+//   if (sessionToken) {
+//     const { data, error } = await supabase.auth.admin.deleteUser(
+//       sessionToken.toString()
+//     );
+
+//     if (data) {
+//       console.log(data);
+//     }
+//     if (error) {
+//       console.warn(error);
+//     } else {
+//       console.error("unkown error");
+//     }
+//   } else {
+//     console.error("User token not found");
+//   }
+// };
+
+export const deleteUser = async () => {
   const sessionToken: Session | null = await getSession();
 
-  if (sessionToken) {
-    const { data, error } = await supabase.auth.admin.deleteUser(
-      sessionToken.toString()
-    );
+  try {
+    const response = await fetch(`https://api.buurbak.nl/accounts`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${sessionToken?.access_token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-    if (data) {
-      console.log(data);
-    }
-    if (error) {
-      console.warn(error);
-    } else {
-      console.error("unkown error");
-    }
-  } else {
-    console.error("User token not found");
+    await response.json();
+    await signOut();
+    return encodedRedirect("success", "/", "Wij hebben je account verwijderd");
+  } catch (error) {
+    return encodedRedirect(
+      "error",
+      "",
+      "Er is helaas wat mis gegaan met het verwijderen van je account."
+    );
   }
 };

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
+import ErrorToast from "./Components/ErrorToast";
 import Footer from "./Components/Footer";
 import Navbar from "./Components/NavBar";
+import SuccessToast from "./Components/SuccesToast";
+import { Toaster } from "./Components/ui/toaster";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,6 +26,11 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <Suspense>
+          <Toaster />
+          <SuccessToast />
+          <ErrorToast />
+        </Suspense>
       </body>
     </html>
   );

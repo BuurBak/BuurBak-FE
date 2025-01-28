@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import Card from "../app/Components/Card";
-import { useState } from "react";
 
 const meta = {
-  title: "InputsAndSelection/Card",
+  title: "Molecules/Card",
   component: Card,
   parameters: {
     layout: "centered",
@@ -29,9 +28,9 @@ export const Primary: Story = {
     distance: 10,
     type: "overview",
     img: "https://upload.wikimedia.org/wikipedia/en/9/9a/Trollface_non-free.png",
-    accesoires: "thing",
+    accessoires: "thing",
     price: "20",
     discription: "very description",
-    link: ""
+    href: "",
   },
 };

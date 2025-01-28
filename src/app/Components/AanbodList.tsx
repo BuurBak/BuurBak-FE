@@ -9,7 +9,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { TrailerType } from "../Types/TrailerType";
 import Button from "./Button";
 import Card from "./Card";
@@ -79,7 +79,7 @@ export const customTheme = (outerTheme: Theme) =>
 
 const AanbodList = () => {
   const [showFilters, setShowFilters] = useState(false);
-  const [inputValueSearch, setInputValueSearch] = useState("");
+  const [inputValueSearch, setInputValueSearch] = useState<string>("");
   const [inputValueType, setInputValueType] =
     useState<TrailerType["name"]>("Alle");
   const [inputValueWhere, setInputValueWhere] = useState("");
@@ -174,14 +174,17 @@ const AanbodList = () => {
             inputType="text"
             icon={true}
             value={inputValueSearch}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setInputValueSearch(event.target.value)
+            }
           />
           <Button
-            styling="border"
+            className="border"
             label="Filter"
             icon={true}
             IconName="Filter"
             type="secondary"
-            buttonAction={() => setShowFilters(!showFilters)}
+            onClick={() => setShowFilters(!showFilters)}
           />
           <div id="results"></div>
         </div>
@@ -234,8 +237,8 @@ const AanbodList = () => {
                 title={item.trailer_type}
                 location={item.address.city}
                 price={item.rental_price.toString()}
-                link={"aanbod/" + item.uuid}
-                accesoires=""
+                href={"aanbod/" + item.uuid}
+                accessoires=""
                 distance={2}
                 type="overview"
               />
