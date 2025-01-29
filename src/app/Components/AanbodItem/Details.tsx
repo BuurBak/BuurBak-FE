@@ -63,9 +63,9 @@ const Details = ({
                 return (
                   <p
                     key={index}
-                    className={`${
-                      index % 2 === 0 ? "bg-offWhite-100" : "bg-white"
-                    } p-2 rounded w-full flex justify-between`}
+                    className={
+                      "bg-offWhite-100 p-2 rounded w-full flex justify-between"
+                    }
                   >
                     {item}
                   </p>

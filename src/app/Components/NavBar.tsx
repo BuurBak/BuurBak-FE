@@ -91,6 +91,10 @@ const Navbar = () => {
 
       loginRequired();
     }
+
+    if (currentRoute === "/wachtwoord_vergeten") {
+      onClose();
+    }
   }, [currentRoute]);
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -169,8 +173,8 @@ const Navbar = () => {
             >
               {singedIn ? (
                 <div className="w-full flex flex-col items-center md:hidden">
-                  {user && user?.profile_picture !== null ? (
-                    <Link href="/dashboard">
+                  <Link href="/dashboard">
+                    {user && user?.profile_picture !== undefined ? (
                       <div className="w-32 h-32 relative">
                         <Image
                           src={user.profile_picture}
@@ -181,12 +185,10 @@ const Navbar = () => {
                           className="rounded-full object-cover"
                         />
                       </div>
-                    </Link>
-                  ) : (
-                    <Link href="/dashboard">
+                    ) : (
                       <CircleUserRound className="w-auto h-[10dvh]" />
-                    </Link>
-                  )}
+                    )}
+                  </Link>
                   <p className="w-fit text-2xl font-semibold mt-4 mb-12">
                     {user?.name}
                   </p>
@@ -224,7 +226,7 @@ const Navbar = () => {
                       key={index}
                     >
                       {link.name === "Inloggen" && singedIn ? (
-                        user && user?.profile_picture !== null ? (
+                        user && user?.profile_picture !== undefined ? (
                           <Link href="/dashboard">
                             <div className="w-14 h-14 relative">
                               <Image

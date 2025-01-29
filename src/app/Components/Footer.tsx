@@ -97,11 +97,13 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <Image
-        alt="Buurbak logo"
-        src={LogoMedium}
-        className="self-center lg:hidden"
-      />
+      <Link href={"/"}>
+        <Image
+          alt="Buurbak logo"
+          src={LogoMedium}
+          className="self-center lg:hidden pt-5"
+        />
+      </Link>
     </div>
   );
 };

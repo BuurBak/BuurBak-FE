@@ -4,6 +4,7 @@ import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Check, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { hasToken } from "../api/auth/Cookies";
@@ -95,7 +96,7 @@ const Verhuren = () => {
     reset();
   }, [isSubmitSuccessful]);
 
-  const license: string[] = ["A", "B", "C"];
+  const license: string[] = ["B", "BE"];
   const soortAanhanger: string[] = [
     "Open Aanhanger",
     "Gesloten Aanhanger",
@@ -358,7 +359,8 @@ const Verhuren = () => {
               placeholder="Rijbewijs..."
               aria-label="car_driving_license"
               {...register("car_driving_license", {
-                required: "Vul het rijbewijs in dat nodig is voor jouw trailer",
+                required:
+                  "Vul het rijbewijs in dat nodig is voor jouw aanhanger",
               })}
             >
               {license.map((item, index) => (
@@ -563,15 +565,21 @@ const Verhuren = () => {
           <Details trailerOffer={watch()} />
           <div className="flex flex-col mt-5 items-center">
             <Button
-              label="Voeg jouw trailer toe"
+              label="Voeg jouw aanhanger toe"
               submit
               disabled={
                 isSubmitting || isSubmitSuccessful || !isSignd || !stripe
               }
             />
-            <p className="underline italic text-black-100 ">
+            <Link
+              href={
+                "https://drive.google.com/file/d/1D9S05Qn7hC3bsEi_ElAqz8uX1s6Se5UZ/view"
+              }
+              target="_blank"
+              className="underline italic text-black-100 "
+            >
               Algemene Voorwaarden
-            </p>
+            </Link>
           </div>
         </div>
       </div>
