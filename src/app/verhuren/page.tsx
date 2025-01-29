@@ -469,14 +469,14 @@ const Verhuren = () => {
                   key={day}
                   aria-label={day}
                   className={`flex flex-col items-center justify-center rounded w-14 h-20 cursor-pointer ${
-                    watch(`availability.${day}`)
+                    !watch(`availability.${day}`)
                       ? "bg-primary-100 text-white"
                       : "bg-offWhite-100"
                   }`}
                   onClick={() => toggleDay(day)}
                 >
                   <p className="font-bold">{getDayAbbreviation(day)}</p>
-                  {watch(`availability.${day}`) ? (
+                  {!watch(`availability.${day}`) ? (
                     <Check className="h-4 w-4" />
                   ) : (
                     <X className="h-4 w-4" />
