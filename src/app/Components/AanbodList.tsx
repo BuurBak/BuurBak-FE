@@ -100,7 +100,7 @@ const AanbodList = () => {
     "Fietsen aanhanger",
     "Overig",
   ];
-  const TempPlaces = ["Putten", "Utrecht", "Tiel"];
+  const TempPlaces = ["Begin met typen..."];
   const [dateCleared, setdateCleared] = useState<boolean>(false);
   const outerTheme = useTheme();
   const [callData, setCallData] = useState<any[]>();
@@ -156,12 +156,12 @@ const AanbodList = () => {
       inputValue: inputValueType,
       setInputValue: setInputValueType,
     },
-    {
-      label: "Waar",
-      options: names || TempPlaces,
-      inputValue: inputValueWhere,
-      setInputValue: setInputValueWhere,
-    },
+    // {
+    //   label: "Waar",
+    //   options: names || TempPlaces,
+    //   inputValue: inputValueWhere,
+    //   setInputValue: setInputValueWhere,
+    // },
   ];
 
   return (
