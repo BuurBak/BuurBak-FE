@@ -221,6 +221,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             <Button
               label="Aanpassen"
               type="secondary"
+              className="hidden sm:block"
               onClick={() => setChangeDate(!changeDate)}
             />
           </div>
@@ -299,6 +300,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
                   href={
                     "https://drive.google.com/file/d/1D9S05Qn7hC3bsEi_ElAqz8uX1s6Se5UZ/view"
                   }
+                  target="_blank"
                   className="z-30 text-primary-100"
                 >
                   algemene voorwaarden
@@ -308,6 +310,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
                   href={
                     "https://drive.google.com/file/d/12uOHI1prSnsfgaYo3nR8YhIy0UNVzukr/view"
                   }
+                  target="_blank"
                   className="z-30 text-primary-100"
                 >
                   privacy policy

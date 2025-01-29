@@ -128,7 +128,7 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
           {(collapsed || window.innerWidth > 639) && (
-            <div className="flex flex-col gap-4 w-full">
+            <div className="flex flex-col gap-4 w-full items-center">
               <X
                 onClick={() => setCollapsed(false)}
                 className="self-end w-8 h-fit sm:hidden"
@@ -137,6 +137,14 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
                 className="buurbak-light sm:hidden"
                 value={date}
                 onChange={setDate}
+                minValue={today(getLocalTimeZone())}
+                isDateUnavailable={(date) =>
+                  disabledRangesArray.some(
+                    (interval) =>
+                      date.compare(interval[0]) >= 0 &&
+                      date.compare(interval[1]) <= 0
+                  )
+                }
               />
               <DateRangePicker
                 label="Datum"
