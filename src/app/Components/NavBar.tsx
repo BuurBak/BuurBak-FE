@@ -4,11 +4,9 @@ import {
   CircleUserRound,
   Facebook,
   Home,
-  InstagramIcon,
   Linkedin,
   Mail,
   Menu,
-  MessageCircleQuestion,
   Tag,
   X,
 } from "lucide-react";
@@ -44,7 +42,6 @@ const MobileLinks = [
   { name: "Aanbod", url: "/aanbod", icon: PlateauTrailer },
   { name: "Verhuren", url: "/verhuren", icon: Tag },
   { name: "Contact", url: "/contact", icon: Mail },
-  { name: "FAQ", url: "/FAQ", icon: MessageCircleQuestion },
 ];
 
 const Navbar = () => {
@@ -268,15 +265,20 @@ const Navbar = () => {
                   Volg ons
                 </p>
                 <div className="flex flex-row gap-8 justify-center">
-                  <div className="bg-offWhite-100 p-4 rounded-full">
-                    <InstagramIcon className="h-8 w-8" />
-                  </div>
-                  <div className="bg-offWhite-100 p-4 rounded-full">
+                  <a
+                    href="https://www.linkedin.com/company/buurbak/"
+                    target="_blank"
+                    className="bg-offWhite-100 p-4 rounded-full"
+                  >
                     <Linkedin className="h-8 w-8" />
-                  </div>
-                  <div className="bg-offWhite-100 p-4 rounded-full">
+                  </a>
+                  <a
+                    href="https://www.facebook.com/BuurBak"
+                    target="_blank"
+                    className="bg-offWhite-100 p-4 rounded-full"
+                  >
                     <Facebook className="h-8 w-8" />
-                  </div>
+                  </a>
                 </div>
               </div>
             </ul>

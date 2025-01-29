@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, InstagramIcon, Linkedin } from "lucide-react";
+import { Facebook, Linkedin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -79,15 +79,20 @@ const Footer = () => {
           <div className="flex flex-col items-center gap-6 flex-1">
             <p className="text-xl text-center">Volg ons</p>
             <div className="flex flex-row gap-8">
-              <div className="bg-offWhite-100 p-4 rounded-full">
-                <InstagramIcon className="h-8 w-8 text-secondary-100 " />
-              </div>
-              <div className="bg-offWhite-100 p-4 rounded-full">
+              <a
+                href="https://www.linkedin.com/company/buurbak/"
+                target="_blank"
+                className="bg-offWhite-100 p-4 rounded-full"
+              >
                 <Linkedin className="h-8 w-8 text-secondary-100 " />
-              </div>
-              <div className="bg-offWhite-100 p-4 rounded-full">
+              </a>
+              <a
+                href="https://www.facebook.com/BuurBak"
+                target="_blank"
+                className="bg-offWhite-100 p-4 rounded-full"
+              >
                 <Facebook className="h-8 w-8 text-secondary-100 " />
-              </div>
+              </a>
             </div>
           </div>
         </div>
