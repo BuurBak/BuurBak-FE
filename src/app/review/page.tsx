@@ -36,17 +36,25 @@ const ReviewPage = ({ params }: { params: { AanbodId: string } }) => {
     return <div>Error: {error}</div>;
   }
   return (
-    <main className="w-dvw h-dvh flex flex-col justify-center items-center">
+    <main className=" h-[80dvh] sm:pt-6 flex flex-col items-center mt-[110px]">
       <h2 className="text-center">
         Laat een review achter voor jouw gehuurde aanhanger
       </h2>
-      <div className="w-max h-60 flex flex-row justify-center items-center">
+      {/* {trailerOffer && ( */}
+      {/* <> */}
+      <div className="w-fit h-60 flex flex-row justify-center items-center p-3">
         <Image alt="Buurbak logo" src={LogoColor} className={"w-max h-max"} />
-        <div className="w-max h-max flex flex-col justify-center">
-          <div className="bg-gray-200 w-full h-fit"></div>
-          <div></div>
+        <div className="h-full flex flex-col justify-center">
+          <div>
+            {/* <ProfileDisplay trailerOffer={trailerOffer} /> */} <p>Jippie</p>
+          </div>
+          <h2 className="text-primary-100 text-h4 ">
+            {/* {trailerOffer.trailer_type} */} Gesloten Aanhanger
+          </h2>
         </div>
       </div>
+      {/* </> */}
+      {/* )} */}
 
       <Button label="Verstuur" submit type="primary" />
     </main>
