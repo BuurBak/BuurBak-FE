@@ -1,6 +1,5 @@
 "use client";
-
-import { Star } from "lucide-react";
+import StarRating from "../Components/StarRating";
 import Button from "../Components/Button";
 import { useState, useEffect } from "react";
 import LogoColor from "../Assets/horizontalColorLogo.svg";
@@ -36,15 +35,15 @@ const ReviewPage = ({ params }: { params: { AanbodId: string } }) => {
     return <div>Error: {error}</div>;
   }
   return (
-    <main className=" h-[80dvh] sm:pt-6 flex flex-col items-center mt-[110px]">
+    <main className=" sm:pt-6 flex flex-col items-center mt-[110px]">
       <h2 className="text-center">
         Laat een review achter voor jouw gehuurde aanhanger
       </h2>
       {/* {trailerOffer && ( */}
       {/* <> */}
-      <div className="w-fit h-60 flex flex-row justify-center items-center p-3">
+      <div className="w-[80dvw] h-60 flex flex-col md:flex-row justify-evenly items-center p-3">
         <Image alt="Buurbak logo" src={LogoColor} className={"w-max h-max"} />
-        <div className="h-full flex flex-col justify-center">
+        <div className="h-full flex flex-col justify-evenly">
           <div>
             {/* <ProfileDisplay trailerOffer={trailerOffer} /> */} <p>Jippie</p>
           </div>
@@ -55,6 +54,7 @@ const ReviewPage = ({ params }: { params: { AanbodId: string } }) => {
       </div>
       {/* </> */}
       {/* )} */}
+      <StarRating />
 
       <Button label="Verstuur" submit type="primary" />
     </main>
