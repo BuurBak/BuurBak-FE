@@ -23,7 +23,7 @@ const StarRating = () => {
               onClick={() => setRating(ratingValue)}
             />
             <StarSvg
-              color={ratingValue <= (hover || rating) ? "#ffc107" : "#ffffff"}
+              color={ratingValue <= (hover || rating) ? "#ee7b46" : "#ffffff"}
               className="w-8 h-8"
             />
           </label>

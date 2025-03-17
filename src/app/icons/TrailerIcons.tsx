@@ -1323,7 +1323,7 @@ export function Hitch({ color = "#222222", size = 24, strokeWidth = "2" }) {
 export function StarSvg({
   color = "",
   size = 24,
-  strokeWidth = "3",
+  strokeWidth = "2",
   className = " ",
 }) {
   return (
