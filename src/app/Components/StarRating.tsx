@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import { StarSvg } from "../icons/TrailerIcons";
+import { type } from "node:os";
 
-const StarRating = () => {
-  const [rating, setRating] = useState(0);
+type StarRatingProps = {
+  rating: number;
+  onRatingChange: (rating: number) => void;
+};
+
+const StarRating: React.FC<StarRatingProps> = ({ rating, onRatingChange }) => {
   const [hover, setHover] = useState(0);
+
   return (
     <div className="flex flex-row p-4">
-      {[...Array(5)].map((star, index) => {
+      {[...Array(5)].map((_, index) => {
         const ratingValue = index + 1;
 
         return (
           <label
-            className="m-3"
+            key={index}
+            className="m-3 cursor-pointer"
             onMouseEnter={() => setHover(ratingValue)}
             onMouseLeave={() => setHover(0)}
           >
@@ -20,7 +27,7 @@ const StarRating = () => {
               type="radio"
               name="rating"
               value={ratingValue}
-              onClick={() => setRating(ratingValue)}
+              onClick={() => onRatingChange(ratingValue)}
             />
             <StarSvg
               color={ratingValue <= (hover || rating) ? "#ee7b46" : "#ffffff"}

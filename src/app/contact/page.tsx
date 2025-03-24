@@ -7,7 +7,7 @@ import SuccessPopup from "./SuccesPopup";
 const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
+    email: "",  
     message: "",
   });
 
