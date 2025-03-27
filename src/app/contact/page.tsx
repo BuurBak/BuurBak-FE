@@ -3,8 +3,8 @@
 import React, { ChangeEvent, useState } from "react";
 import { sendEmail } from "./sendEmail";
 import SuccessPopup from "./SuccesPopup";
-import Schade from "./Schade";
-
+import Link from 'next/link';
+import Button from "../Components/Button";
 
 const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -14,12 +14,7 @@ const ContactPage: React.FC = () => {
   });
 
   const [showPopup, setShowPopup] = useState(false);
-  const [showSchade, setShowSchade] = useState(false);
-
-  const handleButtonClick = () => {
-    setShowSchade(true);
-  };
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -121,18 +116,21 @@ const ContactPage: React.FC = () => {
           Schade? Meld je schade!
         </h2>
         <div className=" flex flex-row space-x-20">
+        <Link href='/schade'>
         <button
-          type="submit"
+          type="button"
           className="py-4 px-8 bg-white text-black font-semibold rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-opacity-50"
         >
           Schade melden
         </button>
-        <button
-          type="submit"
-          className="py-4 px-8 bg-white text-black font-semibold rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-opacity-50"
-        >
-          FAQ
-        </button>
+        </Link>
+
+          <button
+            type="button"
+            className="py-4 px-8 bg-white text-black font-semibold rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-opacity-50"
+          >
+            FAQ
+          </button>
         </div>
       </div>
     </main>
