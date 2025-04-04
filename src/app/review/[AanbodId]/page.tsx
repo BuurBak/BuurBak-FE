@@ -73,7 +73,7 @@ const ReviewPage = ({ params }: { params: { AanbodId: string } }) => {
               alt="Trailer image 1"
               fill
               priority={true}
-              className="hover:brightness-75 transition duration-100"
+              className="hover:brightness-75 transition duration-100 object-cover rounded-md"
             />
           </div>
 
