@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Login } from "../Types/User";
 import { logIn, registerAccount } from "../api/auth/Register";
-import Button from "./Button";
 import InputField from "./InputField";
 import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { usePathname } from "next/navigation";
 import { hasToken } from "../api/auth/Cookies";
+import { Button } from "@nextui-org/button";
 
 const Register = () => {
   const form = useForm<Login>({
@@ -31,6 +31,7 @@ const Register = () => {
         username: getValues("username"),
         password: getValues("password"),
       };
+
       await logIn(loginCredentials);
     } else {
       const registerCredentials: Login = {
@@ -81,18 +82,9 @@ const Register = () => {
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
-  useEffect(() => {
-    setOpen(false);
-  }, [onOpenChange]);
-  useEffect(() => {
-    if (signedIn) {
-      onClose();
-    }
-  }, [signedIn]);
-
   return (
     <div>
-      {/* TODO: The login modal should not be part of the navbar. It should be it's own component that gets loaded in when the 'Inloggen' butten is clicked */}
+      < Button onPress={onOpen}>Inloggen</Button>
       < Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange} >
         <ModalContent>
           {(onClose) => (
@@ -166,7 +158,7 @@ const Register = () => {
                   ) : (
                     ""
                   )}
-                  <Button label={hasAccount ? "Registreer" : "Log in"} submit={true} />
+                  <Button label={hasAccount ? "Registreer" : "Log in"} submit={true} onClick={onClose} />
                   {!hasAccount && (
                     <p>
                       Nog geen BuurBak account?{" "}
