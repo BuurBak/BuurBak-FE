@@ -18,13 +18,6 @@ import LogoWhite from "../Assets/Frame.svg";
 import LogoColor from "../Assets/horizontalColorLogo.svg";
 import { PlateauTrailer } from "../icons/TrailerIcons";
 
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  useDisclosure,
-} from "@nextui-org/modal";
 import { hasToken } from "../api/auth/Cookies";
 import { getUser } from "../api/auth/Register";
 import { GetUser } from "../Types/User";
@@ -34,7 +27,6 @@ const Links = [
   { name: "Aanbod", url: "/aanbod" },
   { name: "Ik wil verhuren", url: "/verhuren" },
   { name: "Contact", url: "/contact" },
-  { name: "Inloggen" },
 ];
 
 const MobileLinks = [
@@ -197,7 +189,7 @@ const Navbar = () => {
                     <a onClick={onOpen}>Login</a>
                   </li>
                 </div>
-              )}
+              )} */}
 
               {open
                 ? MobileLinks.map((link, index) => (
@@ -242,9 +234,9 @@ const Navbar = () => {
                     ) : (
                       <a
                         className="cursor-pointer"
-                        onClick={
-                          link.name === "Inloggen" ? onOpen : undefined
-                        }
+                        // onClick={
+                        //   link.name === "Inloggen" ? onOpen : undefined
+                        // }
                         href={link.url}
                       >
                         {link.name}
@@ -252,7 +244,9 @@ const Navbar = () => {
                     )}
                   </li>
                 ))}
-
+              <li>
+                <Register />
+              </li>
               <div
                 className={`flex flex-col mt-20 items-center ${open ? "" : "hidden"
                   }`}
@@ -281,7 +275,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <Register />
     </main>
   );
 };
