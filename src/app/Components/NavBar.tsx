@@ -46,7 +46,7 @@ const MobileLinks = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const [singedIn, setSingendIn] = useState(false);
+  const [signedIn, setSingendIn] = useState(false);
   const currentRoute = usePathname();
   const [scrolled, isScrolled] = useState(true);
   const [user, setUser] = useState<GetUser>();
@@ -121,10 +121,10 @@ const Navbar = () => {
   }, [onOpenChange, open]);
 
   useEffect(() => {
-    if (singedIn) {
+    if (signedIn) {
       onClose();
     }
-  }, [singedIn]);
+  }, [signedIn]);
 
   return (
     <main>
@@ -169,7 +169,7 @@ const Navbar = () => {
               className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static md:z-50 z-[-1] top-0 h-screen md:h-fit bg-white md:bg-transparent md:w-auto md:pl-0 px-9 md:pr-0 pt-20 md:pt-0 transition-all duration-50 ease-in ${open ? "right-0 w-11/12" : "right-[-500px]"
                 }`}
             >
-              {singedIn ? (
+              {signedIn ? (
                 <div className="w-full flex flex-col items-center md:hidden">
                   <Link href="/dashboard">
                     {user && user.profile_picture ? (
@@ -220,7 +220,7 @@ const Navbar = () => {
                       }`}
                     key={index}
                   >
-                    {link.name === "Inloggen" && singedIn ? (
+                    {link.name === "Inloggen" && signedIn ? (
                       user && user.profile_picture ? (
                         <Link href="/dashboard">
                           <div className="w-14 h-14 relative">
