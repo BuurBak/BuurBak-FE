@@ -103,7 +103,7 @@ const Navbar = () => {
     };
 
     checkToken();
-  }, [onOpenChange, open]);
+  }, [open]);
 
   useEffect(() => {
     if (signedIn) { // Corrected typo
@@ -266,18 +266,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
-              <ModalBody>
-                <Register />
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <Register />
     </main>
   );
 };

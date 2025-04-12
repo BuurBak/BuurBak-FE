@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Login } from "../Types/User";
 import { logIn, registerAccount } from "../api/auth/Register";
 import Button from "./Button";
 import InputField from "./InputField";
+import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/modal";
+import { usePathname } from "next/navigation";
+import { hasToken } from "../api/auth/Cookies";
 
 const Register = () => {
   const form = useForm<Login>({
@@ -24,13 +27,13 @@ const Register = () => {
 
   const onSubmit = async (__data: Login) => {
     if (!hasAccount) {
-      let loginCredentials: Login = {
+      const loginCredentials: Login = {
         username: getValues("username"),
         password: getValues("password"),
       };
       await logIn(loginCredentials);
     } else {
-      let registerCredentials: Login = {
+      const registerCredentials: Login = {
         username: getValues("username"),
         password: getValues("password"),
         name: getValues("name"),
@@ -43,98 +46,156 @@ const Register = () => {
     }
   };
 
+  const currentRoute = usePathname();
+
+  const isReserverenPage = () => {
+    const reserverenPattern = /^\/aanbod\/[^/]+\/reserveren$/;
+    return reserverenPattern.test(currentRoute);
+  };
+
+  useEffect(() => {
+    if (isReserverenPage()) {
+      const loginRequired = async () => {
+        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
+          onOpen();
+        }
+      };
+
+      loginRequired();
+    }
+
+    if (currentRoute === "/verhuren") {
+      const loginRequired = async () => {
+        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
+          onOpen();
+        }
+      };
+
+      loginRequired();
+    }
+
+    if (currentRoute === "/wachtwoord_vergeten") {
+      onClose();
+    }
+  }, [currentRoute]);
+
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [onOpenChange]);
+  useEffect(() => {
+    if (signedIn) {
+      onClose();
+    }
+  }, [signedIn]);
+
   return (
-    <form
-      className="w-full flex flex-col gap-4 pb-4"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      {hasAccount && (
-        <div className="w-full">
-          <label>Naam</label>
-          <InputField
-            type="text"
-            // pattern="^(?:[A-Z]|[a-z])[a-z ]+(?: [A-Z]?[a-z ]*)*$"
-            className="!w-full"
-            label="Naam"
-            inputType="text"
-            outline={true}
-            required={hasAccount}
-            {...register("name")}
-          />
-        </div>
-      )}
-      <div className="w-full">
-        <label>Email</label>
-        <InputField
-          type="email"
-          className="!w-full"
-          // pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-          label="Email"
-          inputType="text"
-          outline={true}
-          required={true}
-          {...register("username")}
-        />
-      </div>
-      {hasAccount && (
-        <div className="w-full">
-          <label>Telefoon nummer</label>
-          <InputField
-            type="tel"
-            // pattern="^(06|00316|\+316|0031 6|\+31 6)(?:\s?)(?:[0-9]{2}\s?){4}$"
-            className="!w-full"
-            label="Telefoon nummer"
-            inputType="text"
-            outline={true}
-            required={hasAccount}
-            {...register("phoneNumber")}
-          />
-        </div>
-      )}
-      <div>
-        <label>Wachtwoord</label>
-        <InputField
-          type={showPassword ? "text" : "passWord"}
-          className="!w-full"
-          label="Wachtwoord"
-          inputType="text"
-          outline={true}
-          required={true}
-          icon={true}
-          iconName={showPassword ? "Eye" : "EyeOff"}
-          iconClick={() => setShowPassword(!showPassword)}
-          {...register("password")}
-        />
-      </div>
-      {!hasAccount ? (
-        <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
-      ) : (
-        ""
-      )}
-      <Button label={hasAccount ? "Registreer" : "Log in"} submit={true} />
-      {!hasAccount && (
-        <p>
-          Nog geen BuurBak account?{" "}
-          <span
-            className="text-primary-100 cursor-pointer"
-            onClick={() => setHasAccount(true)}
-          >
-            Registreren
-          </span>
-        </p>
-      )}
-      {hasAccount && (
-        <p>
-          Heb je al een account?{" "}
-          <span
-            className="text-primary-100"
-            onClick={() => setHasAccount(false)}
-          >
-            Inloggen
-          </span>
-        </p>
-      )}
-    </form>
+    <div>
+      {/* TODO: The login modal should not be part of the navbar. It should be it's own component that gets loaded in when the 'Inloggen' butten is clicked */}
+      < Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange} >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
+              <ModalBody>
+                <form
+                  className="w-full flex flex-col gap-4 pb-4"
+                  onSubmit={handleSubmit(onSubmit)}
+                >
+                  {hasAccount && (
+                    <div className="w-full">
+                      <label>Naam</label>
+                      <InputField
+                        type="text"
+                        // pattern="^(?:[A-Z]|[a-z])[a-z ]+(?: [A-Z]?[a-z ]*)*$"
+                        className="!w-full"
+                        label="Naam"
+                        inputType="text"
+                        outline={true}
+                        required={hasAccount}
+                        {...register("name")}
+                      />
+                    </div>
+                  )}
+                  <div className="w-full">
+                    <label>Email</label>
+                    <InputField
+                      type="email"
+                      className="!w-full"
+                      // pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                      label="Email"
+                      inputType="text"
+                      outline={true}
+                      required={true}
+                      {...register("username")}
+                    />
+                  </div>
+                  {hasAccount && (
+                    <div className="w-full">
+                      <label>Telefoon nummer</label>
+                      <InputField
+                        type="tel"
+                        // pattern="^(06|00316|\+316|0031 6|\+31 6)(?:\s?)(?:[0-9]{2}\s?){4}$"
+                        className="!w-full"
+                        label="Telefoon nummer"
+                        inputType="text"
+                        outline={true}
+                        required={hasAccount}
+                        {...register("phoneNumber")}
+                      />
+                    </div>
+                  )}
+                  <div>
+                    <label>Wachtwoord</label>
+                    <InputField
+                      type={showPassword ? "text" : "passWord"}
+                      className="!w-full"
+                      label="Wachtwoord"
+                      inputType="text"
+                      outline={true}
+                      required={true}
+                      icon={true}
+                      iconName={showPassword ? "Eye" : "EyeOff"}
+                      iconClick={() => setShowPassword(!showPassword)}
+                      {...register("password")}
+                    />
+                  </div>
+                  {!hasAccount ? (
+                    <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
+                  ) : (
+                    ""
+                  )}
+                  <Button label={hasAccount ? "Registreer" : "Log in"} submit={true} />
+                  {!hasAccount && (
+                    <p>
+                      Nog geen BuurBak account?{" "}
+                      <span
+                        className="text-primary-100 cursor-pointer"
+                        onClick={() => setHasAccount(true)}
+                      >
+                        Registreren
+                      </span>
+                    </p>
+                  )}
+                  {hasAccount && (
+                    <p>
+                      Heb je al een account?{" "}
+                      <span
+                        className="text-primary-100"
+                        onClick={() => setHasAccount(false)}
+                      >
+                        Inloggen
+                      </span>
+                    </p>
+                  )}
+                </form>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal >
+    </div>
   );
 };
 
