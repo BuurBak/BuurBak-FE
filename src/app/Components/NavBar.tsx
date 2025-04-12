@@ -46,7 +46,7 @@ const MobileLinks = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const [signedIn, setSingendIn] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
   const currentRoute = usePathname();
   const [scrolled, isScrolled] = useState(true);
   const [user, setUser] = useState<GetUser>();
@@ -106,14 +106,14 @@ const Navbar = () => {
   useEffect(() => {
     const checkToken = async () => {
       if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
-        setSingendIn(true);
+        setSignedIn(true);
         const getApi = async () => {
           const userData = await getUser();
           setUser(userData);
         };
         getApi();
       } else {
-        setSingendIn(false);
+        setSignedIn(false);
       }
     };
 
