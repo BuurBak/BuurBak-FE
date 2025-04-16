@@ -3,8 +3,6 @@
 import React, { ChangeEvent, useState } from "react";
 import { sendEmail } from "./sendEmail";
 import SuccessPopup from "./SuccesPopup";
-import Link from 'next/link';
-import Button from "../Components/Button";
 
 const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +12,7 @@ const ContactPage: React.FC = () => {
   });
 
   const [showPopup, setShowPopup] = useState(false);
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -35,10 +33,10 @@ const ContactPage: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2">
+    <main className="flex items-center justify-center min-h-screen bg-gray-50">
       {showPopup && <SuccessPopup message="E-mail succesvol verzonden!" />}
 
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg mt-[110px]">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
           Contacteer ons
         </h2>
@@ -110,28 +108,6 @@ const ContactPage: React.FC = () => {
             Verstuur
           </button>
         </form>
-      </div>
-      <div className="flex flex-col justify-evenly items-center p-8 bg-primary-100 shadow-lg w-screen mt-auto h-[35vh]">
-        <h2 className="text-2xl font-semibold text-center text-white">
-          Schade? Meld je schade!
-        </h2>
-        <div className=" flex flex-row space-x-20">
-        <Link href='/schade'>
-        <button
-          type="button"
-          className="py-4 px-8 bg-white text-black font-semibold rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-opacity-50"
-        >
-          Schade melden
-        </button>
-        </Link>
-
-          <button
-            type="button"
-            className="py-4 px-8 bg-white text-black font-semibold rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-opacity-50"
-          >
-            FAQ
-          </button>
-        </div>
       </div>
     </main>
   );
