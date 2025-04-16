@@ -222,18 +222,18 @@ const Navbar = () => {
                   >
                     {link.name === "Inloggen" && singedIn ? (
                       user && user?.profile_picture !== undefined ? (
-<Link href="/dashboard">
-  <div className="w-14 h-14 relative">
-    <Image
-      src={user?.profile_picture && user.profile_picture.trim() !== "" ? user.profile_picture : "/default-profile.png"}
-      alt="User profile picture"
-      fill
-      sizes="100% 100%"
-      priority={true}
-      className="rounded-full object-cover"
-    />
-  </div>
-</Link>
+                        <Link href="/dashboard">
+                          <div className="w-14 h-14 relative">
+                            <Image
+                              src={user?.profile_picture && user.profile_picture.trim() !== "" ? user.profile_picture : "/default-profile.png"}
+                              alt="User profile picture"
+                              fill
+                              sizes="100% 100%"
+                              priority={true}
+                              className="rounded-full object-cover"
+                            />
+                          </div>
+                        </Link>
                       ) : (
                         <Link href="/dashboard">
                           <CircleUserRound className="w-auto h-12" />
