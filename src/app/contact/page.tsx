@@ -9,7 +9,7 @@ import Button from "../Components/Button";
 const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
+    email: "",  
     message: "",
   });
 

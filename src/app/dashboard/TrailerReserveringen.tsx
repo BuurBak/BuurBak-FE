@@ -1,4 +1,6 @@
 "use client";
+
+// Gehuurde trailers van de verhuurder
 import {
   Modal,
   ModalBody,

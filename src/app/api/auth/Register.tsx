@@ -55,6 +55,10 @@ export const registerAccount = async (userData: Login) => {
     },
   });
 
+  if (data) {
+    console.log("User created successfully:", data);
+  }
+
   if (error) {
     console.error(error.code + " " + error.message);
     return encodedRedirect("error", "/", error.message);
