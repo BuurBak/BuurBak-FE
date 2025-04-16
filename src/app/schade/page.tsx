@@ -17,10 +17,10 @@ const SchadePage = () => {
         Ongelukje? <span className="text-primary-100">Meld je schade!</span>
       </h2>
       <p className="text-gray-600 text-center mt-2">
-        Voeg hier de nodige informatie en bestanden toe om je schade te melden.
+        Hier kan je een schadeformulier downloaden en vervolgens invullen.
+        Voeg daarna de nodige informatie en bestanden toe om je schade te melden.
       </p>
 
-      {/* Drag & Drop Zone */}
       <div className="mt-6 border-2 border-dashed border-gray-300 p-6 text-center">
         <input type="file" multiple className="hidden" onChange={handleFileChange} id="fileUpload" />
         <label htmlFor="fileUpload" className="cursor-pointer text-gray-500">
@@ -30,12 +30,13 @@ const SchadePage = () => {
         </label>
       </div>
 
-      {/* Download schadeformulier */}
-      <button className="w-full bg-primary-100 text-white font-semibold py-2 mt-4 rounded-md hover:bg-primary-200">
-        Download schadeformulier
-      </button>
+      <a
+          href="/Nieuw_Europees_schadeformulier.pdf"
+          download
+          className="block text-center w-full bg-primary-100 text-white font-semibold py-2 mt-4 rounded-md hover:bg-primary-200">
+          Download schadeformulier
+      </a>
 
-      {/* Tweede Drag & Drop Zone */}
       <div className="mt-6 border-2 border-dashed border-gray-300 p-6 text-center">
         <input type="file" multiple className="hidden" onChange={handleFileChange} id="fileUpload2" />
         <label htmlFor="fileUpload2" className="cursor-pointer text-gray-500">
@@ -45,7 +46,6 @@ const SchadePage = () => {
         </label>
       </div>
 
-      {/* Bevestig-knop */}
       <button className="w-full bg-primary-100 text-white font-semibold py-2 mt-4 rounded-md hover:bg-primary-200">
         Bevestig
       </button>
