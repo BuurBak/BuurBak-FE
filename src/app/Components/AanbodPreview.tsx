@@ -46,21 +46,23 @@ const AanbodPreview: React.FC = () => {
 
   const dataToRender = Array.isArray(data) ? data : [];
 
-  const TrailerDistance = (nearbyLatitude: any, nearbyLongitude: any) => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error);
+  const TrailerDistance = (nearbyLatitude: number, nearbyLongitude: number) => {
+    if (!navigator.geolocation) {
+      console.error("Geolocation is not supported by your browser");
+      return "Locatie niet beschikbaar";
     }
-    function success(position: {
-      coords: { latitude: number; longitude: number };
-    }) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      setCenterCoordinates({ lat: latitude, lng: longitude });
-    }
-    function error() {
-      console.error("Unable to retrieve your location");
-      return undefined;
-    }
+  
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        setCenterCoordinates({ lat: latitude, lng: longitude });
+      },
+      (error) => {
+        console.error("Unable to retrieve your location:", error.message);
+      }
+    );
+  
     if (
       centerCoordinates.lat !== DEFAULT_CENTER.lat ||
       centerCoordinates.lng !== DEFAULT_CENTER.lng
@@ -69,8 +71,10 @@ const AanbodPreview: React.FC = () => {
         { lat: nearbyLatitude, lng: nearbyLongitude },
         centerCoordinates
       );
-      return distance;
+      return `${distance} km`;
     }
+  
+    return "Locatie niet beschikbaar";
   };
 
   return (

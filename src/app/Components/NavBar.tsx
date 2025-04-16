@@ -176,7 +176,7 @@ const Navbar = () => {
                       <div className="w-32 h-32 relative">
                         <Image
                           src={user.profile_picture}
-                          alt="Trailer image 1"
+                          alt="User profile picture"
                           fill
                           sizes="100% 100%"
                           priority={true}
@@ -218,6 +218,7 @@ const Navbar = () => {
                       } ${link.name.includes("Ik wil verhuren") &&
                       "md:bg-primary-100 md:px-4 md:py-2 md:rounded text-white"
                       }`}
+
                     key={index}
                   >
                     {link.name === "Inloggen" && singedIn ? (
@@ -234,24 +235,40 @@ const Navbar = () => {
                             />
                           </div>
                         </Link>
+                      key={index}
+                    >
+                      {link.name === "Inloggen" && singedIn ? (
+                        user && user?.profile_picture !== undefined ? (
+                          <Link href="/dashboard">
+                            <div className="w-14 h-14 relative">
+                              <Image
+                                src={user.profile_picture}
+                                alt="Trailer image 1"
+                                fill
+                                sizes="100% 100%"
+                                priority={true}
+                                className="rounded-full object-cover"
+                              />
+                            </div>
+                          </Link>
+                        ) : (
+                          <Link href="/dashboard">
+                            <CircleUserRound className="w-auto h-12" />
+                          </Link>
+                        )
                       ) : (
-                        <Link href="/dashboard">
-                          <CircleUserRound className="w-auto h-12" />
-                        </Link>
-                      )
-                    ) : (
-                      <a
-                        className="cursor-pointer"
-                        onClick={
-                          link.name === "Inloggen" ? onOpen : undefined
-                        }
-                        href={link.url}
-                      >
-                        {link.name}
-                      </a>
-                    )}
-                  </li>
-                ))}
+                        <a
+                          className="cursor-pointer"
+                          onClick={
+                            link.name === "Inloggen" ? onOpen : undefined
+                          }
+                          href={link.url}
+                        >
+                          {link.name}
+                        </a>
+                      )}
+                    </li>
+                  ))}
 
               <div
                 className={`flex flex-col mt-20 items-center ${open ? "" : "hidden"
