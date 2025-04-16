@@ -46,7 +46,7 @@ const MobileLinks = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const [singedIn, setSingendIn] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
   const currentRoute = usePathname();
   const [scrolled, isScrolled] = useState(true);
   const [user, setUser] = useState<GetUser>();
@@ -106,14 +106,14 @@ const Navbar = () => {
   useEffect(() => {
     const checkToken = async () => {
       if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
-        setSingendIn(true);
+        setSignedIn(true);
         const getApi = async () => {
           const userData = await getUser();
           setUser(userData);
         };
         getApi();
       } else {
-        setSingendIn(false);
+        setSignedIn(false);
       }
     };
 
@@ -121,10 +121,10 @@ const Navbar = () => {
   }, [onOpenChange, open]);
 
   useEffect(() => {
-    if (singedIn) {
+    if (signedIn) {
       onClose();
     }
-  }, [singedIn]);
+  }, [signedIn]);
 
   return (
     <main>
@@ -169,7 +169,7 @@ const Navbar = () => {
               className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static md:z-50 z-[-1] top-0 h-screen md:h-fit bg-white md:bg-transparent md:w-auto md:pl-0 px-9 md:pr-0 pt-20 md:pt-0 transition-all duration-50 ease-in ${open ? "right-0 w-11/12" : "right-[-500px]"
                 }`}
             >
-              {singedIn ? (
+              {signedIn ? (
                 <div className="w-full flex flex-col items-center md:hidden">
                   <Link href="/dashboard">
                     {user && user.profile_picture ? (
@@ -218,40 +218,40 @@ const Navbar = () => {
                       } ${link.name.includes("Ik wil verhuren") &&
                       "md:bg-primary-100 md:px-4 md:py-2 md:rounded text-white"
                       }`}
-                    key={index}
-                  >
-                    {link.name === "Inloggen" && singedIn ? (
-                      user && user?.profile_picture !== undefined ? (
-<Link href="/dashboard">
-  <div className="w-14 h-14 relative">
-    <Image
-      src={user?.profile_picture && user.profile_picture.trim() !== "" ? user.profile_picture : "/default-profile.png"}
-      alt="User profile picture"
-      fill
-      sizes="100% 100%"
-      priority={true}
-      className="rounded-full object-cover"
-    />
-  </div>
-</Link>
+                      key={index}
+                    >
+                      {link.name === "Inloggen" && singedIn ? (
+                        user && user?.profile_picture !== undefined ? (
+                          <Link href="/dashboard">
+                            <div className="w-14 h-14 relative">
+                              <Image
+                                src={user.profile_picture}
+                                alt="Trailer image 1"
+                                fill
+                                sizes="100% 100%"
+                                priority={true}
+                                className="rounded-full object-cover"
+                              />
+                            </div>
+                          </Link>
+                        ) : (
+                          <Link href="/dashboard">
+                            <CircleUserRound className="w-auto h-12" />
+                          </Link>
+                        )
                       ) : (
-                        <Link href="/dashboard">
-                          <CircleUserRound className="w-auto h-12" />
-                        </Link>
-                      )
-                    ) : (
-                      <a
-                        className="cursor-pointer"
-                        onClick={
-                          link.name === "Inloggen" ? onOpen : undefined
-                        }
-                        href={link.url}
-                      >
-                        {link.name}
-                      </a>
-                    )}
-                  </li>
-                ))}
+                        <a
+                          className="cursor-pointer"
+                          onClick={
+                            link.name === "Inloggen" ? onOpen : undefined
+                          }
+                          href={link.url}
+                        >
+                          {link.name}
+                        </a>
+                      )}
+                    </li>
+                  ))}
 
               <div
                 className={`flex flex-col mt-20 items-center ${open ? "" : "hidden"
