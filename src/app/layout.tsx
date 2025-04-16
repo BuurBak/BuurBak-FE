@@ -7,6 +7,8 @@ import Navbar from "./Components/NavBar";
 import SuccessToast from "./Components/SuccesToast";
 import { Toaster } from "./Components/ui/toaster";
 import "./globals.css";
+import Navbar from "./Components/NavBar";
+import Footer from "./Components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +28,8 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
-        <Suspense>
+
+        {/* <Suspense>
           <Toaster />
           <SuccessToast />
           <ErrorToast />
