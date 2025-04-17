@@ -19,16 +19,22 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import * as React from "react";
 
-type FilterOption = {
-  label: string;
-  options: any;
-  inputValue: any;
-  setInputValue: any;
-};
+const TrailerTypes = [
+  "Open aanhanger",
+  "Gesloten aanhanger",
+  "Motorfiets aanhanger",
+  "Bagage aanhanger",
+  "Fietsen aanhanger",
+  "Overig",
+  "Alle",
+] as const;
+
+type TrailerTypeName = typeof TrailerTypes[number];
 
 function valuetext(value: number) {
   return `${value}`;
 }
+
 export const customTheme = (outerTheme: Theme) =>
   createTheme({
     palette: {
@@ -85,24 +91,21 @@ export const customTheme = (outerTheme: Theme) =>
 const AanbodList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [inputValueSearch, setInputValueSearch] = useState<string>("");
-  const [selectedType, setSelectedType] = useState<TrailerType["name"]>("Alle");
   const [selectedWhere, setSelectedWhere] = useState("");
   const [selectedWhen, setSelectedWhen] = useState<Dayjs | null>(null);
   const outerTheme = useTheme();
   const [value, setValue] = React.useState<number[]>([0, 100]);
+  const [selectedType, setSelectedType] = useState<TrailerTypeName>("Alle");
 
-  const handleChange = (event: Event, newValue: number[]) => {
-    setValue(newValue);
+  const handleChange = (
+    event: Event,
+    newValue: number | number[],
+    activeThumb: number
+  ) => {
+    if (Array.isArray(newValue)) {
+      setValue(newValue);
+    }
   };
-
-  const TrailerTypes = [
-    "Open aanhanger",
-    "Gesloten aanhanger",
-    "Motorfiets aanhanger",
-    "Bagage aanhanger",
-    "Fietsen aanhanger",
-    "Overig",
-  ];
 
   const TrailerArray = SearchOrFilter({
     searchTerm: inputValueSearch,
@@ -144,7 +147,11 @@ const AanbodList = () => {
                 id="filter-type"
                 options={TrailerTypes}
                 inputValue={selectedType}
-                onInputChange={(event, newValue) => setSelectedType(newValue)}
+                onInputChange={(event, newValue) => {
+                  if (TrailerTypes.includes(newValue as TrailerTypeName)) {
+                    setSelectedType(newValue as TrailerTypeName);
+                  }
+                }}
                 renderInput={(params) => <TextField {...params} label="Type" />}
               />
               <Box
@@ -163,9 +170,7 @@ const AanbodList = () => {
                   valueLabelDisplay="auto"
                   getAriaValueText={valuetext}
                 />
-                <div className="">
-                  €{value[0]} - {value[1]} per dag
-                </div>
+                <div>€{value[0]} - {value[1]} per dag</div>
               </Box>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
@@ -178,9 +183,7 @@ const AanbodList = () => {
               <Button
                 label="Apply Filters"
                 type="primary"
-                onClick={() => {
-                  setShowFilters(false); // Close filter UI after applying
-                }}
+                onClick={() => setShowFilters(false)}
               />
             </ThemeProvider>
           </div>
