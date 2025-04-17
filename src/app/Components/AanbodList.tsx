@@ -85,24 +85,26 @@ export const customTheme = (outerTheme: Theme) =>
 const AanbodList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [inputValueSearch, setInputValueSearch] = useState<string>("");
-  const [selectedType, setSelectedType] = useState<TrailerType["name"]>("Alle");
   const [selectedWhere, setSelectedWhere] = useState("");
   const [selectedWhen, setSelectedWhen] = useState<Dayjs | null>(null);
   const outerTheme = useTheme();
   const [value, setValue] = React.useState<number[]>([0, 100]);
+  type TrailerTypeName = typeof TrailerTypes[number];
+  const [selectedType, setSelectedType] = useState<TrailerTypeName>("Alle");
 
   const handleChange = (event: Event, newValue: number[]) => {
     setValue(newValue);
   };
 
   const TrailerTypes = [
-    "Open aanhanger",
-    "Gesloten aanhanger",
-    "Motorfiets aanhanger",
-    "Bagage aanhanger",
-    "Fietsen aanhanger",
-    "Overig",
-  ];
+  "Open aanhanger",
+  "Gesloten aanhanger",
+  "Motorfiets aanhanger",
+  "Bagage aanhanger",
+  "Fietsen aanhanger",
+  "Overig",
+  "Alle"
+] as const;
 
   const TrailerArray = SearchOrFilter({
     searchTerm: inputValueSearch,
@@ -144,7 +146,11 @@ const AanbodList = () => {
                 id="filter-type"
                 options={TrailerTypes}
                 inputValue={selectedType}
-                onInputChange={(event, newValue) => setSelectedType(newValue)}
+                onInputChange={(event, newValue) => {
+                  if (TrailerTypes.includes(newValue as TrailerTypeName)) {
+                    setSelectedType(newValue as TrailerTypeName);
+                  }
+                }}
                 renderInput={(params) => <TextField {...params} label="Type" />}
               />
               <Box
