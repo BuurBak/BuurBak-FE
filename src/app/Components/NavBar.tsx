@@ -220,13 +220,13 @@ const Navbar = () => {
                       }`}
                     key={index}
                   >
-                    {link.name === "Inloggen" && signedIn ? (
+                    {link.name === "Inloggen" && signedIn ? ( // Corrected typo
                       user && user.profile_picture ? (
                         <Link href="/dashboard">
                           <div className="w-14 h-14 relative">
                             <Image
-                              src={user.profile_picture}
-                              alt="Trailer image 1"
+                              src={user.profile_picture && user.profile_picture.trim().length ? user.profile_picture : "/default-profile.png"}
+                              alt="User profile picture"
                               fill
                               sizes="100% 100%"
                               priority={true}
