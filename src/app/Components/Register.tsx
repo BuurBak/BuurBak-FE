@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Login } from "../Types/User";
-import { logIn, registerAccount } from "../api/auth/Register";
+import { logIn, registerAccount } from "../../lib/authUtil";
 import InputField from "./InputField";
 import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { usePathname } from "next/navigation";
-import { hasToken } from "../api/auth/Cookies";
+import { hasToken } from "../../lib/cookieUtil";
 import { Button } from "@nextui-org/button";
 
 const Register = () => {

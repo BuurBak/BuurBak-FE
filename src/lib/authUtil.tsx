@@ -1,9 +1,9 @@
 "use server";
 import { GetUser, Login } from "@/app/Types/User";
 import { Session } from "@supabase/supabase-js";
-import { createClient } from "../../../../utils/supabase/server";
-import { encodedRedirect } from "../../../../utils/utils";
-import { deleteToken } from "./Cookies";
+import { createClient } from "../../utils/supabase/server";
+import { encodedRedirect } from "../../utils/utils";
+import { deleteToken } from "./cookieUtil";
 
 export const logIn = async (userData: Login) => {
   const email = userData.username;
@@ -187,29 +187,6 @@ export const signOut = async () => {
   await deleteToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
   await deleteToken("sb-tnffbjgnzpqsjlaumogv-auth-token-code-verifier");
 };
-
-// export const deleteUser = async () => {
-//   const supabase = createClient();
-
-//   const sessionToken: Session | null = await getSession();
-
-//   if (sessionToken) {
-//     const { data, error } = await supabase.auth.admin.deleteUser(
-//       sessionToken.toString()
-//     );
-
-//     if (data) {
-//       console.log(data);
-//     }
-//     if (error) {
-//       console.warn(error);
-//     } else {
-//       console.error("unkown error");
-//     }
-//   } else {
-//     console.error("User token not found");
-//   }
-// };
 
 export const deleteUser = async () => {
   const sessionToken: Session | null = await getSession();

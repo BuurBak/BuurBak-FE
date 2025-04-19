@@ -18,8 +18,8 @@ import { useEffect, useState } from "react";
 import Button from "../Components/Button";
 import { GetUser } from "../Types/User";
 import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
-import { hasToken } from "../api/auth/Cookies";
-import { deleteUser, getUser, signOut } from "../api/auth/Register";
+import { hasToken } from "../../lib/cookieUtil";
+import { deleteUser, getUser, signOut } from "../../lib/authUtil";
 import GegevensModal from "./GegevensModal";
 import TrailerModal from "./TrailerModal";
 

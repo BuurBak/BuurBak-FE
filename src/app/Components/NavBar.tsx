@@ -18,8 +18,7 @@ import LogoWhite from "../Assets/Frame.svg";
 import LogoColor from "../Assets/horizontalColorLogo.svg";
 import { PlateauTrailer } from "../icons/TrailerIcons";
 
-import { hasToken } from "../api/auth/Cookies";
-import { getUser } from "../api/auth/Register";
+import { hasToken } from "../../lib/cookieUtil";
 import { GetUser } from "../Types/User";
 import Register from "./Register";
 
@@ -186,10 +185,10 @@ const Navbar = () => {
               ) : (
                 <div className={`${open ? "" : "hidden"}`}>
                   <li className="py-4 mb-10 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0">
-                    <a onClick={onOpen}>Login</a>
+                    <a>Supposed to Login</a>
                   </li>
                 </div>
-              )} */}
+              )}
 
               {open
                 ? MobileLinks.map((link, index) => (
@@ -243,7 +242,7 @@ const Navbar = () => {
                       </a>
                     )}
                   </li>
-                ))}
+                ))} */}
               <li>
                 <Register />
               </li>

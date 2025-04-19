@@ -7,7 +7,7 @@ import {
   PostReservations,
   ResReservations,
 } from "../Types/Reservation";
-import { getSession } from "./auth/Register";
+import { getSession } from "../../lib/authUtil";
 
 export const getReservationsRequests = async () => {
   const sessionToken: Session | null = await getSession();
