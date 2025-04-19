@@ -1,14 +1,14 @@
-import Register from "@/app/Components/Register";
+import Authentication from "@/app/Components/Authentication";
 import type { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Molecules/Register",
-  component: Register,
+  component: Authentication,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof Register>;
+} satisfies Meta<typeof Authentication>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

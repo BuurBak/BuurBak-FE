@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  CircleUserRound,
   Facebook,
   Home,
   Linkedin,
@@ -12,7 +11,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import LogoWhite from "../Assets/Frame.svg";
 import LogoColor from "../Assets/horizontalColorLogo.svg";
@@ -20,7 +18,8 @@ import { PlateauTrailer } from "../icons/TrailerIcons";
 
 import { hasToken } from "../../lib/cookieUtil";
 import { GetUser } from "../Types/User";
-import Register from "./Register";
+import Authentication from "./Authentication";
+import { getUser } from "@/lib/authUtil";
 
 const Links = [
   { name: "Aanbod", url: "/aanbod" },
@@ -38,7 +37,6 @@ const MobileLinks = [
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(false); // Corrected typo
-  const currentRoute = usePathname();
   const [scrolled, isScrolled] = useState(true);
   const [user, setUser] = useState<GetUser>();
 
@@ -187,7 +185,7 @@ const Navbar = () => {
                   </li>
                 ))} */}
               <li>
-                <Register />
+                <Authentication />
               </li>
               <div
                 className={`flex flex-col mt-20 items-center ${open ? "" : "hidden"
