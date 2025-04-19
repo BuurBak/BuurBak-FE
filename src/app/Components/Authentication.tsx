@@ -24,26 +24,26 @@ const Authentication = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
 
-  const onSubmit = async (__data: Login) => {
-    if (!showRegisterForm) {
-      const loginCredentials: Login = {
-        username: getValues("username"),
-        password: getValues("password"),
-      };
+  const handleLogin = async () => {
+    const loginCredentials: Login = {
+      username: getValues("username"),
+      password: getValues("password"),
+    };
 
-      await logIn(loginCredentials);
-    } else {
-      const registerCredentials: Login = {
-        username: getValues("username"),
-        password: getValues("password"),
-        name: getValues("name"),
-        phoneNumber: getValues("phoneNumber"),
-      };
-      await registerAccount(registerCredentials);
-      setTimeout(function () {
-        window.location.reload();
-      }, 100);
-    }
+    await logIn(loginCredentials);
+  };
+
+  const handleRegisterAccount = async () => {
+    const registerCredentials: Login = {
+      username: getValues("username"),
+      password: getValues("password"),
+      name: getValues("name"),
+      phoneNumber: getValues("phoneNumber"),
+    };
+    await registerAccount(registerCredentials);
+    setTimeout(function () {
+      window.location.reload();
+    }, 100);
   };
 
   const currentRoute = usePathname();
@@ -123,7 +123,7 @@ const Authentication = () => {
     return (
       <form
         className="w-full flex flex-col gap-4 pb-4"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(handleRegisterAccount)}
       >
         <div className="w-full">
           <label>Naam</label>
@@ -153,7 +153,7 @@ const Authentication = () => {
           />
         </div>
         {getWachtwoordFormField()}
-        <Button label={"Registreer"} submit={true} onPress={onClose} />
+        <Button submit={true} onPress={onClose}>Registreer</Button>
         <p>
           Heb je al een account?{" "}
           <span
@@ -171,11 +171,11 @@ const Authentication = () => {
     return (
       <form
         className="w-full flex flex-col gap-4 pb-4"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(handleLogin)}
       >
         {getEmailFormField()}
         {getWachtwoordFormField()}
-        <Button label={"Login"} submit={true} onPress={onClose} />
+        <Button type="submit" onPress={onClose}>Login</Button>
         <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
         <p>
           Nog geen BuurBak account?{" "}
@@ -193,7 +193,7 @@ const Authentication = () => {
   return (
     <div>
       {/* TODO: For some reason the login button doesn't work on first load of the Authentication component  */}
-      < Button onPress={onOpen}>Inloggen</Button>
+      < a className="py-4 md:my-0 md:ml-8 text-secondary-100" onClick={onOpen}>Inloggen</a>
       < Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange} >
         <ModalContent>
           {(onClose) => (
