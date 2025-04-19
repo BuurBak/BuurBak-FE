@@ -10,13 +10,13 @@ export const logIn = async (userData: Login) => {
   const password = userData.password;
   const supabase = createClient();
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const response = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
-  if (error) {
-    if (error.status === 400) {
+  if (response.error) {
+    if (response.error.status === 400) {
       return encodedRedirect(
         "error",
         "/",
