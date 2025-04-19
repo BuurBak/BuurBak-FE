@@ -18,8 +18,7 @@ import LogoWhite from "../Assets/Frame.svg";
 import LogoColor from "../Assets/horizontalColorLogo.svg";
 import { PlateauTrailer } from "../icons/TrailerIcons";
 
-import { hasToken } from "../api/auth/Cookies";
-import { getUser } from "../api/auth/Register";
+import { hasToken } from "../../lib/cookieUtil";
 import { GetUser } from "../Types/User";
 import Register from "./Register";
 
@@ -43,42 +42,6 @@ const Navbar = () => {
   const [scrolled, isScrolled] = useState(true);
   const [user, setUser] = useState<GetUser>();
 
-  const isReserverenPage = () => {
-    const reserverenPattern = /^\/aanbod\/[^/]+\/reserveren$/;
-    return reserverenPattern.test(currentRoute);
-  };
-
-  useEffect(() => {
-    if (isReserverenPage()) {
-      const loginRequired = async () => {
-        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
-          onOpen();
-        }
-      };
-
-      loginRequired();
-    }
-
-    if (currentRoute === "/verhuren") {
-      const loginRequired = async () => {
-        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
-          onOpen();
-        }
-      };
-
-      loginRequired();
-    }
-
-    if (currentRoute === "/wachtwoord_vergeten") {
-      onClose();
-    }
-  }, [currentRoute]);
-
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-
-  useEffect(() => {
-    setOpen(false);
-  }, [onOpenChange]);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -96,12 +59,6 @@ const Navbar = () => {
 
     checkToken();
   }, [open]);
-
-  useEffect(() => {
-    if (signedIn) { // Corrected typo
-      onClose();
-    }
-  }, [signedIn]); // Corrected typo
 
   return (
     <main>
@@ -146,7 +103,7 @@ const Navbar = () => {
               className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static md:z-50 z-[-1] top-0 h-screen md:h-fit bg-white md:bg-transparent md:w-auto md:pl-0 px-9 md:pr-0 pt-20 md:pt-0 transition-all duration-50 ease-in ${open ? "right-0 w-11/12" : "right-[-500px]"
                 }`}
             >
-              {signedIn ? ( // Corrected typo
+              {/* {signedIn ? ( // Corrected typo
                 <div className="w-full flex flex-col items-center md:hidden">
                   <Link href="/dashboard">
                     {user && user.profile_picture ? (
@@ -171,10 +128,10 @@ const Navbar = () => {
               ) : (
                 <div className={`${open ? "" : "hidden"}`}>
                   <li className="py-4 mb-10 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0">
-                    <a onClick={onOpen}>Login</a>
+                    <a>Supposed to Login</a>
                   </li>
                 </div>
-              )} */}
+              )}
 
               {open
                 ? MobileLinks.map((link, index) => (
@@ -228,7 +185,7 @@ const Navbar = () => {
                       </a>
                     )}
                   </li>
-                ))}
+                ))} */}
               <li>
                 <Register />
               </li>

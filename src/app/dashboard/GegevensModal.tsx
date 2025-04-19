@@ -8,7 +8,7 @@ import {
 } from "@nextui-org/modal";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getUser, updateUser } from "../api/auth/Register";
+import { getUser, updateUser } from "../../lib/authUtil";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import { GetUser } from "../Types/User";
@@ -91,15 +91,15 @@ export default function GegevensModal() {
                           item === "name"
                             ? "Naam"
                             : item === "phone_number"
-                            ? "Telefoonnummer"
-                            : ""
+                              ? "Telefoonnummer"
+                              : ""
                         }
                         type={
                           item === "name"
                             ? "text"
                             : item === "phone_number"
-                            ? "tel"
-                            : ""
+                              ? "tel"
+                              : ""
                         }
                         outline
                         className="w-full"
@@ -108,8 +108,8 @@ export default function GegevensModal() {
                             item === "name"
                               ? "Vul een nieuwe naam in"
                               : item === "phone_number"
-                              ? "Voeg een geldig telefoonnummer in"
-                              : "",
+                                ? "Voeg een geldig telefoonnummer in"
+                                : "",
                         })}
                       />
                       <p className="text-error-100">{errors[item]?.message}</p>

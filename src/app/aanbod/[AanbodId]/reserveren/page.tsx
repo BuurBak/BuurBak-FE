@@ -5,8 +5,8 @@ import { PostReservations, TrailerData } from "@/app/Types/Reservation";
 import { SupaUser } from "@/app/Types/User";
 import { postReservations } from "@/app/api/Reservations-controller";
 import { getTrailer } from "@/app/api/Trailer-controller";
-import { hasToken } from "@/app/api/auth/Cookies";
-import { getUserSupaBase } from "@/app/api/auth/Register";
+import { hasToken } from "@/lib/cookieUtil";
+import { getUserSupaBase } from "@/lib/authUtil";
 import { useToast } from "@/app/hooks/use-toast";
 import {
   CalendarDate,
@@ -33,7 +33,7 @@ type Inputs = {
   terms: boolean;
 };
 
-const Page = ({ params }: { params: { AanbodId: string } }) => {
+const Page = ({ params }: { params: { AanbodId: string; }; }) => {
   const { toast } = useToast();
   const searchParams = useSearchParams();
 
@@ -127,15 +127,13 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   const onError = (fieldsErrors: any) => {
     for (const fieldName in fieldsErrors) {
       toast({
-        title: `${
-          !user
-            ? "Je moet ingelogd zijn om een trailer te kunnen reserveren"
-            : ""
-        } ${!user && !terms ? "en" : ""}  ${
-          !terms
+        title: `${!user
+          ? "Je moet ingelogd zijn om een trailer te kunnen reserveren"
+          : ""
+          } ${!user && !terms ? "en" : ""}  ${!terms
             ? "Accepteer nog even de voorwaarden voordat wij je trailer kunnen reserveren"
             : ""
-        }`,
+          }`,
         duration: 6000,
         variant: "error",
       });
@@ -203,8 +201,8 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
                       )} 
                     tot 
                     ${format(parseISO(getValues("dateEnd")), "d MMMM yyyy", {
-                      locale: nl,
-                    })}`}
+                        locale: nl,
+                      })}`}
                   </p>
                 )}
                 {changeDate && (
