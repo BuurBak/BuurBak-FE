@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { getUser, updateUser } from "../../lib/authUtil";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
-import { GetUser } from "../Types/User";
+import { UserDetails } from "../Types/User";
 
 type Info = {
   name: string;
@@ -19,7 +19,7 @@ type Info = {
 };
 
 export default function GegevensModal() {
-  const [user, setUser] = useState<GetUser>();
+  const [user, setUser] = useState<UserDetails>();
 
   useEffect(() => {
     const fetchUser = async () => {

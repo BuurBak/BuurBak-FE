@@ -17,7 +17,7 @@ import LogoColor from "../Assets/horizontalColorLogo.svg";
 import { PlateauTrailer } from "../icons/TrailerIcons";
 
 import { hasToken } from "../../lib/cookieUtil";
-import { GetUser } from "../Types/User";
+import { UserDetails } from "../Types/User";
 import Authentication from "./Authentication";
 import { getUser } from "@/lib/authUtil";
 
@@ -38,7 +38,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(false); // Corrected typo
   const [scrolled, isScrolled] = useState(true);
-  const [user, setUser] = useState<GetUser>();
+  const [user, setUser] = useState<UserDetails>();
 
 
   useEffect(() => {

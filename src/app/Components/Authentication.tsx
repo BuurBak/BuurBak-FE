@@ -3,44 +3,50 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Login } from "../Types/User";
-import { logIn, registerAccount } from "../../lib/authUtil";
+import { UserDetails, LoginCredentials, RegisterUserParams } from "../Types/User";
+import { getUser, logIn as signIn, registerAccount } from "../../lib/authUtil";
 import InputField from "./InputField";
 import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { usePathname } from "next/navigation";
 import { hasToken } from "../../lib/cookieUtil";
 import { Button } from "@nextui-org/button";
+import { CircleUserRound } from "lucide-react";
+import Image from "next/image";
 
 const Authentication = () => {
-  const form = useForm<Login>({
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  const form = useForm<RegisterUserParams>({
     defaultValues: {
-      name: "",
-      password: "",
-      phoneNumber: undefined,
       username: "",
+      password: "",
+      name: "",
+      phone_number: "",
     },
   });
   const { register, handleSubmit, getValues } = form;
   const [showPassword, setShowPassword] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(true);
+  const [user, setUser] = useState<UserDetails>();
 
   const handleLogin = async () => {
-    const loginCredentials: Login = {
+    const signInCredentials: LoginCredentials = {
       username: getValues("username"),
       password: getValues("password"),
     };
 
-    await logIn(loginCredentials);
+    await signIn(signInCredentials);
   };
 
-  const handleRegisterAccount = async () => {
-    const registerCredentials: Login = {
+  const handleRegisterUser = async () => {
+    const registerUserParams: RegisterUserParams = {
       username: getValues("username"),
       password: getValues("password"),
       name: getValues("name"),
-      phoneNumber: getValues("phoneNumber"),
+      phone_number: getValues("phone_number"),
     };
-    await registerAccount(registerCredentials);
+    await registerAccount(registerUserParams);
     setTimeout(function () {
       window.location.reload();
     }, 100);
@@ -55,23 +61,23 @@ const Authentication = () => {
 
   useEffect(() => {
     if (isReserverenPage()) {
-      const loginRequired = async () => {
+      const signInRequired = async () => {
         if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
           onOpen();
         }
       };
 
-      loginRequired();
+      signInRequired();
     }
 
     if (currentRoute === "/verhuren") {
-      const loginRequired = async () => {
+      const signInRequired = async () => {
         if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
           onOpen();
         }
       };
 
-      loginRequired();
+      signInRequired();
     }
 
     if (currentRoute === "/wachtwoord_vergeten") {
@@ -79,7 +85,46 @@ const Authentication = () => {
     }
   }, [currentRoute]);
 
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  useEffect(() => {
+    const checkToken = async () => {
+      const getApi = async () => {
+        const userData = await getUser();
+        setUser(userData);
+      };
+      getApi();
+    };
+
+    checkToken();
+    setShowSignIn(false);
+  }, [onOpenChange]);
+
+
+  const getSignedIn = () => {
+    return (
+      <div className="w-full flex flex-col items-center">
+        <Link href="/dashboard">
+          {user && user.profile_picture ? (
+            <div className="w-32 h-32 relative">
+              <Image
+                src={user.profile_picture}
+                alt="User profile picture"
+                fill
+                sizes="100% 100%"
+                priority={true}
+                className="rounded-full object-cover"
+              />
+            </div>
+          ) : (
+            <CircleUserRound name="ProfilePicturePlaceholder" size={48} color="green" />
+          )}
+        </Link>
+        {/* TODO: Do we want to show the username in navbar? */}
+        {/* <p className="w-fit text-2xl font-semibold mt-4 mb-12">
+          {user?.name}
+        </p> */}
+      </div>
+    );
+  };
 
   const getWachtwoordFormField = () => {
     return (
@@ -123,7 +168,7 @@ const Authentication = () => {
     return (
       <form
         className="w-full flex flex-col gap-4 pb-4"
-        onSubmit={handleSubmit(handleRegisterAccount)}
+        onSubmit={handleSubmit(handleRegisterUser)}
       >
         <div className="w-full">
           <label>Naam</label>
@@ -149,11 +194,11 @@ const Authentication = () => {
             inputType="text"
             outline={true}
             required={showRegisterForm}
-            {...register("phoneNumber")}
+            {...register("phone_number")}
           />
         </div>
         {getWachtwoordFormField()}
-        <Button submit={true} onPress={onClose}>Registreer</Button>
+        <Button type="submit" onPress={onClose}>Registreer</Button>
         <p>
           Heb je al een account?{" "}
           <span
@@ -190,24 +235,31 @@ const Authentication = () => {
     );
   };
 
+  const getSignIn = () => {
+    return (
+      <div>
+        {/* TODO: For some reason the login button doesn't work on first load of the Authentication component  */}
+        <a className="py-4 md:my-0 md:ml-8 text-secondary-100" onClick={onOpen}>Inloggen</a>
+        <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange} >
+          <ModalContent>
+            <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
+            <ModalBody>
+              {
+                showRegisterForm ?
+                  getRegisterForm() :
+                  getLoginForm()
+              }
+            </ModalBody>
+          </ModalContent>
+        </Modal >
+      </div>
+    );
+  };
+
   return (
-    <div>
-      {/* TODO: For some reason the login button doesn't work on first load of the Authentication component  */}
-      < a className="py-4 md:my-0 md:ml-8 text-secondary-100" onClick={onOpen}>Inloggen</a>
-      < Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange} >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
-              <ModalBody>
-                {showRegisterForm && getRegisterForm()}
-                {!showRegisterForm && getLoginForm()}
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal >
-    </div>
+    showSignIn ?
+      getSignIn()
+      : getSignedIn()
   );
 };
 
