@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { UserDetails, LoginCredentials, RegisterUserParams } from "../Types/User";
-import { getUser, logIn as signIn, registerAccount } from "../../lib/authUtil";
+import { UserDetails, SignInCredentials, RegisterUserParams } from "../Types/User";
+import { getUser, signIn as signIn, registerAccount } from "../../lib/authUtil";
 import InputField from "./InputField";
 import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { usePathname } from "next/navigation";
@@ -30,8 +30,8 @@ const Authentication = () => {
   const [showSignIn, setShowSignIn] = useState(true);
   const [user, setUser] = useState<UserDetails>();
 
-  const handleLogin = async () => {
-    const signInCredentials: LoginCredentials = {
+  const handleSignIn = async () => {
+    const signInCredentials: SignInCredentials = {
       username: getValues("username"),
       password: getValues("password"),
     };
@@ -212,11 +212,11 @@ const Authentication = () => {
     );
   };
 
-  const getLoginForm = () => {
+  const getSignInForm = () => {
     return (
       <form
         className="w-full flex flex-col gap-4 pb-4"
-        onSubmit={handleSubmit(handleLogin)}
+        onSubmit={handleSubmit(handleSignIn)}
       >
         {getEmailFormField()}
         {getWachtwoordFormField()}
@@ -247,7 +247,7 @@ const Authentication = () => {
               {
                 showRegisterForm ?
                   getRegisterForm() :
-                  getLoginForm()
+                  getSignInForm()
               }
             </ModalBody>
           </ModalContent>

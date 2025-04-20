@@ -213,13 +213,13 @@ const Verhuren = () => {
   };
 
   useEffect(() => {
-    const loginRequired = async () => {
+    const signInRequired = async () => {
       if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
         setIsSignd(true);
       }
     };
 
-    loginRequired();
+    signInRequired();
   });
 
   const onSubmit = (data: PostTrailer) => {
