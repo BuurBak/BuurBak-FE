@@ -1,11 +1,11 @@
 "use server";
-import { GetUser, Login } from "@/app/Types/User";
+import { UserDetails, LoginCredentials, RegisterUserParams } from "@/app/Types/User";
 import { Session } from "@supabase/supabase-js";
 import { createClient } from "../../utils/supabase/server";
 import { encodedRedirect } from "../../utils/utils";
 import { deleteToken } from "./cookieUtil";
 
-export const logIn = async (userData: Login) => {
+export const logIn = async (userData: LoginCredentials) => {
   const email = userData.username;
   const password = userData.password;
   const supabase = createClient();
@@ -34,9 +34,9 @@ export const logIn = async (userData: Login) => {
   return encodedRedirect("success", "/", "Je bent ingelogd");
 };
 
-export const registerAccount = async (userData: Login) => {
-  const email = userData.username;
-  const password = userData.password;
+export const registerAccount = async (registerUserParams: RegisterUserParams) => {
+  const email = registerUserParams.username;
+  const password = registerUserParams.password;
   const supabase = createClient();
 
   if (!email || !password) {
@@ -49,8 +49,8 @@ export const registerAccount = async (userData: Login) => {
     options: {
       emailRedirectTo: `/dashboard`,
       data: {
-        name: userData.name,
-        phoneNumber: userData.phoneNumber,
+        name: registerUserParams.name,
+        phoneNumber: registerUserParams.phone_number,
       },
     },
   });
@@ -125,7 +125,7 @@ export const getUser = async () => {
       },
     });
 
-    const data: GetUser = await response.json();
+    const data: UserDetails = await response.json();
     return data;
   } catch (error) {
     console.warn(error);
@@ -133,7 +133,7 @@ export const getUser = async () => {
 };
 
 //TODO remove any
-export const updateUser = async (data: Partial<GetUser>) => {
+export const updateUser = async (data: Partial<UserDetails>) => {
   const sessionToken: Session | null = await getSession();
 
   try {

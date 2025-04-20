@@ -16,7 +16,7 @@ import {
 import { useRouter } from "next/navigation"; // Import useRouter
 import { useEffect, useState } from "react";
 import Button from "../Components/Button";
-import { GetUser } from "../Types/User";
+import { UserDetails } from "../Types/User";
 import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
 import { hasToken } from "../../lib/cookieUtil";
 import { deleteUser, getUser, signOut } from "../../lib/authUtil";
@@ -24,7 +24,7 @@ import GegevensModal from "./GegevensModal";
 import TrailerModal from "./TrailerModal";
 
 export default function Profiel() {
-  const [user, setUser] = useState<GetUser>();
+  const [user, setUser] = useState<UserDetails>();
   const [stripe, setStripe] = useState<boolean>();
   const router = useRouter(); // Gebruik de router om te navigeren
 
