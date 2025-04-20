@@ -1,11 +1,11 @@
 "use server";
-import { UserDetails, LoginCredentials, RegisterUserParams } from "@/app/Types/User";
+import { UserDetails, SignInCredentials, RegisterUserParams } from "@/app/Types/User";
 import { Session } from "@supabase/supabase-js";
 import { createClient } from "../../utils/supabase/server";
 import { encodedRedirect } from "../../utils/utils";
 import { deleteToken } from "./cookieUtil";
 
-export const logIn = async (userData: LoginCredentials) => {
+export const signIn = async (userData: SignInCredentials) => {
   const email = userData.username;
   const password = userData.password;
   const supabase = createClient();

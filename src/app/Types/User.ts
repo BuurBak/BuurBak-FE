@@ -2,7 +2,7 @@ import { UserResponse } from "@supabase/supabase-js";
 
 export type SupaUser = UserResponse["data"]["user"];
 
-export type LoginCredentials = {
+export type SignInCredentials = {
   username: string;
   password: string;
 };
@@ -13,5 +13,5 @@ export type UserDetails = {
   profile_picture?: string;
 };
 
-export type RegisterUserParams = LoginCredentials & UserDetails
+export type RegisterUserParams = SignInCredentials & UserDetails
 
