@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserDetails, SignInCredentials, RegisterUserParams } from "../Types/User";
-import { getSignedInUserOrUndefined, signIn, registerAccount } from "../../lib/authUtil";
+import { signIn, registerAccount } from "../../lib/authUtil";
 import InputField from "./InputField";
 import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { usePathname } from "next/navigation";
@@ -12,6 +12,7 @@ import { hasToken } from "../../lib/cookieUtil";
 import { Button } from "@nextui-org/button";
 import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
+import { NextUIBasedButton } from "./NextUIBasedButton";
 
 const Authentication = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -29,6 +30,8 @@ const Authentication = () => {
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showSignIn, setShowSignIn] = useState(true);
   const [user, setUser] = useState<UserDetails>();
+
+  const currentRoute = usePathname();
 
   const handleSignIn = async () => {
     const signInCredentials: SignInCredentials = {
@@ -51,8 +54,6 @@ const Authentication = () => {
       window.location.reload();
     }, 100);
   };
-
-  const currentRoute = usePathname();
 
   const isReserverenPage = () => {
     const reserverenPattern = /^\/aanbod\/[^/]+\/reserveren$/;
@@ -96,6 +97,7 @@ const Authentication = () => {
 
   const getSignedIn = () => {
     return (
+      // TODO: This doesn't align properly with it's neighbours right now. Should be fixed.
       <div className="w-full flex flex-col items-center">
         <Link href="/dashboard">
           {user && user.profile_picture ? (
@@ -193,7 +195,7 @@ const Authentication = () => {
           />
         </div>
         {getWachtwoordFormField()}
-        <Button type="submit" onPress={onClose}>Registreer</Button>
+        <NextUIBasedButton buttonVariant="primary" type="submit" onPress={onClose}>Registreer</NextUIBasedButton>
         <p>
           Heb je al een account?{" "}
           <span
@@ -215,7 +217,7 @@ const Authentication = () => {
       >
         {getEmailFormField()}
         {getWachtwoordFormField()}
-        <Button type="submit" onPress={onClose}>Login</Button>
+        <NextUIBasedButton buttonVariant="primary" className="" type="submit" onPress={onClose}>Login</NextUIBasedButton>
         <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
         <p>
           Nog geen BuurBak account?{" "}

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  CircleUserRound,
   Facebook,
   Home,
   Linkedin,
@@ -20,8 +21,10 @@ import { hasToken } from "../../lib/cookieUtil";
 import { UserDetails } from "../Types/User";
 import Authentication from "./Authentication";
 import { getSignedInUserOrUndefined } from "@/lib/authUtil";
+import { usePathname } from "next/navigation";
 
 const Links = [
+  { name: "Home", url: "/", icon: Home },
   { name: "Aanbod", url: "/aanbod" },
   { name: "Ik wil verhuren", url: "/verhuren" },
   { name: "Contact", url: "/contact" },
@@ -39,6 +42,8 @@ const Navbar = () => {
   const [signedIn, setSignedIn] = useState(false); // Corrected typo
   const [scrolled, isScrolled] = useState(true);
   const [user, setUser] = useState<UserDetails>();
+
+  const currentRoute = usePathname();
 
 
   useEffect(() => {
@@ -129,7 +134,7 @@ const Navbar = () => {
                     <a>Supposed to Login</a>
                   </li>
                 </div>
-              )}
+              )} */ }
 
               {open
                 ? MobileLinks.map((link, index) => (
@@ -183,8 +188,9 @@ const Navbar = () => {
                       </a>
                     )}
                   </li>
-                ))} */}
+                ))}
               <li>
+                {/* TODO: Doesn't have a mobile menu equivalent anymore right now. This will be fixed in a future MR. */}
                 <Authentication />
               </li>
               <div
