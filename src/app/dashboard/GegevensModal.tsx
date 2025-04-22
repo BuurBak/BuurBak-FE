@@ -8,7 +8,7 @@ import {
 } from "@nextui-org/modal";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getUser, updateUser } from "../../lib/authUtil";
+import { getSignedInUserOrUndefined, updateUser } from "../../lib/authUtil";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import { UserDetails } from "../Types/User";
@@ -24,7 +24,7 @@ export default function GegevensModal() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const data = await getUser();
+        const data = await getSignedInUserOrUndefined();
         setUser(data);
       } catch (error) {
         console.error(error);

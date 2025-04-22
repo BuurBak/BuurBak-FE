@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserDetails, SignInCredentials, RegisterUserParams } from "../Types/User";
-import { getUser, signIn as signIn, registerAccount } from "../../lib/authUtil";
+import { getSignedInUserOrUndefined, signIn, registerAccount } from "../../lib/authUtil";
 import InputField from "./InputField";
 import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/modal";
 import { usePathname } from "next/navigation";
@@ -36,7 +36,7 @@ const Authentication = () => {
       password: getValues("password"),
     };
 
-    await signIn(signInCredentials);
+    setUser(await signIn(signInCredentials));
   };
 
   const handleRegisterUser = async () => {
@@ -86,17 +86,12 @@ const Authentication = () => {
   }, [currentRoute]);
 
   useEffect(() => {
-    const checkToken = async () => {
-      const getApi = async () => {
-        const userData = await getUser();
-        setUser(userData);
-      };
-      getApi();
+    const checkSignIn = async () => {
+      setShowSignIn(!!user);
     };
 
-    checkToken();
-    setShowSignIn(false);
-  }, [onOpenChange]);
+    checkSignIn();
+  }, [user]);
 
 
   const getSignedIn = () => {
@@ -237,29 +232,33 @@ const Authentication = () => {
 
   const getSignIn = () => {
     return (
-      <div>
+      <>
         {/* TODO: For some reason the login button doesn't work on first load of the Authentication component  */}
         <a className="py-4 md:my-0 md:ml-8 text-secondary-100" onClick={onOpen}>Inloggen</a>
         <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange} >
           <ModalContent>
-            <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
-            <ModalBody>
-              {
-                showRegisterForm ?
-                  getRegisterForm() :
-                  getSignInForm()
-              }
-            </ModalBody>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
+                <ModalBody>
+                  {
+                    showRegisterForm ?
+                      getRegisterForm() :
+                      getSignInForm()
+                  }
+                </ModalBody>
+              </>
+            )}
           </ModalContent>
         </Modal >
-      </div>
+      </>
     );
   };
 
   return (
     showSignIn ?
+      getSignedIn() :
       getSignIn()
-      : getSignedIn()
   );
 };
 
