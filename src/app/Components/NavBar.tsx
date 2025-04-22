@@ -19,7 +19,7 @@ import { PlateauTrailer } from "../icons/TrailerIcons";
 import { hasToken } from "../../lib/cookieUtil";
 import { UserDetails } from "../Types/User";
 import Authentication from "./Authentication";
-import { getUser } from "@/lib/authUtil";
+import { getSignedInUserOrUndefined } from "@/lib/authUtil";
 
 const Links = [
   { name: "Aanbod", url: "/aanbod" },
@@ -46,7 +46,7 @@ const Navbar = () => {
       if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
         setSignedIn(true); // Corrected typo
         const getApi = async () => {
-          const userData = await getUser();
+          const userData = await getSignedInUserOrUndefined();
           setUser(userData);
         };
         getApi();

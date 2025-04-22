@@ -19,7 +19,7 @@ import Button from "../Components/Button";
 import { UserDetails } from "../Types/User";
 import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
 import { hasToken } from "../../lib/cookieUtil";
-import { deleteUser, getUser, signOut } from "../../lib/authUtil";
+import { deleteUser, getSignedInUserOrUndefined, signOut } from "../../lib/authUtil";
 import GegevensModal from "./GegevensModal";
 import TrailerModal from "./TrailerModal";
 
@@ -33,7 +33,7 @@ export default function Profiel() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const data = await getUser();
+        const data = await getSignedInUserOrUndefined();
         setUser(data);
       } catch (error) {
         console.error(error);
