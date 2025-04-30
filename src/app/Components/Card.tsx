@@ -5,7 +5,7 @@ type CardType = {
   type: "overview" | "category";
   img: string;
   location?: string;
-  distance?: number;
+  distance?: string;
   accessoires?: string;
   price?: string;
   discription?: string;
@@ -55,6 +55,7 @@ const Card = ({
         >
           <h5 className="hidden xl:flex text-primary-100">{title}</h5>
           <p className="flex xl:hidden text-primary-100 font-bold">{title}</p>
+          {/* TODO: Distance is not used for anything? */}
           {/* <p className="text-gray-100 xl:text-xl">
             {location}
             {distance !== undefined &&
