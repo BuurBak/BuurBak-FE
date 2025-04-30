@@ -9,31 +9,19 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { TrailerType } from "../Types/TrailerType";
 import Button from "./Button";
 import Card from "./Card";
 import InputField from "./InputField";
 import SearchOrFilter from "./SearchOrFilterFunction";
-import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider";
-import * as React from "react";
 
-const TrailerTypes = [
-  "Open aanhanger",
-  "Gesloten aanhanger",
-  "Motorfiets aanhanger",
-  "Bagage aanhanger",
-  "Fietsen aanhanger",
-  "Overig",
-  "Alle",
-] as const;
-
-type TrailerTypeName = typeof TrailerTypes[number];
-
-function valuetext(value: number) {
-  return `${value}`;
-}
+type FilterOption = {
+  label: string;
+  options: any;
+  inputValue: any;
+  setInputValue: any;
+};
 
 export const customTheme = (outerTheme: Theme) =>
   createTheme({
@@ -50,6 +38,7 @@ export const customTheme = (outerTheme: Theme) =>
             "& label.Mui-focused": {
               color: "var(--TextField-brandBorderFocusedColor)",
             },
+
             minWidth: "150px",
           },
         },
@@ -69,19 +58,19 @@ export const customTheme = (outerTheme: Theme) =>
           },
         },
       },
-      MuiSlider: {
+      MuiInput: {
         styleOverrides: {
           root: {
-            color: "#EE7B46",
-          },
-          thumb: {
-            color: "#EE7B46",
-          },
-          track: {
-            color: "#EE7B46",
-          },
-          rail: {
-            color: "#ddd",
+            "&::before": {
+              borderBottom: "2px solid var(--TextField-brandBorderColor)",
+            },
+            "&:hover:not(.Mui-disabled, .Mui-error):before": {
+              borderBottom: "2px solid var(--TextField-brandBorderHoverColor)",
+            },
+            "&.Mui-focused:after": {
+              borderBottom:
+                "2px solid var(--TextField-brandBorderFocusedColor)",
+            },
           },
         },
       },
@@ -91,34 +80,94 @@ export const customTheme = (outerTheme: Theme) =>
 const AanbodList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [inputValueSearch, setInputValueSearch] = useState<string>("");
-  const [selectedWhere, setSelectedWhere] = useState("");
-  const [selectedWhen, setSelectedWhen] = useState<Dayjs | null>(null);
-  const outerTheme = useTheme();
-  const [value, setValue] = React.useState<number[]>([0, 100]);
-  const [selectedType, setSelectedType] = useState<TrailerTypeName>("Alle");
-
-  const handleChange = (
-    event: Event,
-    newValue: number | number[],
-    activeThumb: number
-  ) => {
-    if (Array.isArray(newValue)) {
-      setValue(newValue);
-    }
-  };
-
+  const [inputValueType, setInputValueType] =
+    useState<TrailerType["name"]>("Alle");
+  const [inputValueWhere, setInputValueWhere] = useState("");
+  const [inputValueWhen, setInputValueWhen] = useState<Dayjs | null>();
+  const [names, setNames] = useState<string[]>();
+  //TrailerArray is de lijst met getypte trailers objects
   const TrailerArray = SearchOrFilter({
     searchTerm: inputValueSearch,
-    filterType: selectedType,
-    filterDate: selectedWhen,
-    filterWhere: selectedWhere,
-    filterPriceRange: value as [number, number],
+    filterType: inputValueType,
+    filterDate: inputValueWhen,
+    filterWhere: inputValueWhere,
   });
+  const TrailerTypes = [
+    "Open aanhanger",
+    "Gesloten aanhanger",
+    "Motorfiets aanhanger",
+    "Bagage aanhanger",
+    "Fietsen aanhanger",
+    "Overig",
+  ];
+  const TempPlaces = ["Begin met typen..."];
+  const [dateCleared, setdateCleared] = useState<boolean>(false);
+  const outerTheme = useTheme();
+  const [callData, setCallData] = useState<any[]>();
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    function initService(): void {
+      const displaySuggestions = function (
+        predictions: google.maps.places.QueryAutocompletePrediction[] | null,
+        status: google.maps.places.PlacesServiceStatus
+      ) {
+        if (
+          status != google.maps.places.PlacesServiceStatus.OK ||
+          !predictions
+        ) {
+          return;
+        }
+
+        let namesReturn: string[] = [];
+
+        predictions.forEach((prediction) => {
+          namesReturn.push(prediction.description.toString());
+        });
+
+        setNames(namesReturn.map((item) => item.split(",")[0].trim()));
+      };
+
+      const service = new window.google.maps.places.AutocompleteService();
+
+      service.getQueryPredictions(
+        { input: inputValueWhere },
+        displaySuggestions
+      );
+    }
+    initService();
+  }, [inputValueWhere]);
+
+  useEffect(() => {
+    if (dateCleared) {
+      const timeout = setTimeout(() => {
+        setdateCleared(false);
+      }, 1500);
+
+      return () => clearTimeout(timeout);
+    }
+    return () => { };
+  }, [dateCleared]);
+
+  const filterOptions: FilterOption[] = [
+    {
+      label: "Type",
+      options: TrailerTypes,
+      inputValue: inputValueType,
+      setInputValue: setInputValueType,
+    },
+    // {
+    //   label: "Waar",
+    //   options: names || TempPlaces,
+    //   inputValue: inputValueWhere,
+    //   setInputValue: setInputValueWhere,
+    // },
+  ];
 
   return (
     <div className="flex flex-col h-full max-h-screen overflow-auto w-full p-2 bg-offWhite-100 gap-3">
       <div className="flex flex-col w-full h-fit gap-3">
-        <div className="flex flex-row gap-3 w-full">
+        <div className="flex flex-row gap-3  w-full">
           <InputField
             className="w-full"
             label="Zoeken"
@@ -137,73 +186,63 @@ const AanbodList = () => {
             type="secondary"
             onClick={() => setShowFilters(!showFilters)}
           />
+          <div id="results"></div>
         </div>
         {showFilters && (
           <div className="flex flex-row flex-wrap gap-3">
             <ThemeProvider theme={customTheme(outerTheme)}>
-              <Autocomplete
-                className="flex-1"
-                disablePortal
-                id="filter-type"
-                options={TrailerTypes}
-                inputValue={selectedType}
-                onInputChange={(event, newValue) => {
-                  if (TrailerTypes.includes(newValue as TrailerTypeName)) {
-                    setSelectedType(newValue as TrailerTypeName);
-                  }
-                }}
-                renderInput={(params) => <TextField {...params} label="Type" />}
-              />
-              <Box
-                sx={{
-                  width: 170,
-                  padding: "0 15px",
-                  border: "1px solid #EE7B46",
-                  borderRadius: "3px",
-                }}
-              >
-                <Slider
+              {filterOptions?.map((item: FilterOption, index: number) => (
+                <Autocomplete
                   className="flex-1"
-                  getAriaLabel={() => "Price range"}
-                  value={value}
-                  onChange={handleChange}
-                  valueLabelDisplay="auto"
-                  getAriaValueText={valuetext}
+                  disablePortal
+                  id={index.toString()}
+                  options={item.options}
+                  key={index}
+                  inputValue={item.inputValue}
+                  onInputChange={(event, newValue) => {
+                    item.setInputValue(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label={item.label} />
+                  )}
                 />
-                <div>€{value[0]} - {value[1]} per dag</div>
-              </Box>
+              ))}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   className="flex-1"
                   label="Wanneer"
-                  value={selectedWhen}
-                  onChange={(newValue) => setSelectedWhen(newValue)}
+                  value={inputValueWhen}
+                  onChange={(newValue) => {
+                    setInputValueWhen(newValue);
+                  }}
+                  slotProps={{
+                    field: {
+                      clearable: true,
+                      onClear: () => setdateCleared(true),
+                    },
+                  }}
                 />
               </LocalizationProvider>
-              <Button
-                label="Apply Filters"
-                type="primary"
-                onClick={() => setShowFilters(false)}
-              />
+              <div id="test"></div>
             </ThemeProvider>
           </div>
         )}
       </div>
       <div className="w-full h-fit max-h-min overflow-auto flex flex-row justify-center md:justify-start flex-wrap gap-3">
-        {TrailerArray?.length
-          ? TrailerArray.map((item) => (
-              <Card
-                key={item.uuid}
-                img={item.images[0]}
-                title={item.trailer_type}
-                location={item.address.city}
-                price={item.rental_price.toString()}
-                href={"aanbod/" + item.uuid}
-                accessoires=""
-                distance={2}
-                type="overview"
-              />
-            ))
+        {TrailerArray != undefined && TrailerArray.length != 0
+          ? TrailerArray?.map((item) => (
+            <Card
+              key={item.uuid}
+              img={item.images[0]}
+              title={item.trailer_type}
+              location={item.address.city}
+              price={item.rental_price.toString()}
+              href={"aanbod/" + item.uuid}
+              accessoires=""
+              distance={"2"}
+              type="overview"
+            />
+          ))
           : "Geen aanhangers gevonden"}
       </div>
     </div>
