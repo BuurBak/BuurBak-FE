@@ -1,6 +1,6 @@
 import { Session } from "@supabase/supabase-js";
 import { CheckStripe, LinkToStripe } from "../Types/Payment";
-import { getSession } from "./auth/Register";
+import { getSession } from "../../lib/authUtil";
 
 export const linkToStripe = async () => {
   const sessionToken: Session | null = await getSession();

@@ -146,7 +146,7 @@ const AanbodList = () => {
 
       return () => clearTimeout(timeout);
     }
-    return () => {};
+    return () => { };
   }, [dateCleared]);
 
   const filterOptions: FilterOption[] = [
@@ -231,18 +231,18 @@ const AanbodList = () => {
       <div className="w-full h-fit max-h-min overflow-auto flex flex-row justify-center md:justify-start flex-wrap gap-3">
         {TrailerArray != undefined && TrailerArray.length != 0
           ? TrailerArray?.map((item) => (
-              <Card
-                key={item.uuid}
-                img={item.images[0]}
-                title={item.trailer_type}
-                location={item.address.city}
-                price={item.rental_price.toString()}
-                href={"aanbod/" + item.uuid}
-                accessoires=""
-                distance={2}
-                type="overview"
-              />
-            ))
+            <Card
+              key={item.uuid}
+              img={item.images[0]}
+              title={item.trailer_type}
+              location={item.address.city}
+              price={item.rental_price.toString()}
+              href={"aanbod/" + item.uuid}
+              accessoires=""
+              distance={"2"}
+              type="overview"
+            />
+          ))
           : "Geen aanhangers gevonden"}
       </div>
     </div>

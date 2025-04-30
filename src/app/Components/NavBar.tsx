@@ -12,29 +12,22 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import LogoWhite from "../Assets/Frame.svg";
 import LogoColor from "../Assets/horizontalColorLogo.svg";
 import { PlateauTrailer } from "../icons/TrailerIcons";
 
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  useDisclosure,
-} from "@nextui-org/modal";
-import { hasToken } from "../api/auth/Cookies";
-import { getUser } from "../api/auth/Register";
-import { GetUser } from "../Types/User";
-import Register from "./Register";
+import { hasToken } from "../../lib/cookieUtil";
+import { UserDetails } from "../Types/User";
+import Authentication from "./Authentication";
+import { getSignedInUserOrUndefined } from "@/lib/authUtil";
+import { usePathname } from "next/navigation";
 
 const Links = [
+  { name: "Home", url: "/", icon: Home },
   { name: "Aanbod", url: "/aanbod" },
   { name: "Ik wil verhuren", url: "/verhuren" },
   { name: "Contact", url: "/contact" },
-  { name: "Inloggen" },
 ];
 
 const MobileLinks = [
@@ -47,53 +40,18 @@ const MobileLinks = [
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(false); // Corrected typo
-  const currentRoute = usePathname();
   const [scrolled, isScrolled] = useState(true);
-  const [user, setUser] = useState<GetUser>();
+  const [user, setUser] = useState<UserDetails>();
 
-  const isReserverenPage = () => {
-    const reserverenPattern = /^\/aanbod\/[^/]+\/reserveren$/;
-    return reserverenPattern.test(currentRoute);
-  };
+  const currentRoute = usePathname();
 
-  useEffect(() => {
-    if (isReserverenPage()) {
-      const loginRequired = async () => {
-        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
-          onOpen();
-        }
-      };
-
-      loginRequired();
-    }
-
-    if (currentRoute === "/verhuren") {
-      const loginRequired = async () => {
-        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
-          onOpen();
-        }
-      };
-
-      loginRequired();
-    }
-
-    if (currentRoute === "/wachtwoord_vergeten") {
-      onClose();
-    }
-  }, [currentRoute]);
-
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-
-  useEffect(() => {
-    setOpen(false);
-  }, [onOpenChange]);
 
   useEffect(() => {
     const checkToken = async () => {
       if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
         setSignedIn(true); // Corrected typo
         const getApi = async () => {
-          const userData = await getUser();
+          const userData = await getSignedInUserOrUndefined();
           setUser(userData);
         };
         getApi();
@@ -103,13 +61,7 @@ const Navbar = () => {
     };
 
     checkToken();
-  }, [onOpenChange, open]);
-
-  useEffect(() => {
-    if (signedIn) { // Corrected typo
-      onClose();
-    }
-  }, [signedIn]); // Corrected typo
+  }, [open]);
 
   return (
     <main>
@@ -154,7 +106,7 @@ const Navbar = () => {
               className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static md:z-50 z-[-1] top-0 h-screen md:h-fit bg-white md:bg-transparent md:w-auto md:pl-0 px-9 md:pr-0 pt-20 md:pt-0 transition-all duration-50 ease-in ${open ? "right-0 w-11/12" : "right-[-500px]"
                 }`}
             >
-              {signedIn ? ( // Corrected typo
+              {/* {signedIn ? ( // Corrected typo
                 <div className="w-full flex flex-col items-center md:hidden">
                   <Link href="/dashboard">
                     {user && user.profile_picture ? (
@@ -179,10 +131,10 @@ const Navbar = () => {
               ) : (
                 <div className={`${open ? "" : "hidden"}`}>
                   <li className="py-4 mb-10 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0">
-                    <a onClick={onOpen}>Login</a>
+                    <a>Supposed to Login</a>
                   </li>
                 </div>
-              )}
+              )} */ }
 
               {open
                 ? MobileLinks.map((link, index) => (
@@ -206,11 +158,11 @@ const Navbar = () => {
                     key={index}
                   >
                     {link.name === "Inloggen" && signedIn ? ( // Corrected typo
-                      user && user?.profile_picture !== undefined ? (
+                      user && user.profile_picture ? (
                         <Link href="/dashboard">
                           <div className="w-14 h-14 relative">
                             <Image
-                              src={user?.profile_picture && user.profile_picture.trim() !== "" ? user.profile_picture : "/default-profile.png"}
+                              src={user.profile_picture && user.profile_picture.trim().length ? user.profile_picture : "/default-profile.png"}
                               alt="User profile picture"
                               fill
                               sizes="100% 100%"
@@ -227,9 +179,9 @@ const Navbar = () => {
                     ) : (
                       <a
                         className="cursor-pointer"
-                        onClick={
-                          link.name === "Inloggen" ? onOpen : undefined
-                        }
+                        // onClick={
+                        //   link.name === "Inloggen" ? onOpen : undefined
+                        // }
                         href={link.url}
                       >
                         {link.name}
@@ -237,7 +189,10 @@ const Navbar = () => {
                     )}
                   </li>
                 ))}
-
+              <li>
+                {/* TODO: Doesn't have a mobile menu equivalent anymore right now. This will be fixed in a future MR. */}
+                <Authentication />
+              </li>
               <div
                 className={`flex flex-col mt-20 items-center ${open ? "" : "hidden"
                   }`}
@@ -266,18 +221,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
-              <ModalBody>
-                <Register />
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
     </main>
   );
 };

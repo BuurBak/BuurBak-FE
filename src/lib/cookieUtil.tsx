@@ -5,8 +5,8 @@ export async function deleteToken(token: string) {
   cookies().delete(token);
 }
 
-export async function hasToken(hasToken: string) {
-  return cookies().has(hasToken);
+export async function hasToken(token: string) {
+  return cookies().has(token);
 }
 
 export async function getToken(token: string) {
