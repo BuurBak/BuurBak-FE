@@ -107,6 +107,7 @@ export default function Profiel() {
           <ChevronRight className="h-4 w-4 ml-2 align-middle" />
         </div>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+       {/* weghaald na advies van Luuk
         {!stripe && (
           <a
             className="font-semibold flex-row inline-flex items-center"
@@ -116,9 +117,9 @@ export default function Profiel() {
             <ChevronRight className="h-4 w-4 ml-2 align-middle" />
           </a>
         )}
-        {!stripe && (
+         {!stripe && (
           <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        )}
+        )} */}
         <a
           className="font-semibold flex-row inline-flex items-center"
           href="/wachtwoord_vergeten"
