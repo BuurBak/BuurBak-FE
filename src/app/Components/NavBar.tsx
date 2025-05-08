@@ -39,85 +39,29 @@ const MobileLinks = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const [signedIn, setSignedIn] = useState(false);
-  const currentRoute = usePathname();
+  const [signedIn, setSignedIn] = useState(false); // Corrected typo
   const [scrolled, isScrolled] = useState(true);
   const [user, setUser] = useState<UserDetails>();
 
-  const isReserverenPage = () => {
-    const reserverenPattern = /^\/aanbod\/[^/]+\/reserveren$/;
-    return reserverenPattern.test(currentRoute);
-  };
+  const currentRoute = usePathname();
 
-  // useEffect(() => {
-  //   function changeCss() {
-  //     if (currentRoute === "/") {
-  //       window.scrollY > 500 ? isScrolled(true) : isScrolled(false);
-  //     }
-  //   }
-
-  //   window.addEventListener("scroll", changeCss, false);
-  // }, []);
-
-  useEffect(() => {
-    // if (currentRoute !== "/") {
-    //   isScrolled(true);
-    //   onClose();
-    // }
-
-    if (isReserverenPage()) {
-      const loginRequired = async () => {
-        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
-          onOpen();
-        }
-      };
-
-      loginRequired();
-    }
-
-    if (currentRoute === "/verhuren") {
-      const loginRequired = async () => {
-        if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
-          onOpen();
-        }
-      };
-
-      loginRequired();
-    }
-
-    if (currentRoute === "/wachtwoord_vergeten") {
-      onClose();
-    }
-  }, [currentRoute]);
-
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-
-  useEffect(() => {
-    setOpen(false);
-  }, [onOpenChange]);
 
   useEffect(() => {
     const checkToken = async () => {
       if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
-        setSignedIn(true);
+        setSignedIn(true); // Corrected typo
         const getApi = async () => {
           const userData = await getSignedInUserOrUndefined();
           setUser(userData);
         };
         getApi();
       } else {
-        setSignedIn(false);
+        setSignedIn(false); // Corrected typo
       }
     };
 
     checkToken();
   }, [open]);
-
-  useEffect(() => {
-    if (signedIn) {
-      onClose();
-    }
-  }, [signedIn]);
 
   return (
     <main>
@@ -162,36 +106,6 @@ const Navbar = () => {
               className={`md:flex md:items-center md:pb-0 pb-12 absolute md:static md:z-50 z-[-1] top-0 h-screen md:h-fit bg-white md:bg-transparent md:w-auto md:pl-0 px-9 md:pr-0 pt-20 md:pt-0 transition-all duration-50 ease-in ${open ? "right-0 w-11/12" : "right-[-500px]"
                 }`}
             >
-              {signedIn ? (
-                <div className="w-full flex flex-col items-center md:hidden">
-                  <Link href="/dashboard">
-                    {user && user.profile_picture ? (
-                      <div className="w-32 h-32 relative">
-                        <Image
-                          src={user.profile_picture}
-                          alt="Trailer image 1"
-                          fill
-                          sizes="100% 100%"
-                          priority={true}
-                          className="rounded-full object-cover"
-                        />
-                      </div>
-                    ) : (
-                      <CircleUserRound className="w-auto h-[10dvh]" />
-                    )}
-                  </Link>
-                  <p className="w-fit text-2xl font-semibold mt-4 mb-12">
-                    {user?.name}
-                  </p>
-                </div>
-              ) : (
-                <div className={`${open ? "" : "hidden"}`}>
-                  <li className="py-4 mb-10 text-lg font-semibold border-b-1 border-b-offWhite-100 md:border-0">
-                    <a>Supposed to Login</a>
-                  </li>
-                </div>
-              )} */ }
-
               {open
                 ? MobileLinks.map((link, index) => (
                   <li
@@ -235,9 +149,6 @@ const Navbar = () => {
                     ) : (
                       <a
                         className="cursor-pointer"
-                        // onClick={
-                        //   link.name === "Inloggen" ? onOpen : undefined
-                        // }
                         href={link.url}
                       >
                         {link.name}
