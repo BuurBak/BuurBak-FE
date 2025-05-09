@@ -97,16 +97,17 @@ export default function Profiel() {
         )}
       </div>
       <div className="flex flex-col mt-8">
-        <div className="font-semibold flex-row inline-flex items-center">
+        <div className="font-semibold flex-row inline-flex items-center hover:bg-neutral-300 w-fit p-0.5 rounded">
           <GegevensModal />
           <ChevronRight className="h-4 w-4 ml-2 align-middle" />
         </div>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        <div className="font-semibold flex-row inline-flex items-center">
+        <div className="font-semibold flex-row inline-flex items-center hover:bg-neutral-300 w-fit p-0.5 rounded">
           <TrailerModal />
           <ChevronRight className="h-4 w-4 ml-2 align-middle" />
         </div>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+       {/* weghaald na advies van Luuk
         {!stripe && (
           <a
             className="font-semibold flex-row inline-flex items-center"
@@ -116,11 +117,11 @@ export default function Profiel() {
             <ChevronRight className="h-4 w-4 ml-2 align-middle" />
           </a>
         )}
-        {!stripe && (
+         {!stripe && (
           <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        )}
+        )} */}
         <a
-          className="font-semibold flex-row inline-flex items-center"
+        className="font-semibold flex-row inline-flex items-center hover:bg-red-100 w-fit p-0.5 rounded"
           href="/wachtwoord_vergeten"
         >
           Wachtwoord veranderen

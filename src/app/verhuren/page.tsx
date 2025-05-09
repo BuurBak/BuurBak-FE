@@ -330,7 +330,7 @@ const Verhuren = () => {
           </div>
           <div className="w-3/4 gap-5">
             <p className="font-bold">
-              Kies de locatie waar je je aanhanger vanaf verhuurd:
+              Kies de locatie waar je je aanhanger vanaf verhuurd (bijv. Kamperbinnenpoort 1, Utrecht, Netherlands):
             </p>
             <LocationInput
               onLocationChange={handleLocationChange}
