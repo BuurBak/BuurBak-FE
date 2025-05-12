@@ -11,6 +11,9 @@ import Image from "next/image";
 import { getTrailer } from "@/app/api/Trailer-controller";
 import { TrailerData } from "@/app/Types/Reservation";
 import { useEffect } from "react";
+import DOMPurify from 'dompurify';
+
+
 
 const ReviewPage = ({ params }: { params: { AanbodId: string } }) => {
   const [formData, setFormData] = useState({
@@ -46,7 +49,7 @@ const ReviewPage = ({ params }: { params: { AanbodId: string } }) => {
       //  await sendReview(formData);
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
-      setFormData({ reviewText: "", rating: 0 });
+      setFormData({ reviewText: DOMPurify.sanitize(formData.reviewText), rating: 0 });
     } catch (error) {
       console.error("Fout bij verzenden review:", error);
       alert("Er is een probleem opgetreden bij het verzenden van je review.");

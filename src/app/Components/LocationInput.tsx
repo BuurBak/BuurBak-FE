@@ -81,7 +81,7 @@ const LocationInput = ({ onLocationChange }: PropType) => {
 
   const filterOptions: FilterOption[] = [
     {
-      label: "Waar",
+      label: "Woonplaats (straat huisnummer, woonplaats, land)",
       options: addresses,
       inputValue: inputValueWhere,
       setInputValue: setInputValueWhere,
