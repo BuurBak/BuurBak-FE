@@ -111,7 +111,7 @@ const ContactPage: React.FC = () => {
           </button>
         </form>
       </div>
-      <div className="flex flex-col justify-evenly items-center p-8 bg-primary-100 shadow-lg w-screen mt-auto h-[35vh]">
+      <div className="flex flex-col justify-evenly items-center p-8 bg-primary-100 shadow-lg w-full mt-auto h-[35vh]">
         <h2 className="text-2xl font-semibold text-center text-white">
           Schade? Meld je schade!
         </h2>
