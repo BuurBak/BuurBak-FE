@@ -3,7 +3,7 @@ import { Session } from "@supabase/supabase-js";
 import { encodedRedirect } from "../../../utils/utils";
 import { TrailerData } from "../Types/Reservation";
 import { PostTrailer } from "../Types/TrailerType";
-import { getSession } from "./auth/Register";
+import { getSession } from "../../lib/authUtil";
 
 export const getAllTrailers = async () => {
   // const token = await getToken("sb-tnffbjgnzpqsjlaumogv-auth-token");

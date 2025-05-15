@@ -3,8 +3,6 @@
 import React, { ChangeEvent, useState } from "react";
 import { sendEmail } from "./sendEmail";
 import SuccessPopup from "./SuccesPopup";
-import Link from 'next/link';
-import Button from "../Components/Button";
 
 const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +12,7 @@ const ContactPage: React.FC = () => {
   });
 
   const [showPopup, setShowPopup] = useState(false);
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -35,10 +33,10 @@ const ContactPage: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2">
+    <main className="flex items-center justify-center min-h-screen bg-gray-50">
       {showPopup && <SuccessPopup message="E-mail succesvol verzonden!" />}
 
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg mt-[110px]">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
           Contacteer ons
         </h2>

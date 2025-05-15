@@ -16,15 +16,15 @@ import {
 import { useRouter } from "next/navigation"; // Import useRouter
 import { useEffect, useState } from "react";
 import Button from "../Components/Button";
-import { GetUser } from "../Types/User";
+import { UserDetails } from "../Types/User";
 import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
-import { hasToken } from "../api/auth/Cookies";
-import { deleteUser, getUser, signOut } from "../api/auth/Register";
+import { hasToken } from "../../lib/cookieUtil";
+import { deleteUser, getSignedInUserOrUndefined, signOut } from "../../lib/authUtil";
 import GegevensModal from "./GegevensModal";
 import TrailerModal from "./TrailerModal";
 
 export default function Profiel() {
-  const [user, setUser] = useState<GetUser>();
+  const [user, setUser] = useState<UserDetails>();
   const [stripe, setStripe] = useState<boolean>();
   const router = useRouter(); // Gebruik de router om te navigeren
 
@@ -33,7 +33,7 @@ export default function Profiel() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const data = await getUser();
+        const data = await getSignedInUserOrUndefined();
         setUser(data);
       } catch (error) {
         console.error(error);
@@ -51,7 +51,7 @@ export default function Profiel() {
 
   const handleSignOut = async () => {
     try {
-      await signOut(); // Roep de signOut-functie aan
+      await signOut();
       window.location.reload();
     } catch (error) {
       console.error("Error during sign-out:", error);
@@ -97,16 +97,17 @@ export default function Profiel() {
         )}
       </div>
       <div className="flex flex-col mt-8">
-        <div className="font-semibold flex-row inline-flex items-center">
+        <div className="font-semibold flex-row inline-flex items-center hover:bg-neutral-300 w-fit p-0.5 rounded">
           <GegevensModal />
           <ChevronRight className="h-4 w-4 ml-2 align-middle" />
         </div>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        <div className="font-semibold flex-row inline-flex items-center">
+        <div className="font-semibold flex-row inline-flex items-center hover:bg-neutral-300 w-fit p-0.5 rounded">
           <TrailerModal />
           <ChevronRight className="h-4 w-4 ml-2 align-middle" />
         </div>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+       {/* weghaald na advies van Luuk
         {!stripe && (
           <a
             className="font-semibold flex-row inline-flex items-center"
@@ -116,11 +117,11 @@ export default function Profiel() {
             <ChevronRight className="h-4 w-4 ml-2 align-middle" />
           </a>
         )}
-        {!stripe && (
+         {!stripe && (
           <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        )}
+        )} */}
         <a
-          className="font-semibold flex-row inline-flex items-center"
+        className="font-semibold flex-row inline-flex items-center hover:bg-red-100 w-fit p-0.5 rounded"
           href="/wachtwoord_vergeten"
         >
           Wachtwoord veranderen

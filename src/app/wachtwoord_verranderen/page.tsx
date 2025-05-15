@@ -2,7 +2,7 @@
 import { ChangeEvent, useState } from "react";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
-import { resetPassword } from "../api/auth/Register";
+import { resetPassword } from "../../lib/authUtil";
 
 const Page = () => {
   const [pass, setPass] = useState<string>();

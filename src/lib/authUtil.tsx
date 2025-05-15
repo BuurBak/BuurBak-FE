@@ -1,42 +1,49 @@
 "use server";
-import { GetUser, Login } from "@/app/Types/User";
+import { UserDetails, SignInCredentials, RegisterUserParams } from "@/app/Types/User";
 import { Session } from "@supabase/supabase-js";
-import { createClient } from "../../../../utils/supabase/server";
-import { encodedRedirect } from "../../../../utils/utils";
-import { deleteToken } from "./Cookies";
+import { createClient } from "../../utils/supabase/server";
+import { encodedRedirect } from "../../utils/utils";
 
-export const logIn = async (userData: Login) => {
+
+export const signIn = async (userData: SignInCredentials): Promise<UserDetails | undefined> => {
+  const supabase = createClient();
   const email = userData.username;
   const password = userData.password;
-  const supabase = createClient();
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const response = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
-  if (error) {
-    if (error.status === 400) {
-      return encodedRedirect(
+  if (response.error) {
+    response.error.status === 400 ?
+      encodedRedirect(
         "error",
         "/",
         "Jouw email of wachtwoord is onjuist"
-      );
-    } else {
-      return encodedRedirect(
+      ) :
+      encodedRedirect(
         "error",
         "/",
         "Er is iets fout gegaan. Probeer het later nog eens"
       );
-    }
-  }
+    return;
+  };
 
-  return encodedRedirect("success", "/", "Je bent ingelogd");
+  return response.data.user.user_metadata as UserDetails;
 };
 
-export const registerAccount = async (userData: Login) => {
-  const email = userData.username;
-  const password = userData.password;
+export const signOut = async () => {
+  const supabase = createClient();
+  const error = await supabase.auth.signOut();
+  if (error) {
+    console.warn(error);
+  }
+};
+
+export const registerAccount = async (registerUserParams: RegisterUserParams) => {
+  const email = registerUserParams.username;
+  const password = registerUserParams.password;
   const supabase = createClient();
 
   if (!email || !password) {
@@ -49,8 +56,8 @@ export const registerAccount = async (userData: Login) => {
     options: {
       emailRedirectTo: `/dashboard`,
       data: {
-        name: userData.name,
-        phoneNumber: userData.phoneNumber,
+        name: registerUserParams.name,
+        phoneNumber: registerUserParams.phone_number,
       },
     },
   });
@@ -110,7 +117,7 @@ export const getUserSupaBase = async () => {
   return user;
 };
 
-export const getUser = async () => {
+export const getSignedInUserOrUndefined = async (): Promise<UserDetails | undefined> => {
   const sessionToken: Session | null = await getSession();
 
   try {
@@ -121,15 +128,22 @@ export const getUser = async () => {
       },
     });
 
-    const data: GetUser = await response.json();
-    return data;
+    const responseJson = await response.json();
+
+    if (responseJson.message) {
+      console.log(JSON.stringify(responseJson));
+      return;
+    }
+
+
+    return responseJson;
   } catch (error) {
     console.warn(error);
   }
 };
 
 //TODO remove any
-export const updateUser = async (data: Partial<GetUser>) => {
+export const updateUser = async (data: Partial<UserDetails>) => {
   const sessionToken: Session | null = await getSession();
 
   try {
@@ -168,7 +182,6 @@ export const updateSupaUser = async (name: string, phoneNumber: string) => {
 
 export const getSession = async () => {
   const supabase = createClient();
-
   const { data, error } = await supabase.auth.getSession();
 
   if (error) {
@@ -179,33 +192,6 @@ export const getSession = async () => {
   return data.session;
 };
 
-export const signOut = async () => {
-  await deleteToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
-  await deleteToken("sb-tnffbjgnzpqsjlaumogv-auth-token-code-verifier");
-};
-
-// export const deleteUser = async () => {
-//   const supabase = createClient();
-
-//   const sessionToken: Session | null = await getSession();
-
-//   if (sessionToken) {
-//     const { data, error } = await supabase.auth.admin.deleteUser(
-//       sessionToken.toString()
-//     );
-
-//     if (data) {
-//       console.log(data);
-//     }
-//     if (error) {
-//       console.warn(error);
-//     } else {
-//       console.error("unkown error");
-//     }
-//   } else {
-//     console.error("User token not found");
-//   }
-// };
 
 export const deleteUser = async () => {
   const sessionToken: Session | null = await getSession();

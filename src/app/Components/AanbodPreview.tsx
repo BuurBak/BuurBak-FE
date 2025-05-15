@@ -24,9 +24,9 @@ const AanbodPreview: React.FC = () => {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((coords1.lat * Math.PI) / 180) *
-        Math.cos((coords2.lat * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos((coords2.lat * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     return Math.round(distance);
@@ -46,21 +46,23 @@ const AanbodPreview: React.FC = () => {
 
   const dataToRender = Array.isArray(data) ? data : [];
 
-  const TrailerDistance = (nearbyLatitude: any, nearbyLongitude: any) => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error);
+  const calculateDistance = (nearbyLatitude: number, nearbyLongitude: number): string => {
+    if (!navigator.geolocation) {
+      console.error("Geolocation is not supported by your browser");
+      return "Locatie niet beschikbaar";
     }
-    function success(position: {
-      coords: { latitude: number; longitude: number };
-    }) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      setCenterCoordinates({ lat: latitude, lng: longitude });
-    }
-    function error() {
-      console.error("Unable to retrieve your location");
-      return undefined;
-    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        setCenterCoordinates({ lat: latitude, lng: longitude });
+      },
+      (error) => {
+        console.error("Unable to retrieve your location:", error.message);
+      }
+    );
+
     if (
       centerCoordinates.lat !== DEFAULT_CENTER.lat ||
       centerCoordinates.lng !== DEFAULT_CENTER.lng
@@ -69,8 +71,10 @@ const AanbodPreview: React.FC = () => {
         { lat: nearbyLatitude, lng: nearbyLongitude },
         centerCoordinates
       );
-      return distance;
+      return `${distance} km`;
     }
+
+    return "Locatie niet beschikbaar";
   };
 
   return (
@@ -103,7 +107,7 @@ const AanbodPreview: React.FC = () => {
                   href={"aanbod/" + item.uuid}
                   location={item.address.city}
                   price={item.rental_price.toString()}
-                  distance={TrailerDistance(
+                  distance={calculateDistance(
                     item.location.latitude,
                     item.location.longitude
                   )}
