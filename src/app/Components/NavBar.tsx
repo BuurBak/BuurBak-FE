@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Car,
   CircleUserRound,
   Facebook,
   Home,
@@ -27,6 +28,7 @@ const Links = [
   { name: "Home", url: "/", icon: Home },
   { name: "Aanbod", url: "/aanbod" },
   { name: "Ik wil verhuren", url: "/verhuren" },
+  { name: "Over ons", url: "/over_ons" },
   { name: "Contact", url: "/contact" },
 ];
 
@@ -34,6 +36,7 @@ const MobileLinks = [
   { name: "Home", url: "/", icon: Home },
   { name: "Aanbod", url: "/aanbod", icon: PlateauTrailer },
   { name: "Verhuren", url: "/verhuren", icon: Tag },
+  { name: "Over ons", url: "/over_ons", icon: Car },
   { name: "Contact", url: "/contact", icon: Mail },
 ];
 
