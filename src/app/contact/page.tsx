@@ -2,6 +2,7 @@
 "use client";
 import React, { ChangeEvent, useState } from "react";
 import { sendEmail } from "./sendEmail";
+import Link from 'next/link';
 import SuccessPopup from "./SuccesPopup";
 
 const ContactPage: React.FC = () => {
