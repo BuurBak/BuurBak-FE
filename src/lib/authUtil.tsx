@@ -69,17 +69,17 @@ export const registerAccount = async (registerUserParams: RegisterUserParams) =>
     return encodedRedirect(
       "success",
       "/",
-      "Bedankt voor het inloggen! Check je email voor de bevestegings link."
+      "Bedankt voor het inloggen! Check je email voor de bevestigings link."
     );
   }
 };
 
-export const forgotPassword = async (email: string) => {
+export const forgotPassword = async (email: string, origin: string) => {
   const supabase = createClient();
 
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: "http://localhost:3000/wachtwoord_verranderen",
-  });
+  const { error } = await supabase.auth.resetPasswordForEmail(email,
+    { redirectTo: origin + '/wachtwoord_veranderen' }
+  );
 
   if (error) {
     console.error(error.code + " " + error.message);
@@ -104,8 +104,8 @@ export const resetPassword = async (newPassword: string) => {
   } else {
     return encodedRedirect(
       "success",
-      "/wachtwoord_verranderen",
-      "Je wachtwoord is succesvol verranderd"
+      "/wachtwoord_veranderen",
+      "Je wachtwoord is succesvol veranderd"
     );
   }
 };
