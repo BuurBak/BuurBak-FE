@@ -6,11 +6,6 @@ import { forgotPassword } from "../../lib/authUtil";
 
 const WachtwoordVergeten = () => {
   const [mail, setMail] = useState<string>();
-  // const [hostname, setHostname] = useState<string>();
-
-  // useEffect(() => {
-  //   setHostname(window.location.hostname);
-  // }, []);;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,7 +27,7 @@ const WachtwoordVergeten = () => {
           enkele minuten een linkje om een nieuw wachtwoord in te stellen.
         </p>
         <InputField
-          label="Email addres"
+          label="Emailadres"
           inputType="text"
           outline
           className="w-full"
