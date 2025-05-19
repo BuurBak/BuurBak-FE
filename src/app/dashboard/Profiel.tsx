@@ -59,7 +59,7 @@ export default function Profiel() {
   };
 
   const connectStripe = async () => {
-    const res = await linkToStripe();
+    const res = await linkToStripe(window.location.origin);
     window.open(res?.url, "_blank");
   };
 
@@ -107,21 +107,20 @@ export default function Profiel() {
           <ChevronRight className="h-4 w-4 ml-2 align-middle" />
         </div>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-       {/* weghaald na advies van Luuk
         {!stripe && (
-          <a
-            className="font-semibold flex-row inline-flex items-center"
-            onClick={() => connectStripe()}
-          >
-            Connect stripe
-            <ChevronRight className="h-4 w-4 ml-2 align-middle" />
-          </a>
+          <>
+            <a
+              className="font-semibold flex-row inline-flex items-center"
+              onClick={() => connectStripe()}
+            >
+              Connect stripe
+              <ChevronRight className="h-4 w-4 ml-2 align-middle" />
+            </a>
+            <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+          </>
         )}
-         {!stripe && (
-          <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        )} */}
         <a
-        className="font-semibold flex-row inline-flex items-center hover:bg-red-100 w-fit p-0.5 rounded"
+          className="font-semibold flex-row inline-flex items-center hover:bg-red-100 w-fit p-0.5 rounded"
           href="/wachtwoord_vergeten"
         >
           Wachtwoord veranderen
