@@ -19,7 +19,7 @@ import Button from "../Components/Button";
 import { UserDetails } from "../Types/User";
 import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
 import { hasToken } from "../../lib/cookieUtil";
-import { deleteUser, getSignedInUserOrUndefined, signOut } from "../../lib/authUtil";
+import { deleteUser, getSignedInUserOrUndefined, signOut, updateUser } from "../../lib/authUtil";
 import GegevensModal from "./GegevensModal";
 import TrailerModal from "./TrailerModal";
 
@@ -29,6 +29,11 @@ export default function Profiel() {
   const router = useRouter(); // Gebruik de router om te navigeren
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  const onSubmit = async (updatedUser: UserDetails) => {
+    await updateUser(updatedUser);
+    setUser(updatedUser);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -92,13 +97,13 @@ export default function Profiel() {
           </p>
         ) : (
           <p className="text-error-100 text-center bg-offWhite-100 p-3 rounded">
-            Verbind jouw account met stripe
+            Je account is nog niet verbonden met stripe
           </p>
         )}
       </div>
       <div className="flex flex-col mt-8">
         <div className="font-semibold flex-row inline-flex items-center hover:bg-neutral-300 w-fit p-0.5 rounded">
-          <GegevensModal />
+          <GegevensModal user={user} onSubmit={onSubmit} />
           <ChevronRight className="h-4 w-4 ml-2 align-middle" />
         </div>
         <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
