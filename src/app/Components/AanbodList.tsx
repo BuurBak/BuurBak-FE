@@ -10,7 +10,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
 import { ChangeEvent, useState } from "react";
-import { TrailerType } from "../Types/TrailerType";
 import Button from "./Button";
 import Card from "./Card";
 import InputField from "./InputField";
@@ -192,18 +191,18 @@ const AanbodList = () => {
       <div className="w-full h-fit max-h-min overflow-auto flex flex-row justify-center md:justify-start flex-wrap gap-3">
         {TrailerArray?.length
           ? TrailerArray.map((item) => (
-              <Card
-                key={item.uuid}
-                img={item.images[0]}
-                title={item.trailer_type}
-                location={item.address.city}
-                price={item.rental_price.toString()}
-                href={"aanbod/" + item.uuid}
-                accessoires=""
-                distance={2}
-                type="overview"
-              />
-            ))
+            <Card
+              key={item.uuid}
+              img={item.images[0]}
+              title={item.trailer_type}
+              location={item.address.city}
+              price={item.rental_price.toString()}
+              href={"aanbod/" + item.uuid}
+              accessoires=""
+              distance={"2"}
+              type="overview"
+            />
+          ))
           : "Geen aanhangers gevonden"}
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import { Session } from "@supabase/supabase-js";
 import { PostImageRes } from "../Types/Image";
-import { getSession } from "./auth/Register";
+import { getSession } from "../../lib/authUtil";
 
 // Console.log no return yet and guessed the type of return
 export const putImage = async (uuid: string) => {
