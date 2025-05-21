@@ -8,7 +8,6 @@ import {
 } from "@nextui-org/modal";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { updateUser } from "../../lib/authUtil";
 import InputField from "../Components/InputField";
 import { UserDetails } from "../Types/User";
 import { NextUIBasedButton } from "../Components/NextUIBasedButton";

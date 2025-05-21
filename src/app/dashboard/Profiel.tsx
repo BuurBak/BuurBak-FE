@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/modal";
 import {
   ChevronRight,
+  CircleUser,
   CircleUserRound,
   DoorClosed,
   Trash2,
@@ -22,6 +23,7 @@ import { hasToken } from "../../lib/cookieUtil";
 import { deleteUser, getSignedInUserOrUndefined, signOut, updateUser } from "../../lib/authUtil";
 import GegevensModal from "./GegevensModal";
 import TrailerModal from "./TrailerModal";
+import { ProfilePicture } from "../icons/ProfilePicture";
 
 export default function Profiel() {
   const [user, setUser] = useState<UserDetails>();
@@ -83,13 +85,8 @@ export default function Profiel() {
 
   return (
     <>
-      <div className="flex flex-col rounded-md">
-        <div className="relative aspect-square">
-          <CircleUserRound
-            className="w-full h-auto text-secondary-100"
-            strokeWidth={1}
-          />
-        </div>
+      <div className="flex flex-col rounded-md items-center">
+        {ProfilePicture(200)}
         <p className="text-center text-2xl font-bold m-4">{user?.name}</p>
         {stripe ? (
           <p className="text-success-400 text-center bg-offWhite-100 p-3 rounded">
