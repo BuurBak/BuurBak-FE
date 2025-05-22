@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import InputField from "../Components/InputField";
 import { UserDetails } from "../Types/User";
 import { NextUIBasedButton } from "../Components/NextUIBasedButton";
+import { ChevronRight } from "lucide-react";
 
 interface GegevensModalProps {
   user: UserDetails | undefined;
@@ -37,53 +38,56 @@ export default function GegevensModal({ user, onSubmit }: GegevensModalProps) {
 
   return (
     <>
-      <button onClick={onOpen}>Mijn gegevens</button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose: () => void) => (
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <ModalHeader className="flex flex-col gap-1">
-                Mijn Gegevens
-              </ModalHeader>
-              <ModalBody>
-                <div className="flex flex-col gap-4">
-                  <div className="flex flex-col justify-between">
-                    <InputField
-                      inputType={"text"}
-                      label="Naam"
-                      type="text"
-                      outline
-                      className="w-full"
-                      {...register(`name`, {
-                        required: "Vul een nieuwe naam in"
-                      })}
-                    />
-                    <p className="text-error-100">{errors.name?.message}</p>
+      <div className="left-side-box-shadow">
+        <NextUIBasedButton buttonVariant="profile" onPress={onOpen}>Wijzig gegevens<ChevronRight className="w-4" /></NextUIBasedButton>
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+          <ModalContent>
+            {(onClose: () => void) => (
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <ModalHeader className="flex flex-col gap-1">
+                  Mijn Gegevens
+                </ModalHeader>
+                <ModalBody>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col justify-between">
+                      <InputField
+                        inputType={"text"}
+                        label="Naam"
+                        type="text"
+                        outline
+                        className="w-full"
+                        {...register(`name`, {
+                          required: "Vul een nieuwe naam in"
+                        })}
+                      />
+                      <p className="text-error-100">{errors.name?.message}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <div className="flex flex-col justify-between">
-                    <InputField
-                      inputType={"text"}
-                      label="Telefoonnummer"
-                      type="tel"
-                      outline
-                      className="w-full"
-                      {...register(`phone_number`, {
-                        required: "Voer een geldig telefoonnummer in"
-                      })}
-                    />
-                    <p className="text-error-100">{errors.phone_number?.message}</p>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col justify-between">
+                      <InputField
+                        inputType={"text"}
+                        label="Telefoonnummer"
+                        type="tel"
+                        outline
+                        className="w-full"
+                        {...register(`phone_number`, {
+                          required: "Voer een geldig telefoonnummer in"
+                        })}
+                      />
+                      <p className="text-error-100">{errors.phone_number?.message}</p>
+                    </div>
                   </div>
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <NextUIBasedButton buttonVariant="primary" type="submit" onPress={onClose}>Opslaan</NextUIBasedButton>
-              </ModalFooter>
-            </form>
-          )}
-        </ModalContent>
-      </Modal>
+                </ModalBody>
+                <ModalFooter>
+                  <NextUIBasedButton buttonVariant="primary" type="submit" onPress={onClose}>Opslaan</NextUIBasedButton>
+                </ModalFooter>
+              </form>
+            )}
+          </ModalContent>
+        </Modal>
+      </div>
+      {/* <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div> */}
     </>
   );
 }

@@ -99,16 +99,8 @@ export default function Profiel() {
         )}
       </div>
       <div className="flex flex-col mt-8">
-        <div className="font-semibold flex-row inline-flex items-center hover:bg-neutral-300 w-fit p-0.5 rounded">
-          <GegevensModal user={user} onSubmit={onSubmit} />
-          <ChevronRight className="h-4 w-4 ml-2 align-middle" />
-        </div>
-        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        <div className="font-semibold flex-row inline-flex items-center hover:bg-neutral-300 w-fit p-0.5 rounded">
-          <TrailerModal />
-          <ChevronRight className="h-4 w-4 ml-2 align-middle" />
-        </div>
-        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+        <GegevensModal user={user} onSubmit={onSubmit} />
+        <TrailerModal />
         {!stripe && (
           <>
             <a
