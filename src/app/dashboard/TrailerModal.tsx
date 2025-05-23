@@ -52,56 +52,56 @@ export default function TrailerModal() {
 
   return (
     <>
-      <div className="left-side-box-shadow">
+      <div>
         <NextUIBasedButton buttonVariant="profile" onPress={onOpen}>Mijn aanhangers<ChevronRight className="w-4" /></NextUIBasedButton>
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-fit">
-          <ModalContent className="w-full">
-            {(onClose: () => void) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1 w-full">
-                  Mijn aanhangers
-                </ModalHeader>
-                <ModalBody className="w-full">
-                  <div className="flex flex-col gap-4 m-5 mt-0 w-full">
-                    {trailers?.map((item, index) => {
-                      return (
-                        <div
-                          key={item.uuid}
-                          className="flex gap-5 p-2 h-[20dvh] w-full"
-                        >
-                          <div className="relative aspect-square w-auto h-full m-2">
-                            <Image
-                              src={item.images[0]}
-                              alt={`Trailer image ${index + 1}`}
-                              fill
-                              sizes="100% 100%"
-                              priority={true}
-                              className="sm:rounded-md object-cover w-40 h-40"
-                            />
-                          </div>
-                          <div className="flex flex-col gap-2 w-fit">
-                            <p className="font-semibold text-h5">{item.title}</p>
-                            <div className="flex gap-1">
-                              <p>{item.rental_price}</p>
-                              <EuroIcon className="text-primary-100" />
-                            </div>
-                            <p>{item.address.city}</p>
-                          </div>
-                          <Button
-                            label="X"
-                            className="!bg-error-100"
-                            onClick={() => handleDelete(item.uuid)}
+      </div>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-fit">
+        <ModalContent className="w-full">
+          {(onClose: () => void) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 w-full">
+                Mijn aanhangers
+              </ModalHeader>
+              <ModalBody className="w-full">
+                <div className="flex flex-col gap-4 m-5 mt-0 w-full">
+                  {trailers?.map((item, index) => {
+                    return (
+                      <div
+                        key={item.uuid}
+                        className="flex gap-5 p-2 h-[20dvh] w-full"
+                      >
+                        <div className="relative aspect-square w-auto h-full m-2">
+                          <Image
+                            src={item.images[0]}
+                            alt={`Trailer image ${index + 1}`}
+                            fill
+                            sizes="100% 100%"
+                            priority={true}
+                            className="sm:rounded-md object-cover w-40 h-40"
                           />
                         </div>
-                      );
-                    })}
-                  </div>
-                </ModalBody>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
-      </div>
+                        <div className="flex flex-col gap-2 w-fit">
+                          <p className="font-semibold text-h5">{item.title}</p>
+                          <div className="flex gap-1">
+                            <p>{item.rental_price}</p>
+                            <EuroIcon className="text-primary-100" />
+                          </div>
+                          <p>{item.address.city}</p>
+                        </div>
+                        <Button
+                          label="X"
+                          className="!bg-error-100"
+                          onClick={() => handleDelete(item.uuid)}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 }

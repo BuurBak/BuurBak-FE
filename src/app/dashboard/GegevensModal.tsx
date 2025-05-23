@@ -38,55 +38,57 @@ export default function GegevensModal({ user, onSubmit }: GegevensModalProps) {
 
   return (
     <>
-      <div className="left-side-box-shadow">
+      {/* TODO: This will display a small bar so it is clear which button is focused. With the current profile page it's not very useful yet
+             <div className="focus-within:border-l-2 focus-within:border-orange-600"> */}
+      <div>
         <NextUIBasedButton buttonVariant="profile" onPress={onOpen}>Wijzig gegevens<ChevronRight className="w-4" /></NextUIBasedButton>
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-          <ModalContent>
-            {(onClose: () => void) => (
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <ModalHeader className="flex flex-col gap-1">
-                  Mijn Gegevens
-                </ModalHeader>
-                <ModalBody>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex flex-col justify-between">
-                      <InputField
-                        inputType={"text"}
-                        label="Naam"
-                        type="text"
-                        outline
-                        className="w-full"
-                        {...register(`name`, {
-                          required: "Vul een nieuwe naam in"
-                        })}
-                      />
-                      <p className="text-error-100">{errors.name?.message}</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    <div className="flex flex-col justify-between">
-                      <InputField
-                        inputType={"text"}
-                        label="Telefoonnummer"
-                        type="tel"
-                        outline
-                        className="w-full"
-                        {...register(`phone_number`, {
-                          required: "Voer een geldig telefoonnummer in"
-                        })}
-                      />
-                      <p className="text-error-100">{errors.phone_number?.message}</p>
-                    </div>
-                  </div>
-                </ModalBody>
-                <ModalFooter>
-                  <NextUIBasedButton buttonVariant="primary" type="submit" onPress={onClose}>Opslaan</NextUIBasedButton>
-                </ModalFooter>
-              </form>
-            )}
-          </ModalContent>
-        </Modal>
       </div>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose: () => void) => (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <ModalHeader className="flex flex-col gap-1">
+                Mijn Gegevens
+              </ModalHeader>
+              <ModalBody>
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col justify-between">
+                    <InputField
+                      inputType={"text"}
+                      label="Naam"
+                      type="text"
+                      outline
+                      className="w-full"
+                      {...register(`name`, {
+                        required: "Vul een nieuwe naam in"
+                      })}
+                    />
+                    <p className="text-error-100">{errors.name?.message}</p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col justify-between">
+                    <InputField
+                      inputType={"text"}
+                      label="Telefoonnummer"
+                      type="tel"
+                      outline
+                      className="w-full"
+                      {...register(`phone_number`, {
+                        required: "Voer een geldig telefoonnummer in"
+                      })}
+                    />
+                    <p className="text-error-100">{errors.phone_number?.message}</p>
+                  </div>
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <NextUIBasedButton buttonVariant="primary" type="submit" onPress={onClose}>Opslaan</NextUIBasedButton>
+              </ModalFooter>
+            </form>
+          )}
+        </ModalContent>
+      </Modal>
       {/* <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div> */}
     </>
   );

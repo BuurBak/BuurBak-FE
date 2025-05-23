@@ -24,6 +24,8 @@ import { deleteUser, getSignedInUserOrUndefined, signOut, updateUser } from "../
 import GegevensModal from "./GegevensModal";
 import TrailerModal from "./TrailerModal";
 import { ProfilePicture } from "../icons/ProfilePicture";
+import { NextUIBasedButton } from "../Components/NextUIBasedButton";
+import AccountVerwijderenModal from "./AccountVerwijderenModal";
 
 export default function Profiel() {
   const [user, setUser] = useState<UserDetails>();
@@ -78,11 +80,6 @@ export default function Profiel() {
     checkStripe();
   }, []);
 
-  const handleDeleteAccout = async () => {
-    deleteUser();
-    onClose();
-  };
-
   return (
     <>
       <div className="flex flex-col rounded-md items-center">
@@ -101,65 +98,14 @@ export default function Profiel() {
       <div className="flex flex-col mt-8">
         <GegevensModal user={user} onSubmit={onSubmit} />
         <TrailerModal />
-        {!stripe && (
-          <>
-            <a
-              className="font-semibold flex-row inline-flex items-center"
-              onClick={() => connectStripe()}
-            >
-              Connect stripe
-              <ChevronRight className="h-4 w-4 ml-2 align-middle" />
-            </a>
-            <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-          </>
-        )}
-        <a
-          className="font-semibold flex-row inline-flex items-center hover:bg-red-100 w-fit p-0.5 rounded"
-          href="/wachtwoord_vergeten"
-        >
-          Wachtwoord veranderen
-          <ChevronRight className="h-4 w-4 ml-2 align-middle" />
-        </a>
-        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        {/* Toevoegen van de Uitloggen knop */}
-        <button
-          onClick={handleSignOut}
-          className="font-semibold flex-row inline-flex items-center text-red-600"
-        >
-          Uitloggen
-          <DoorClosed className="h-4 w-4 ml-2 align-middle" />
-        </button>
-        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        {/* Toevoegen van de Uitloggen knop */}
-        <button
-          onClick={onOpen}
-          className="font-semibold flex-row inline-flex items-center text-red-600"
-        >
-          Account verwijderen
-          <Trash2 className="h-4 w-4 ml-2 align-middle" />
-        </button>
+        <div>
+          <NextUIBasedButton buttonVariant="profile" onPress={() => router.push("/wachtwoord_vergeten")}>Wachtwoord veranderen<ChevronRight className="w-4" /></NextUIBasedButton>
+        </div>
+        <div>
+          <NextUIBasedButton className="text-red-600" buttonVariant="profile" onPress={handleSignOut}>Uitloggen<DoorClosed className="w-4" /></NextUIBasedButton>
+        </div>
+        <AccountVerwijderenModal />
       </div>
-      <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1 text-error-100">
-                Weet je het zeker dat je jouw account wilt verwijderen?
-              </ModalHeader>
-              <ModalBody>
-                <div className="flex gap-4">
-                  <Button
-                    label="Ja ik weet het zeker!"
-                    onClick={handleDeleteAccout}
-                    className="!bg-error-100"
-                  />
-                  <Button label="Nee verwijder niet" onClick={onClose} />
-                </div>
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
     </>
   );
 }
