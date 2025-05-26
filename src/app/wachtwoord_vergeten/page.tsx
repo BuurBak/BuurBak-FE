@@ -1,22 +1,18 @@
 "use client";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import { forgotPassword } from "../../lib/authUtil";
 
-const Page = () => {
+const WachtwoordVergeten = () => {
   const [mail, setMail] = useState<string>();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const test = async () => {
-      if (mail) {
-        const forgot = await forgotPassword(mail);
-      }
-    };
-
-    test();
+    if (mail) {
+      await forgotPassword(mail, window.location.origin);
+    }
   };
 
   return (
@@ -31,7 +27,7 @@ const Page = () => {
           enkele minuten een linkje om een nieuw wachtwoord in te stellen.
         </p>
         <InputField
-          label="Email addres"
+          label="Emailadres"
           inputType="text"
           outline
           className="w-full"
@@ -51,4 +47,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default WachtwoordVergeten;

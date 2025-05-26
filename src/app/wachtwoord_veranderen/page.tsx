@@ -4,20 +4,16 @@ import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import { resetPassword } from "../../lib/authUtil";
 
-const Page = () => {
+const WachtwoordVeranderen = () => {
   const [pass, setPass] = useState<string>();
   const [secPass, setSecPass] = useState<string>();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const test = async () => {
-      if (pass === secPass && pass && secPass) {
-        const forgot = await resetPassword(pass);
-      }
-    };
-
-    test();
+    if (pass === secPass && pass && secPass) {
+      await resetPassword(pass);
+    }
   };
 
   return (
@@ -26,7 +22,7 @@ const Page = () => {
         className="p-5 border-1 border-gray-100 rounded flex flex-col gap-5 w-[90vw] md:w-[35vw]"
         onSubmit={handleSubmit}
       >
-        <h3>Verrander wachtwoord</h3>
+        <h3>Verander wachtwoord</h3>
         <p></p>
         <InputField
           label="Nieuw wachtwoord"
@@ -58,4 +54,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default WachtwoordVeranderen;
