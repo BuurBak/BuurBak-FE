@@ -52,8 +52,3 @@ h6 {
   font-size: 20px;
   line-height: 22px;
 }
-
-
-.left-side-box-shadow {
-  box-shadow: inset .25rem 0 0 0 hsla(29, 100%, 50%, 0.798)
-}
