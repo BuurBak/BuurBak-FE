@@ -47,5 +47,4 @@ const WachtwoordVergeten = () => {
   );
 };
 
-
 export default WachtwoordVergeten;
