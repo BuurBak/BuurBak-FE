@@ -89,7 +89,6 @@ export default function GegevensModal({ user, onSubmit }: GegevensModalProps) {
           )}
         </ModalContent>
       </Modal>
-      {/* <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div> */}
     </>
   );
 }
