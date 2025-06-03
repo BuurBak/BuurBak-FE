@@ -194,11 +194,6 @@ const Verhuren = () => {
     extractAddress(locationData.address);
   };
 
-  const connectStripe = async () => {
-    const res = await linkToStripe();
-    window.open(res?.url, "_blank");
-  };
-
   useEffect(() => {
     const checkStripe = async () => {
       let res = await checkStripeConnection();

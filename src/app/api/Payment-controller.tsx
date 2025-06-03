@@ -2,11 +2,11 @@ import { Session } from "@supabase/supabase-js";
 import { CheckStripe, LinkToStripe } from "../Types/Payment";
 import { getSession } from "../../lib/authUtil";
 
-export const linkToStripe = async () => {
+export const linkToStripe = async (returnUrl: string): Promise<LinkToStripe | undefined> => {
   const sessionToken: Session | null = await getSession();
 
   try {
-    const response = await fetch(`https://api.buurbak.nl/payments/setup`, {
+    const response = await fetch(`https://api.buurbak.nl/payments/setup?` + new URLSearchParams({ returnUrl }), {
       method: "GET",
       headers: {
         Authorization: `Bearer ${sessionToken?.access_token}`,
@@ -14,8 +14,7 @@ export const linkToStripe = async () => {
       },
     });
 
-    const data: LinkToStripe = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
     console.warn(error);
   }
