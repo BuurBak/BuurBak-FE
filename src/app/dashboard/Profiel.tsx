@@ -1,7 +1,9 @@
 "use client";
 
-import { useDisclosure } from "@nextui-org/modal";
-import { ChevronRight, DoorClosed, Trash2 } from "lucide-react";
+import {
+  ChevronRight,
+  DoorClosed,
+} from "lucide-react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { useEffect, useState } from "react";
 import {
@@ -10,20 +12,18 @@ import {
   updateUser,
 } from "../../lib/authUtil";
 import { hasToken } from "../../lib/cookieUtil";
-import { NextUIBasedButton } from "../Components/NextUIBasedButton";
 import { UserDetails } from "../Types/User";
-import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
-import { ProfilePicture } from "../icons/ProfilePicture";
-import AccountVerwijderenModal from "./AccountVerwijderenModal";
+import { checkStripeConnection } from "../api/Payment-controller";
 import GegevensModal from "./GegevensModal";
 import TrailerModal from "./TrailerModal";
+import { ProfilePicture } from "../icons/ProfilePicture";
+import { NextUIBasedButton } from "../Components/NextUIBasedButton";
+import AccountVerwijderenModal from "./AccountVerwijderenModal";
 
 export default function Profiel() {
   const [user, setUser] = useState<UserDetails>();
   const [stripe, setStripe] = useState<boolean>();
   const router = useRouter(); // Gebruik de router om te navigeren
-
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const onSubmit = async (updatedUser: UserDetails) => {
     await updateUser(updatedUser);
@@ -56,11 +56,6 @@ export default function Profiel() {
     } catch (error) {
       console.error("Error during sign-out:", error);
     }
-  };
-
-  const connectStripe = async () => {
-    const res = await linkToStripe(window.location.origin);
-    window.open(res?.url, "_blank");
   };
 
   useEffect(() => {
@@ -108,48 +103,8 @@ export default function Profiel() {
             <DoorClosed className="w-4" />
           </NextUIBasedButton>
         </div>
-        <AccountVerwijderenModal />
-        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        {/*         Volgens Luuk niet meer nodig omdat er anders stripe twee keer op de pagina komt
-       {!stripe && (
-          <a
-            className="font-semibold flex-row inline-flex items-center"
-            onClick={() => connectStripe()}
-          >
-            Connect stripe
-            <ChevronRight className="h-4 w-4 ml-2 align-middle" />
-          </a>
-        )}
-        {!stripe && (
-          <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        )} 
-           */}
 
-        <a
-          className="font-semibold flex-row inline-flex items-center"
-          href="/wachtwoord_vergeten"
-        >
-          Wachtwoord veranderen
-          <ChevronRight className="h-4 w-4 ml-2 align-middle" />
-        </a>
-        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        {/* Toevoegen van de Uitloggen knop */}
-        <button
-          onClick={handleSignOut}
-          className="font-semibold flex-row inline-flex items-center text-red-600"
-        >
-          Uitloggen
-          <DoorClosed className="h-4 w-4 ml-2 align-middle" />
-        </button>
-        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
-        {/* Toevoegen van de Uitloggen knop */}
-        <button
-          onClick={onOpen}
-          className="font-semibold flex-row inline-flex items-center text-red-600"
-        >
-          Account verwijderen
-          <Trash2 className="h-4 w-4 ml-2 align-middle" />
-        </button>
+        <AccountVerwijderenModal />
       </div>
     </>
   );

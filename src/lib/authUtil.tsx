@@ -1,3 +1,5 @@
+"use server";
+
 import {
   RegisterUserParams,
   SignInCredentials,
@@ -23,10 +25,10 @@ export const signIn = async (
     response.error.status === 400
       ? encodedRedirect("error", "/", "Jouw email of wachtwoord is onjuist")
       : encodedRedirect(
-          "error",
-          "/",
-          "Er is iets fout gegaan. Probeer het later nog eens"
-        );
+        "error",
+        "/",
+        "Er is iets fout gegaan. Probeer het later nog eens"
+      );
     return;
   }
 
