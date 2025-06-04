@@ -16,6 +16,7 @@ import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import LocationInput from "../Components/LocationInput";
 import FileUpload from "../Components/UploadFile";
+import { toast } from "../hooks/use-toast";
 import { PostImageRes } from "../Types/Image";
 import { PostTrailer } from "../Types/TrailerType";
 
@@ -197,13 +198,28 @@ const Verhuren = () => {
   useEffect(() => {
     const checkStripe = async () => {
       let res = await checkStripeConnection();
-      setStripe(res?.ready_for_payments);
+      console.log(res);
+      if (res) {
+        if (res.ready_for_payments) {
+          setStripe(res.ready_for_payments);
+        } else {
+          toast({
+            title: "Verbind eerst jouw account met stripe via het dashboard",
+            variant: "error",
+          });
+        }
+      } else {
+        toast({
+          title: "Er is helaas iets mis gegaan probeer het later opnieuw",
+          variant: "error",
+        });
+      }
     };
     checkStripe();
   }, []);
+
   const getImageById = async (id: string) => {
     const res = await getImage(id);
-    console.log("res", res);
     return res;
   };
 
