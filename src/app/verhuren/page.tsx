@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { hasToken } from "../../lib/cookieUtil";
 import { getImage, postImages } from "../api/Images-controller";
-import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
+import { checkStripeConnection } from "../api/Payment-controller";
 import { postTrailer } from "../api/Trailer-controller";
 import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
@@ -325,7 +325,8 @@ const Verhuren = () => {
           </div>
           <div className="w-3/4 gap-5">
             <p className="font-bold">
-              Kies de locatie waar je je aanhanger vanaf verhuurd (bijv. Kamperbinnenpoort 1, Utrecht, Netherlands):
+              Kies de locatie waar je je aanhanger vanaf verhuurd (bijv.
+              Kamperbinnenpoort 1, Utrecht, Netherlands):
             </p>
             <LocationInput
               onLocationChange={handleLocationChange}
@@ -465,10 +466,11 @@ const Verhuren = () => {
                 <div
                   key={day}
                   aria-label={day}
-                  className={`flex flex-col items-center justify-center rounded w-14 h-20 cursor-pointer ${!watch(`availability.${day}`)
-                    ? "bg-primary-100 text-white"
-                    : "bg-offWhite-100"
-                    }`}
+                  className={`flex flex-col items-center justify-center rounded w-14 h-20 cursor-pointer ${
+                    !watch(`availability.${day}`)
+                      ? "bg-primary-100 text-white"
+                      : "bg-offWhite-100"
+                  }`}
                   onClick={() => toggleDay(day)}
                 >
                   <p className="font-bold">{getDayAbbreviation(day)}</p>
