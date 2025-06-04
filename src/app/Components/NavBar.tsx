@@ -154,7 +154,7 @@ const Navbar = () => {
                 ))
                 : Links.map((link, index) => (
                   <li
-                    className={`py-4 md:my-0 md:ml-8 ${scrolled ? "text-secondary-100" : "text-white"
+                    className={`py-4 md:my-0 md:ml-8 cursor-pointer ${scrolled ? "text-secondary-100" : "text-white"
                       } ${link.name.includes("Ik wil verhuren") &&
                       "md:bg-primary-100 md:px-4 md:py-2 md:rounded text-white"
                       }`}

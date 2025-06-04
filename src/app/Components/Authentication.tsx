@@ -96,7 +96,7 @@ const Authentication = () => {
   const getSignedIn = () => {
     return (
       // TODO: This doesn't align properly with it's neighbours right now. Should be fixed.
-      <div className="w-full flex flex-col items-center">
+      <div className="w-full flex flex-col items-center py-2 md:my-0 md:ml-6">
         <Link href="/dashboard">
           {ProfilePicture()}
         </Link>
