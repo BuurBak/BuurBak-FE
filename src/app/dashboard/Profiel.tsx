@@ -1,31 +1,22 @@
 "use client";
 
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  useDisclosure,
-} from "@nextui-org/modal";
-import {
-  ChevronRight,
-  CircleUser,
-  CircleUserRound,
-  DoorClosed,
-  Trash2,
-} from "lucide-react";
+import { useDisclosure } from "@nextui-org/modal";
+import { ChevronRight, DoorClosed, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { useEffect, useState } from "react";
-import Button from "../Components/Button";
+import {
+  getSignedInUserOrUndefined,
+  signOut,
+  updateUser,
+} from "../../lib/authUtil";
+import { hasToken } from "../../lib/cookieUtil";
+import { NextUIBasedButton } from "../Components/NextUIBasedButton";
 import { UserDetails } from "../Types/User";
 import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
-import { hasToken } from "../../lib/cookieUtil";
-import { deleteUser, getSignedInUserOrUndefined, signOut, updateUser } from "../../lib/authUtil";
+import { ProfilePicture } from "../icons/ProfilePicture";
+import AccountVerwijderenModal from "./AccountVerwijderenModal";
 import GegevensModal from "./GegevensModal";
 import TrailerModal from "./TrailerModal";
-import { ProfilePicture } from "../icons/ProfilePicture";
-import { NextUIBasedButton } from "../Components/NextUIBasedButton";
-import AccountVerwijderenModal from "./AccountVerwijderenModal";
 
 export default function Profiel() {
   const [user, setUser] = useState<UserDetails>();
@@ -99,12 +90,66 @@ export default function Profiel() {
         <GegevensModal user={user} onSubmit={onSubmit} />
         <TrailerModal />
         <div>
-          <NextUIBasedButton buttonVariant="profile" onPress={() => router.push("/wachtwoord_vergeten")}>Wachtwoord veranderen<ChevronRight className="w-4" /></NextUIBasedButton>
+          <NextUIBasedButton
+            buttonVariant="profile"
+            onPress={() => router.push("/wachtwoord_vergeten")}
+          >
+            Wachtwoord veranderen
+            <ChevronRight className="w-4" />
+          </NextUIBasedButton>
         </div>
         <div>
-          <NextUIBasedButton className="text-red-600" buttonVariant="profile" onPress={handleSignOut}>Uitloggen<DoorClosed className="w-4" /></NextUIBasedButton>
+          <NextUIBasedButton
+            className="text-red-600"
+            buttonVariant="profile"
+            onPress={handleSignOut}
+          >
+            Uitloggen
+            <DoorClosed className="w-4" />
+          </NextUIBasedButton>
         </div>
         <AccountVerwijderenModal />
+        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+        {/*         Volgens Luuk niet meer nodig omdat er anders stripe twee keer op de pagina komt
+       {!stripe && (
+          <a
+            className="font-semibold flex-row inline-flex items-center"
+            onClick={() => connectStripe()}
+          >
+            Connect stripe
+            <ChevronRight className="h-4 w-4 ml-2 align-middle" />
+          </a>
+        )}
+        {!stripe && (
+          <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+        )} 
+           */}
+
+        <a
+          className="font-semibold flex-row inline-flex items-center"
+          href="/wachtwoord_vergeten"
+        >
+          Wachtwoord veranderen
+          <ChevronRight className="h-4 w-4 ml-2 align-middle" />
+        </a>
+        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+        {/* Toevoegen van de Uitloggen knop */}
+        <button
+          onClick={handleSignOut}
+          className="font-semibold flex-row inline-flex items-center text-red-600"
+        >
+          Uitloggen
+          <DoorClosed className="h-4 w-4 ml-2 align-middle" />
+        </button>
+        <div className="mt-1 h-[0.5px] mb-8 w-full bg-primary-200"></div>
+        {/* Toevoegen van de Uitloggen knop */}
+        <button
+          onClick={onOpen}
+          className="font-semibold flex-row inline-flex items-center text-red-600"
+        >
+          Account verwijderen
+          <Trash2 className="h-4 w-4 ml-2 align-middle" />
+        </button>
       </div>
     </>
   );
