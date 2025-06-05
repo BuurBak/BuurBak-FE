@@ -71,7 +71,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               <h1 className="text-primary-100 text-h4 ">
                 {trailerOffer.trailer_type}
               </h1>
-
+    
               <ProfileDisplay trailerOffer={trailerOffer} />
 
               <div>

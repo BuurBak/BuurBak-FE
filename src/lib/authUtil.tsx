@@ -1,11 +1,15 @@
-"use server";
-import { UserDetails, SignInCredentials, RegisterUserParams } from "@/app/Types/User";
+import {
+  RegisterUserParams,
+  SignInCredentials,
+  UserDetails,
+} from "@/app/Types/User";
 import { Session } from "@supabase/supabase-js";
 import { createClient } from "../../utils/supabase/server";
 import { encodedRedirect } from "../../utils/utils";
 
-
-export const signIn = async (userData: SignInCredentials): Promise<UserDetails | undefined> => {
+export const signIn = async (
+  userData: SignInCredentials
+): Promise<UserDetails | undefined> => {
   const supabase = createClient();
   const email = userData.username;
   const password = userData.password;
@@ -16,19 +20,15 @@ export const signIn = async (userData: SignInCredentials): Promise<UserDetails |
   });
 
   if (response.error) {
-    response.error.status === 400 ?
-      encodedRedirect(
-        "error",
-        "/",
-        "Jouw email of wachtwoord is onjuist"
-      ) :
-      encodedRedirect(
-        "error",
-        "/",
-        "Er is iets fout gegaan. Probeer het later nog eens"
-      );
+    response.error.status === 400
+      ? encodedRedirect("error", "/", "Jouw email of wachtwoord is onjuist")
+      : encodedRedirect(
+          "error",
+          "/",
+          "Er is iets fout gegaan. Probeer het later nog eens"
+        );
     return;
-  };
+  }
 
   return response.data.user.user_metadata as UserDetails;
 };
@@ -41,7 +41,9 @@ export const signOut = async () => {
   }
 };
 
-export const registerAccount = async (registerUserParams: RegisterUserParams) => {
+export const registerAccount = async (
+  registerUserParams: RegisterUserParams
+) => {
   const email = registerUserParams.username;
   const password = registerUserParams.password;
   const supabase = createClient();
@@ -77,9 +79,9 @@ export const registerAccount = async (registerUserParams: RegisterUserParams) =>
 export const forgotPassword = async (email: string, origin: string) => {
   const supabase = createClient();
 
-  const { error } = await supabase.auth.resetPasswordForEmail(email,
-    { redirectTo: origin + '/wachtwoord_veranderen' }
-  );
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: origin + "/wachtwoord_veranderen",
+  });
 
   if (error) {
     console.error(error.code + " " + error.message);
@@ -117,7 +119,9 @@ export const getUserSupaBase = async () => {
   return user;
 };
 
-export const getSignedInUserOrUndefined = async (): Promise<UserDetails | undefined> => {
+export const getSignedInUserOrUndefined = async (): Promise<
+  UserDetails | undefined
+> => {
   const sessionToken: Session | null = await getSession();
 
   try {
@@ -134,7 +138,6 @@ export const getSignedInUserOrUndefined = async (): Promise<UserDetails | undefi
       console.log(JSON.stringify(responseJson));
       return;
     }
-
 
     return responseJson;
   } catch (error) {
@@ -186,12 +189,11 @@ export const getSession = async () => {
 
   if (error) {
     console.error("error", "/", error.message);
-    return encodedRedirect("error", "/", error.message);
+    return null;
   }
 
   return data.session;
 };
-
 
 export const deleteUser = async () => {
   const sessionToken: Session | null = await getSession();

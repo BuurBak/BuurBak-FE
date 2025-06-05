@@ -21,12 +21,14 @@ type SearchOrFilter = {
   filterPrice?: number;
   filterDimensions?: any;
   filterWhere?: string;
+  filterPriceRange?: [number, number];
 };
 const SearchOrFilter = ({
   searchTerm,
   filterDate,
   filterType,
-  filterPrice,
+  filterPrice, // not used atm
+  filterPriceRange,
   filterDimensions,
   filterWhere,
   ...props
@@ -104,7 +106,9 @@ const SearchOrFilter = ({
             (!filterType ||
               filterType === "Alle" ||
               trailer.trailer_type === filterType) &&
-            (!filterPrice || trailer.rental_price <= filterPrice) &&
+            (!filterPriceRange ||
+              (trailer.rental_price >= filterPriceRange[0] &&
+                trailer.rental_price <= filterPriceRange[1])) &&
             (!filterWhere ||
               trailer.address.city
                 ?.toLowerCase()
@@ -146,6 +150,7 @@ const SearchOrFilter = ({
     filterWhere,
     filterDate,
     centerCoordinates,
+    filterPriceRange,
   ]);
 
   return filteredTrailers;
