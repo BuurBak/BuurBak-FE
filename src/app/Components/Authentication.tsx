@@ -1,16 +1,27 @@
 "use client";
 
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/modal";
+import { CircleUserRound } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { UserDetails, SignInCredentials, RegisterUserParams } from "../Types/User";
-import { signIn, registerAccount } from "../../lib/authUtil";
-import InputField from "./InputField";
-import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/modal";
-import { usePathname } from "next/navigation";
+import { registerAccount, signIn } from "../../lib/authUtil";
 import { hasToken } from "../../lib/cookieUtil";
+import {
+  RegisterUserParams,
+  SignInCredentials,
+  UserDetails,
+} from "../Types/User";
+import InputField from "./InputField";
 import { NextUIBasedButton } from "./NextUIBasedButton";
-import { ProfilePicture } from "../icons/ProfilePicture";
 
 const Authentication = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -92,13 +103,29 @@ const Authentication = () => {
     checkSignIn();
   }, [user]);
 
-
   const getSignedIn = () => {
     return (
       // TODO: This doesn't align properly with it's neighbours right now. Should be fixed.
       <div className="w-full flex flex-col items-center">
         <Link href="/dashboard">
-          {ProfilePicture()}
+          {user && user.profile_picture ? (
+            <div className="w-32 h-32 relative">
+              <Image
+                src={user.profile_picture}
+                alt="User profile picture"
+                fill
+                sizes="100% 100%"
+                priority={true}
+                className="rounded-full object-cover"
+              />
+            </div>
+          ) : (
+            <CircleUserRound
+              name="ProfilePicturePlaceholder"
+              size={48}
+              color="green"
+            />
+          )}
         </Link>
         {/* TODO: Do we want to show the username in navbar? */}
         {/* <p className="w-fit text-2xl font-semibold mt-4 mb-12">
@@ -180,7 +207,13 @@ const Authentication = () => {
           />
         </div>
         {getWachtwoordFormField()}
-        <NextUIBasedButton buttonVariant="primary" type="submit" onPress={onClose}>Registreer</NextUIBasedButton>
+        <NextUIBasedButton
+          buttonVariant="primary"
+          type="submit"
+          onPress={onClose}
+        >
+          Registreer
+        </NextUIBasedButton>
         <p>
           Heb je al een account?{" "}
           <span
@@ -202,7 +235,14 @@ const Authentication = () => {
       >
         {getEmailFormField()}
         {getWachtwoordFormField()}
-        <NextUIBasedButton buttonVariant="primary" className="" type="submit" onPress={onClose}>Login</NextUIBasedButton>
+        <NextUIBasedButton
+          buttonVariant="primary"
+          className=""
+          type="submit"
+          onPress={onClose}
+        >
+          Login
+        </NextUIBasedButton>
         <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
         <p>
           Nog geen BuurBak account?{" "}
@@ -221,32 +261,28 @@ const Authentication = () => {
     return (
       <>
         {/* TODO: For some reason the login button doesn't work on first load of the Authentication component  */}
-        <a className="py-4 md:my-0 md:ml-8 text-secondary-100" onClick={onOpen}>Inloggen</a>
-        <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange} >
+        <a className="py-4 md:my-0 md:ml-8 text-secondary-100" onClick={onOpen}>
+          Inloggen
+        </a>
+        <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange}>
           <ModalContent>
             {(onClose) => (
               <>
-                <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
+                <ModalHeader className="flex flex-col gap-1">
+                  Log in
+                </ModalHeader>
                 <ModalBody>
-                  {
-                    showRegisterForm ?
-                      getRegisterForm() :
-                      getSignInForm()
-                  }
+                  {showRegisterForm ? getRegisterForm() : getSignInForm()}
                 </ModalBody>
               </>
             )}
           </ModalContent>
-        </Modal >
+        </Modal>
       </>
     );
   };
 
-  return (
-    showSignIn ?
-      getSignedIn() :
-      getSignIn()
-  );
+  return showSignIn ? getSignedIn() : getSignIn();
 };
 
 export default Authentication;
