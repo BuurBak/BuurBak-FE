@@ -231,7 +231,7 @@ const Verhuren = () => {
     };
 
     signInRequired();
-  });
+  }, []);
 
   const onSubmit = (data: PostTrailer) => {
     const addTrailer = async () => {

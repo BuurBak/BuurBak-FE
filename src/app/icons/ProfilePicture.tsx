@@ -1,5 +1,12 @@
+import Image from "next/image";
+
 export function ProfilePicture(size = 44, profilePicture?: string) {
-    return (
-        <img src="/img/profielfoto.png" width={size} height={size} />
-    );
+  return (
+    <Image
+      src={profilePicture || "/img/profielfoto.png"}
+      alt="profiel foto"
+      width={size}
+      height={size}
+    />
+  );
 }
