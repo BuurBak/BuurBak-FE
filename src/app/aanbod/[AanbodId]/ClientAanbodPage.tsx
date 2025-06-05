@@ -13,7 +13,7 @@ import PageBackButton from "@/app/Components/PageBackButton";
 import { TrailerData } from "@/app/Types/Reservation";
 import { useEffect, useState } from "react";
 
-const Page = ({ aanbodId }: { aanbodId: string }) => {
+const ClientAanbodPage = ({ aanbodId }: { aanbodId: string }) => {
   const [trailerOffer, setTrailerOffer] = useState<TrailerData>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -107,4 +107,4 @@ const Page = ({ aanbodId }: { aanbodId: string }) => {
   );
 };
 
-export default Page;
+export default ClientAanbodPage;
