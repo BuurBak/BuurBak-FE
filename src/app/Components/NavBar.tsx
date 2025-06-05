@@ -133,7 +133,8 @@ const Navbar = () => {
                         "md:bg-primary-100 md:px-4 md:py-2 md:rounded text-white"
                       }`}
                       key={index}
-                    >
+                    > 
+                  {/* This does nothing? if you want to change the profile picture, you can do so in the Authentication component. */}
                       {link.name === "Inloggen" && signedIn ? ( // Corrected typo
                         user && user.profile_picture ? (
                           <Link href="/dashboard">
