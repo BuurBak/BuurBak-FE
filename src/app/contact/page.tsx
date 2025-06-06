@@ -1,8 +1,8 @@
 // src/app/contact/page.tsx
 "use client";
-import Link from "next/link";
 import React, { ChangeEvent, useState } from "react";
 import { sendEmail } from "./sendEmail";
+import Link from 'next/link';
 import SuccessPopup from "./SuccesPopup";
 
 const ContactPage: React.FC = () => {
@@ -110,19 +110,19 @@ const ContactPage: React.FC = () => {
           </button>
         </form>
       </div>
-      <div className="flex flex-col justify-evenly items-center p-8 bg-primary-100 shadow-lg w-full max-w-md mt-auto h-[35vh] rounded-lg">
+      <div className="flex flex-col justify-evenly items-center p-8 bg-primary-100 shadow-lg w-full mt-auto h-[35vh]">
         <h2 className="text-2xl font-semibold text-center text-white">
           Schade? Meld je schade!
         </h2>
         <div className=" flex flex-row space-x-20">
-          <Link href="/schade">
-            <button
-              type="button"
-              className="py-4 px-8 bg-white text-black font-semibold rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-opacity-50"
-            >
-              Schade melden
-            </button>
-          </Link>
+        <Link href='/schade'>
+        <button
+          type="button"
+          className="py-4 px-8 bg-white text-black font-semibold rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-opacity-50"
+        >
+          Schade melden
+        </button>
+        </Link>
 
           <button
             type="button"

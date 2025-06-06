@@ -1,16 +1,12 @@
-import {
-  RegisterUserParams,
-  SignInCredentials,
-  UserDetails,
-} from "@/app/Types/User";
+"use server";
+import { UserDetails, SignInCredentials, RegisterUserParams } from "@/app/Types/User";
 import { Session } from "@supabase/supabase-js";
 import { createClient } from "../../utils/supabase/server";
 import { encodedRedirect } from "../../utils/utils";
 
-export const signIn = async (
-  userData: SignInCredentials
-): Promise<UserDetails | undefined> => {
-  const supabase = createClient();
+
+export const signIn = async (userData: SignInCredentials): Promise<UserDetails | undefined> => {
+  const supabase = await createClient();
   const email = userData.username;
   const password = userData.password;
 
@@ -20,33 +16,35 @@ export const signIn = async (
   });
 
   if (response.error) {
-    response.error.status === 400
-      ? encodedRedirect("error", "/", "Jouw email of wachtwoord is onjuist")
-      : encodedRedirect(
-          "error",
-          "/",
-          "Er is iets fout gegaan. Probeer het later nog eens"
-        );
+    response.error.status === 400 ?
+      encodedRedirect(
+        "error",
+        "/",
+        "Jouw email of wachtwoord is onjuist"
+      ) :
+      encodedRedirect(
+        "error",
+        "/",
+        "Er is iets fout gegaan. Probeer het later nog eens"
+      );
     return;
-  }
+  };
 
   return response.data.user.user_metadata as UserDetails;
 };
 
 export const signOut = async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const error = await supabase.auth.signOut();
   if (error) {
     console.warn(error);
   }
 };
 
-export const registerAccount = async (
-  registerUserParams: RegisterUserParams
-) => {
+export const registerAccount = async (registerUserParams: RegisterUserParams) => {
   const email = registerUserParams.username;
   const password = registerUserParams.password;
-  const supabase = createClient();
+  const supabase = await createClient();
 
   if (!email || !password) {
     return { error: "Email and password are required" };
@@ -77,11 +75,11 @@ export const registerAccount = async (
 };
 
 export const forgotPassword = async (email: string, origin: string) => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: origin + "/wachtwoord_veranderen",
-  });
+  const { error } = await supabase.auth.resetPasswordForEmail(email,
+    { redirectTo: origin + '/wachtwoord_veranderen' }
+  );
 
   if (error) {
     console.error(error.code + " " + error.message);
@@ -96,7 +94,7 @@ export const forgotPassword = async (email: string, origin: string) => {
 };
 
 export const resetPassword = async (newPassword: string) => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { error } = await supabase.auth.updateUser({ password: newPassword });
 
@@ -113,15 +111,13 @@ export const resetPassword = async (newPassword: string) => {
 };
 
 export const getUserSupaBase = async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const user = await supabase.auth.getUser();
   return user;
 };
 
-export const getSignedInUserOrUndefined = async (): Promise<
-  UserDetails | undefined
-> => {
+export const getSignedInUserOrUndefined = async (): Promise<UserDetails | undefined> => {
   const sessionToken: Session | null = await getSession();
 
   try {
@@ -138,6 +134,7 @@ export const getSignedInUserOrUndefined = async (): Promise<
       console.log(JSON.stringify(responseJson));
       return;
     }
+
 
     return responseJson;
   } catch (error) {
@@ -169,7 +166,7 @@ export const updateUser = async (data: Partial<UserDetails>) => {
 };
 
 export const updateSupaUser = async (name: string, phoneNumber: string) => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { error } = await supabase.auth.updateUser({
     data: { name: name, phoneNumber: phoneNumber },
@@ -184,16 +181,17 @@ export const updateSupaUser = async (name: string, phoneNumber: string) => {
 };
 
 export const getSession = async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase.auth.getSession();
 
   if (error) {
     console.error("error", "/", error.message);
-    return null;
+    return encodedRedirect("error", "/", error.message);
   }
 
   return data.session;
 };
+
 
 export const deleteUser = async () => {
   const sessionToken: Session | null = await getSession();

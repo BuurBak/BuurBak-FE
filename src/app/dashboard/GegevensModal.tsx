@@ -6,74 +6,43 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { getSignedInUserOrUndefined, updateUser } from "../../lib/authUtil";
-import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import { UserDetails } from "../Types/User";
+import { NextUIBasedButton } from "../Components/NextUIBasedButton";
+import { ChevronRight } from "lucide-react";
 
-type Info = {
-  name: string;
-  phone_number: string;
-};
+interface GegevensModalProps {
+  user: UserDetails | undefined;
+  onSubmit: (updatedUser: UserDetails) => Promise<void>;
+}
 
-export default function GegevensModal() {
-  const [user, setUser] = useState<UserDetails>();
+export default function GegevensModal({ user, onSubmit }: GegevensModalProps) {
+  const form = useForm<UserDetails>();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const data = await getSignedInUserOrUndefined();
-        setUser(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    if (user) {
+      form.setValue('name', user.name);
+      form.setValue('phone_number', user.phone_number);
+    }
+  }, [user]);
 
-    fetchUser();
-  }, []);
-
-  const form = useForm<Info>({
-    defaultValues: {
-      name: user?.name,
-      phone_number: user?.phone_number,
-    },
-  });
   const {
     register,
     handleSubmit,
     formState,
-    setValue,
-    watch,
-    getValues,
-    reset,
-    control,
   } = form;
-  const { errors, isSubmitSuccessful, isSubmitting } = formState;
-
-  useEffect(() => {
-    reset();
-  }, [isSubmitSuccessful]);
-
-  const [gegevens, setGegevens] = useState<(keyof Info)[]>([
-    "name",
-    "phone_number",
-  ] as const);
-
+  const { errors } = formState;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  const onSubmit = (data: Info) => {
-    const updateInfo = async () => {
-      await updateUser(data);
-    };
-
-    updateInfo();
-  };
 
   return (
     <>
-      <button onClick={onOpen}>Mijn gegevens</button>
+      {/* TODO: This will display a small bar so it is clear which button is focused. With the current profile page it's not very useful yet
+             <div className="focus-within:border-l-2 focus-within:border-orange-600"> */}
+      <div>
+        <NextUIBasedButton buttonVariant="profile" onPress={onOpen}>Wijzig gegevens<ChevronRight className="w-4" /></NextUIBasedButton>
+      </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose: () => void) => (
@@ -83,47 +52,38 @@ export default function GegevensModal() {
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col gap-4">
-                  {gegevens.map((item, index) => (
-                    <div key={index} className="flex flex-col justify-between">
-                      <InputField
-                        inputType={"text"}
-                        label={
-                          item === "name"
-                            ? "Naam"
-                            : item === "phone_number"
-                            ? "Telefoonnummer"
-                            : ""
-                        }
-                        type={
-                          item === "name"
-                            ? "text"
-                            : item === "phone_number"
-                            ? "tel"
-                            : ""
-                        }
-                        outline
-                        className="w-full"
-                        {...register(`${item}`, {
-                          required:
-                            item === "name"
-                              ? "Vul een nieuwe naam in"
-                              : item === "phone_number"
-                              ? "Voeg een geldig telefoonnummer in"
-                              : "",
-                        })}
-                      />
-                      <p className="text-error-100">{errors[item]?.message}</p>
-                    </div>
-                  ))}
+                  <div className="flex flex-col justify-between">
+                    <InputField
+                      inputType={"text"}
+                      label="Naam"
+                      type="text"
+                      outline
+                      className="w-full"
+                      {...register(`name`, {
+                        required: "Vul een nieuwe naam in"
+                      })}
+                    />
+                    <p className="text-error-100">{errors.name?.message}</p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col justify-between">
+                    <InputField
+                      inputType={"text"}
+                      label="Telefoonnummer"
+                      type="tel"
+                      outline
+                      className="w-full"
+                      {...register(`phone_number`, {
+                        required: "Voer een geldig telefoonnummer in"
+                      })}
+                    />
+                    <p className="text-error-100">{errors.phone_number?.message}</p>
+                  </div>
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button
-                  label="Opslaan"
-                  submit
-                  onClick={isSubmitSuccessful && onClose()}
-                  disabled={isSubmitting || isSubmitSuccessful}
-                />
+                <NextUIBasedButton buttonVariant="primary" type="submit" onPress={onClose}>Opslaan</NextUIBasedButton>
               </ModalFooter>
             </form>
           )}
