@@ -1,5 +1,3 @@
-"use client";
-
 import { getTrailer } from "@/app/api/Trailer-controller";
 import Carousel from "@/app/Components/AanbodItem/Carousel";
 import Details from "@/app/Components/AanbodItem/Details";
