@@ -10,23 +10,6 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        "landing-background":
-          "url('/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp')",
-      },
-      fontSize: {
-        h1: ["56px", "61.6px"],
-        h2: ["48px", "52.8px"],
-        h3: ["40px", "44px"],
-        h4: ["32px", "35.2px"],
-        h5: ["24px", "26.4px"],
-        h6: ["20px", "22px"],
-        normal: ["20px", "100%"],
-        small: ["14px", "100%"],
-      },
       colors: {
         primary: {
           100: "#EE7B46",
