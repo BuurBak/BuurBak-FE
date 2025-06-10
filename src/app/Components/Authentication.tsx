@@ -104,9 +104,8 @@ const Authentication = () => {
 
   const getSignedIn = () => {
     return (
-      // TODO: This doesn't align properly with it's neighbours right now. Should be fixed.
       // TODO: Do we want to show the username in navbar? */}
-      <Link className="mx-2" href="/dashboard">
+      <Link href="/dashboard">
         {ProfilePicture()}
       </Link>
     );
@@ -238,9 +237,7 @@ const Authentication = () => {
     return (
       <>
         {/* TODO: For some reason the login button doesn't work on first load of the Authentication component  */}
-        <a className="text-secondary-100 mx-2 cursor-pointer" onClick={onOpen}>
-          Inloggen
-        </a>
+        <HeroUIBasedButton size="lg" buttonVariant="modalButton" onPress={onOpen}>Inloggen</HeroUIBasedButton>
         <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange}>
           <ModalContent>
             {(onClose) => (
