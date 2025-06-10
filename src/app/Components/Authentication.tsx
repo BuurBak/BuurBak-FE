@@ -7,8 +7,6 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { CircleUserRound } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -22,6 +20,7 @@ import {
 } from "../Types/User";
 import InputField from "./InputField";
 import { NextUIBasedButton } from "./NextUIBasedButton";
+import { ProfilePicture } from "../icons/ProfilePicture";
 
 const Authentication = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -108,24 +107,7 @@ const Authentication = () => {
       // TODO: This doesn't align properly with it's neighbours right now. Should be fixed.
       <div className="w-full flex flex-col items-center">
         <Link href="/dashboard">
-          {user && user.profile_picture ? (
-            <div className="w-32 h-32 relative">
-              <Image
-                src={user.profile_picture}
-                alt="User profile picture"
-                fill
-                sizes="100% 100%"
-                priority={true}
-                className="rounded-full object-cover"
-              />
-            </div>
-          ) : (
-            <CircleUserRound
-              name="ProfilePicturePlaceholder"
-              size={48}
-              color="green"
-            />
-          )}
+          {ProfilePicture()}
         </Link>
         {/* TODO: Do we want to show the username in navbar? */}
         {/* <p className="w-fit text-2xl font-semibold mt-4 mb-12">
