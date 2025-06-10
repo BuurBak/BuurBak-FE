@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, ButtonProps } from "@nextui-org/button";
+import { Button, ButtonProps } from "@heroui/button";
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -10,7 +10,7 @@ export interface ExtraButtonProps extends ButtonProps {
 
 // Just an example of how we can use nextui to do a lot of the work in making components function.
 // No need to come up with a Button Component ourselves.
-export const NextUIBasedButton: React.FC<ExtraButtonProps> = ({
+export const HeroUIBasedButton: React.FC<ExtraButtonProps> = ({
   className,
   variant,
   buttonVariant,

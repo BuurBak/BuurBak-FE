@@ -14,9 +14,9 @@ import {
   getLocalTimeZone,
   toCalendarDate,
 } from "@internationalized/date";
-import type { RangeValue } from "@nextui-org/calendar";
-import { Checkbox } from "@nextui-org/checkbox";
-import { DateRangePicker } from "@nextui-org/date-picker";
+import type { RangeValue } from "@heroui/calendar";
+import { Checkbox } from "@heroui/checkbox";
+import { DateRangePicker } from "@heroui/date-picker";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import Image from "next/image";

@@ -6,7 +6,7 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/modal";
+} from "@heroui/modal";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ import {
   UserDetails,
 } from "../Types/User";
 import InputField from "./InputField";
-import { NextUIBasedButton } from "./NextUIBasedButton";
+import { HeroUIBasedButton } from "./HeroUIBasedButton";
 import { ProfilePicture } from "../icons/ProfilePicture";
 
 const Authentication = () => {
@@ -105,15 +105,10 @@ const Authentication = () => {
   const getSignedIn = () => {
     return (
       // TODO: This doesn't align properly with it's neighbours right now. Should be fixed.
-      <div className="w-full flex flex-col items-center">
-        <Link href="/dashboard">
-          {ProfilePicture()}
-        </Link>
-        {/* TODO: Do we want to show the username in navbar? */}
-        {/* <p className="w-fit text-2xl font-semibold mt-4 mb-12">
-          {user?.name}
-        </p> */}
-      </div>
+      // TODO: Do we want to show the username in navbar? */}
+      <Link className="mx-2" href="/dashboard">
+        {ProfilePicture()}
+      </Link>
     );
   };
 
@@ -189,13 +184,13 @@ const Authentication = () => {
           />
         </div>
         {getWachtwoordFormField()}
-        <NextUIBasedButton
+        <HeroUIBasedButton
           buttonVariant="primary"
           type="submit"
           onPress={onClose}
         >
           Registreer
-        </NextUIBasedButton>
+        </HeroUIBasedButton>
         <p>
           Heb je al een account?{" "}
           <span
@@ -217,14 +212,14 @@ const Authentication = () => {
       >
         {getEmailFormField()}
         {getWachtwoordFormField()}
-        <NextUIBasedButton
+        <HeroUIBasedButton
           buttonVariant="primary"
           className=""
           type="submit"
           onPress={onClose}
         >
           Login
-        </NextUIBasedButton>
+        </HeroUIBasedButton>
         <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
         <p>
           Nog geen BuurBak account?{" "}
@@ -243,7 +238,7 @@ const Authentication = () => {
     return (
       <>
         {/* TODO: For some reason the login button doesn't work on first load of the Authentication component  */}
-        <a className="py-4 md:my-0 md:ml-8 text-secondary-100" onClick={onOpen}>
+        <a className="text-secondary-100 mx-2 cursor-pointer" onClick={onOpen}>
           Inloggen
         </a>
         <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange}>

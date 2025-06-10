@@ -1,4 +1,4 @@
-import { nextui } from "@nextui-org/theme";
+import { heroui } from "@heroui/theme";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -6,7 +6,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(autocomplete|calendar|checkbox|date-picker|modal|button|ripple|spinner|input|listbox|divider|popover|scroll-shadow|date-input).js",
+    "./node_modules/@heroui/theme/dist/components/(autocomplete|calendar|checkbox|date-picker|modal|button|ripple|spinner|input|listbox|divider|popover|scroll-shadow|date-input).js",
   ],
   theme: {
     extend: {
@@ -43,7 +43,7 @@ const config: Config = {
     },
   },
   plugins: [
-    nextui({
+    heroui({
       themes: {
         "buurbak-light": {
           extend: "light",

@@ -1,7 +1,7 @@
 "use client";
 
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
-import { Select, SelectItem } from "@nextui-org/select";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
+import { Select, SelectItem } from "@heroui/select";
 import { Check, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
