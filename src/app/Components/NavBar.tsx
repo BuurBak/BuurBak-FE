@@ -52,20 +52,22 @@ const Navbar = () => {
 
   return (
     <NavbarElement className="bg-white h-16" onMenuOpenChange={setIsMenuOpen} >
-      <NavbarContent>
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="md:hidden"
-        />
-        <NavbarBrand>
+      <NavbarBrand>
+        <Link href={"/"}>
           <Image
             alt="Buurbak logo"
             src={isScrolled ? LogoWhite : LogoColor}
           />
-        </NavbarBrand>
+        </Link>
+      </NavbarBrand>
+      <NavbarContent justify="end">
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          className="md:hidden"
+        />
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="end">
+      <NavbarContent className="hidden" justify="end">
         {links.map((linkData, index) => (
           <NavbarItem key={`${linkData}-${index}`}>
             {getNavbarLink(linkData)}
@@ -73,12 +75,9 @@ const Navbar = () => {
         ))}
         <NavbarItem>
           <Authentication />
-          {/* <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button> */}
         </NavbarItem>
       </NavbarContent>
-      <NavbarMenu>
+      <NavbarMenu className="bg-white items-center">
         {links.map((linkData, index) => (
           <NavbarMenuItem key={`${linkData}-${index}`}>
             {getNavbarLink(linkData)}
