@@ -15,7 +15,6 @@ import LogoColor from "../Assets/horizontalColorLogo.svg";
 import { PlateauTrailer } from "../icons/TrailerIcons";
 
 import Authentication from "./Authentication";
-import { useRouter } from "next/navigation";
 import { LinkData } from "@/lib/interfaces/LinkData";
 import {
   Navbar as NavbarElement,
@@ -27,7 +26,7 @@ import {
   NavbarMenuItem
 } from "@heroui/navbar";
 import { HeroUIBasedButton } from "./HeroUIBasedButton";
-import { motion } from "framer-motion";
+import { MotionProps } from "framer-motion";
 
 
 const Navbar = () => {
@@ -59,65 +58,58 @@ const Navbar = () => {
     );
   };
 
-  // Define variants for the slide-in/slide-out animation
-  const menuVariants = {
-    closed: {
-      x: '100vw', // Start completely off-screen to the right (100% of viewport width)
+  const menuMotionProps = {
+    initial: {
+      y: '-100vh',
+      type: 'spring',
+      top: '4rem',
+    },
+    animate: {
+      y: '0vh',
       transition: {
         type: 'spring',
         stiffness: 400,
         damping: 40,
       },
-    },
-    open: {
-      x: '0vw', // Slide to 0 (its natural position)
-      transition: {
-        type: 'spring',
-        stiffness: 400,
-        damping: 40,
-      },
-    },
-  };
+    }
+  } satisfies MotionProps;
 
   return (
-    <>
-      <div id="navbarmenu" className="fixed z-30 h-full w-sm" />
-      <NavbarElement className="bg-white h-16" onMenuOpenChange={setIsMenuOpen} >
-        <NavbarBrand>
-          <Link href={"/"}>
-            <Image
-              alt="Buurbak logo"
-              src={isScrolled ? LogoWhite : LogoColor}
-            />
-          </Link>
-        </NavbarBrand>
-        <NavbarContent className="md:hidden" justify="end">
-          <NavbarMenuToggle
-            className="w-12"
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            icon={getMenuIcon()}
+    <NavbarElement className="bg-white h-16" onMenuOpenChange={setIsMenuOpen} >
+      <NavbarMenu motionProps={menuMotionProps} className="bg-white items-center absolute inset-x-auto right-0 w-64">
+        {links.map((linkData, index) => (
+          <NavbarMenuItem key={`${linkData}-${index}`}>
+            {getNavbarLink(linkData)}
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
+      <NavbarBrand>
+        <Link href={"/"}>
+          <Image
+            alt="Buurbak logo"
+            src={isScrolled ? LogoWhite : LogoColor}
           />
-        </NavbarContent>
+        </Link>
+      </NavbarBrand>
+      <NavbarContent className="md:hidden" justify="end">
+        <NavbarMenuToggle
+          className="w-12"
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          icon={getMenuIcon()}
+        />
+      </NavbarContent>
 
-        <NavbarContent className="hidden md:flex" justify="end">
-          {links.map((linkData, index) => (
-            <NavbarItem key={`${linkData}-${index}`}>
-              {getNavbarLink(linkData)}
-            </NavbarItem>
-          ))}
-          <NavbarItem>
-            <Authentication />
+      <NavbarContent className="hidden md:flex" justify="end">
+        {links.map((linkData, index) => (
+          <NavbarItem key={`${linkData}-${index}`}>
+            {getNavbarLink(linkData)}
           </NavbarItem>
-        </NavbarContent>
-        <NavbarMenu motionProps={<motion.div variants={menuVariants} initial="closed" animate="open" />} className="bg-white items-center absolute inset-x-auto right-0 w-64">
-          {links.map((linkData, index) => (
-            <NavbarMenuItem key={`${linkData}-${index}`}>
-              {getNavbarLink(linkData)}
-            </NavbarMenuItem>
-          ))}
-        </NavbarMenu>
-      </NavbarElement >
-    </>
+        ))}
+        <NavbarItem>
+          <Authentication />
+        </NavbarItem>
+      </NavbarContent>
+    </NavbarElement >
   );
 };
 
