@@ -9,7 +9,7 @@ import {
 } from "@heroui/modal";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { registerAccount, signIn } from "../../lib/authUtil";
 import { hasToken } from "../../lib/cookieUtil";
@@ -22,7 +22,12 @@ import InputField from "./InputField";
 import { HeroUIBasedButton } from "./HeroUIBasedButton";
 import { ProfilePicture } from "../icons/ProfilePicture";
 
-const Authentication = () => {
+interface AuthenticationProps {
+  user: UserDetails | undefined;
+  onLogin: Function;
+}
+
+const Authentication: FC<AuthenticationProps> = ({ user, onLogin }) => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const form = useForm<RegisterUserParams>({
@@ -37,7 +42,6 @@ const Authentication = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showSignIn, setShowSignIn] = useState(true);
-  const [user, setUser] = useState<UserDetails>();
 
   const currentRoute = usePathname();
 
@@ -46,8 +50,9 @@ const Authentication = () => {
       username: getValues("username"),
       password: getValues("password"),
     };
+    const signedInUser = await signIn(signInCredentials);
 
-    setUser(await signIn(signInCredentials));
+    onLogin(signedInUser);
   };
 
   const handleRegisterUser = async () => {

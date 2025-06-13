@@ -27,11 +27,13 @@ import {
 } from "@heroui/navbar";
 import { HeroUIBasedButton } from "./HeroUIBasedButton";
 import { MotionProps } from "framer-motion";
+import { UserDetails } from "../Types/User";
 
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState<UserDetails>();
   const links: LinkData[] = [
     { name: "Aanbod", href: "/aanbod", icon: PlateauTrailer },
     { name: "Ik wil verhuren", href: "/verhuren", icon: Tag, displayAsButton: true },
@@ -83,7 +85,7 @@ const Navbar = () => {
           </NavbarMenuItem>
         ))}
         <NavbarMenuItem>
-          <Authentication />
+          <Authentication user={user} onLogin={(userToSet: UserDetails) => setUser(userToSet)} />
         </NavbarMenuItem>
       </NavbarMenu>
       <NavbarBrand>
@@ -109,7 +111,7 @@ const Navbar = () => {
           </NavbarItem>
         ))}
         <NavbarItem>
-          <Authentication />
+          <Authentication user={user} onLogin={(userToSet: UserDetails) => setUser(userToSet)} />
         </NavbarItem>
       </NavbarContent>
     </NavbarElement >
