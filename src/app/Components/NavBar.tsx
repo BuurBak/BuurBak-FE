@@ -77,14 +77,14 @@ const Navbar = () => {
   } satisfies MotionProps;
 
   return (
-    <NavbarElement className="bg-white h-16 border-b" onMenuOpenChange={setIsMenuOpen} >
+    <NavbarElement className="bg-white h-16 border-b" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen} >
       <NavbarMenu motionProps={menuMotionProps} className="bg-white items-center absolute inset-x-auto right-0 w-64 border-l">
         {links.map((linkData, index) => (
-          <NavbarMenuItem key={`${linkData}-${index}`}>
+          <NavbarMenuItem onClick={() => setIsMenuOpen(false)} key={`${linkData}-${index}`}>
             {getNavbarLink(linkData)}
           </NavbarMenuItem>
         ))}
-        <NavbarMenuItem>
+        <NavbarMenuItem onClick={() => setIsMenuOpen(false)}>
           <Authentication user={user} onLogin={(userToSet: UserDetails) => setUser(userToSet)} />
         </NavbarMenuItem>
       </NavbarMenu>
