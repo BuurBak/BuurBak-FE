@@ -82,6 +82,9 @@ const Navbar = () => {
             {getNavbarLink(linkData)}
           </NavbarMenuItem>
         ))}
+        <NavbarMenuItem>
+          <Authentication />
+        </NavbarMenuItem>
       </NavbarMenu>
       <NavbarBrand>
         <Link href={"/"}>
