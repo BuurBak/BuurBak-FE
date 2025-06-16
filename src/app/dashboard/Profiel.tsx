@@ -17,7 +17,7 @@ import { checkStripeConnection } from "../api/Payment-controller";
 import GegevensModal from "./GegevensModal";
 import TrailerModal from "./TrailerModal";
 import { ProfilePicture } from "../icons/ProfilePicture";
-import { NextUIBasedButton } from "../Components/NextUIBasedButton";
+import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
 import AccountVerwijderenModal from "./AccountVerwijderenModal";
 
 export default function Profiel() {
@@ -85,23 +85,23 @@ export default function Profiel() {
         <GegevensModal user={user} onSubmit={onSubmit} />
         <TrailerModal />
         <div>
-          <NextUIBasedButton
+          <HeroUIBasedButton
             buttonVariant="profile"
             onPress={() => router.push("/wachtwoord_vergeten")}
           >
             Wachtwoord veranderen
             <ChevronRight className="w-4" />
-          </NextUIBasedButton>
+          </HeroUIBasedButton>
         </div>
         <div>
-          <NextUIBasedButton
+          <HeroUIBasedButton
             className="text-red-600"
             buttonVariant="profile"
             onPress={handleSignOut}
           >
             Uitloggen
             <DoorClosed className="w-4" />
-          </NextUIBasedButton>
+          </HeroUIBasedButton>
         </div>
 
         <AccountVerwijderenModal />

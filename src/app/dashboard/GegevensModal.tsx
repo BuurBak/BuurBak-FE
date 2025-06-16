@@ -5,12 +5,12 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/modal";
+} from "@heroui/modal";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import InputField from "../Components/InputField";
 import { UserDetails } from "../Types/User";
-import { NextUIBasedButton } from "../Components/NextUIBasedButton";
+import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
 import { ChevronRight } from "lucide-react";
 
 interface GegevensModalProps {
@@ -41,7 +41,7 @@ export default function GegevensModal({ user, onSubmit }: GegevensModalProps) {
       {/* TODO: This will display a small bar so it is clear which button is focused. With the current profile page it's not very useful yet
              <div className="focus-within:border-l-2 focus-within:border-orange-600"> */}
       <div>
-        <NextUIBasedButton buttonVariant="profile" onPress={onOpen}>Wijzig gegevens<ChevronRight className="w-4" /></NextUIBasedButton>
+        <HeroUIBasedButton buttonVariant="profile" onPress={onOpen}>Wijzig gegevens<ChevronRight className="w-4" /></HeroUIBasedButton>
       </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
@@ -83,7 +83,7 @@ export default function GegevensModal({ user, onSubmit }: GegevensModalProps) {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <NextUIBasedButton buttonVariant="primary" type="submit" onPress={onClose}>Opslaan</NextUIBasedButton>
+                <HeroUIBasedButton buttonVariant="primary" type="submit" onPress={onClose}>Opslaan</HeroUIBasedButton>
               </ModalFooter>
             </form>
           )}

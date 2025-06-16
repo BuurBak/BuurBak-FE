@@ -1,6 +1,6 @@
-import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@nextui-org/modal";
+import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@heroui/modal";
 import { Trash2 } from "lucide-react";
-import { NextUIBasedButton } from "../Components/NextUIBasedButton";
+import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
 import { deleteUser } from "@/lib/authUtil";
 
 export default function AccountVerwijderenModal() {
@@ -13,7 +13,7 @@ export default function AccountVerwijderenModal() {
     return (
         <>
             <div>
-                <NextUIBasedButton buttonVariant="profile" className="text-red-600" onPress={onOpen}>Account verwijderen<Trash2 className="w-4" /></NextUIBasedButton>
+                <HeroUIBasedButton buttonVariant="profile" className="text-red-600" onPress={onOpen}>Account verwijderen<Trash2 className="w-4" /></HeroUIBasedButton>
             </div>
             <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange}>
                 <ModalContent>
@@ -24,8 +24,8 @@ export default function AccountVerwijderenModal() {
                             </ModalHeader>
                             <ModalBody>
                                 <div className="flex gap-4">
-                                    <NextUIBasedButton buttonVariant="primary" onPress={handleDeleteAccout} className="!bg-error-100">Ja ik weet het zeker!</NextUIBasedButton>
-                                    <NextUIBasedButton buttonVariant="secondary" onPress={onClose} >Nee verwijder niet</NextUIBasedButton>
+                                    <HeroUIBasedButton buttonVariant="primary" onPress={handleDeleteAccout} className="!bg-error-100">Ja ik weet het zeker!</HeroUIBasedButton>
+                                    <HeroUIBasedButton buttonVariant="secondary" onPress={onClose} >Nee verwijder niet</HeroUIBasedButton>
                                 </div>
                             </ModalBody>
                         </>

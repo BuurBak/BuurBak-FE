@@ -2,7 +2,6 @@
 
 import React, { forwardRef } from "react";
 import Icon, { IconName } from "./Icon";
-import MultiRangeSlider from "./MultiRangeSlider";
 
 type InputFieldType = {
   label: string;
@@ -57,11 +56,10 @@ const InputField = forwardRef<HTMLInputElement, InputFieldType>(
               className={`
               h-12 rounded w-full focus:outline-none
               ${iconLeft ? "pl-12 pr-3" : "px-3"}
-              ${
-                outline
+              ${outline
                   ? "border border-primary-100"
                   : "border border-offWhite-100"
-              }
+                }
             `}
               placeholder={label}
               pattern={pattern}
@@ -91,13 +89,13 @@ const InputField = forwardRef<HTMLInputElement, InputFieldType>(
         )}
 
         {inputType === "rangeSlider" && (
-          <div className="w-60 h-10">
-            <MultiRangeSlider
+          <div id="thisisaslider" className="w-60 h-10">
+            {/* <MultiRangeSlider
               min={rangeMin}
               max={rangeMax}
               setMin={setRangeValueMin}
               setMax={setRangeValueMax}
-            />
+            /> */}
           </div>
         )}
 
