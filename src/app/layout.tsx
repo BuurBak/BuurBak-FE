@@ -30,9 +30,9 @@ export default function RootLayout({
         {children}
         <Footer />
         <Suspense>
-          {/* <Toaster /> */}
-          {/* <SuccessToast /> */}
-          {/* <ErrorToast /> */}
+          <Toaster />
+          <SuccessToast />
+          <ErrorToast />
         </Suspense>
       </body>
     </html>
