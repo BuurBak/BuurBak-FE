@@ -53,6 +53,7 @@ const Card = ({
             (type === "overview" ? "flex" : "hidden") + " flex-col gap-1 p-2"
           }
         >
+          {/* TODO: Remove unnecessary h5 and don't hide the p on xl*/}
           <h5 className="hidden xl:flex text-primary-100">{title}</h5>
           <p className="flex xl:hidden text-primary-100 font-bold">{title}</p>
           {/* TODO: Distance is not used for anything? */}
@@ -70,6 +71,7 @@ const Card = ({
             (type === "overview" ? "hidden" : "flex") + " flex-col gap-1 p-2"
           }
         >
+          {/* TODO: Remove unnecessary h5 and don't hide the p on xl*/}
           <h5 className="flex text-primary-100">{title}</h5>
           <p className="text-gray-100 xl:text-xl text-md min-h-14">
             {discription}

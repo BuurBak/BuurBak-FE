@@ -17,6 +17,7 @@ const Footer = () => {
     { title: "Aanbod", link: "/aanbod" },
     { title: "Verhuren", link: "/verhuren" },
     { title: "Contact", link: "/contact" },
+    { title: "Over ons", link: "/over_ons" },
   ];
   const subPages: Link[] = [
     {

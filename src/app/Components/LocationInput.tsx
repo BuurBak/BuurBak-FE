@@ -1,136 +1,45 @@
 "use client";
 
-import { Autocomplete, TextField } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import { ThemeProvider, useTheme } from "@mui/material/styles";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { customTheme } from "../Components/AanbodList";
-
-type FilterOption = {
-  label: string;
-  options: string[];
-  inputValue: string;
-  setInputValue: React.Dispatch<React.SetStateAction<string>>;
-};
 
 type LocationData = {
   address: string;
   lat: number;
   lng: number;
 };
+type AddressComponent = {
+  long_name: string;
+  short_name: string;
+  types: string[];
+};
 
 type PropType = {
   onLocationChange: (location: LocationData) => void;
 };
 
-const loadGoogleMapsAPI = (): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    if (typeof window === "undefined") {
-      reject(new Error("Window is undefined"));
-      return;
-    }
-
-    if (window.google && window.google.maps) {
-      resolve();
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Failed to load Google Maps API"));
-    document.head.appendChild(script);
-  });
-};
-
 const LocationInput = ({ onLocationChange }: PropType) => {
   const outerTheme = useTheme();
-  const [addresses, setAddresses] = useState<string[]>([
-    "Begin met typen voor suggesties",
-  ]);
-  const [inputValueWhere, setInputValueWhere] = useState("");
-  const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
-  const autocompleteServiceRef =
-    useRef<google.maps.places.AutocompleteService | null>(null);
-  const geocoderRef = useRef<google.maps.Geocoder | null>(null);
+  const [postcode, setPostcode] = useState("");
+  const [huisnummer, setHuisnummer] = useState("");
+  const [foundAddress, setFoundAddress] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const initGoogleMaps = async () => {
-      try {
-        await loadGoogleMapsAPI();
-        if (isMounted) {
-          setIsGoogleMapsLoaded(true);
-          autocompleteServiceRef.current =
-            new window.google.maps.places.AutocompleteService();
-          geocoderRef.current = new window.google.maps.Geocoder();
-        }
-      } catch (error) {
-        console.error("Error loading Google Maps API:", error);
-      }
-    };
-
-    initGoogleMaps();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const filterOptions: FilterOption[] = [
-    {
-      label: "Woonplaats (straat huisnummer, woonplaats, land)",
-      options: addresses,
-      inputValue: inputValueWhere,
-      setInputValue: setInputValueWhere,
-    },
-  ];
-
-  useEffect(() => {
-    if (
-      !isGoogleMapsLoaded ||
-      !inputValueWhere ||
-      !autocompleteServiceRef.current
-    )
+  const handleAddressFetch = async () => {
+    if (!postcode || !huisnummer) {
+      setErrorMessage("Postcode en huisnummer zijn verplicht.");
       return;
+    }
 
-    const displaySuggestions = (
-      predictions: google.maps.places.AutocompletePrediction[] | null,
-      status: google.maps.places.PlacesServiceStatus
-    ) => {
-      if (
-        status !== google.maps.places.PlacesServiceStatus.OK ||
-        !predictions
-      ) {
-        console.error("Error fetching predictions:", status);
-        return;
-      }
+    setErrorMessage(null);
+    setIsLoading(true);
+    setFoundAddress(null);
 
-      const addressesReturn = predictions.map(
-        (prediction) => prediction.description
-      );
-      setAddresses(addressesReturn);
-    };
+    const address = `${huisnummer} ${postcode}, Nederland`;
 
-    autocompleteServiceRef.current.getPlacePredictions(
-      {
-        input: inputValueWhere,
-        componentRestrictions: { country: "nl" },
-        types: ["address"],
-      },
-      displaySuggestions
-    );
-  }, [inputValueWhere, isGoogleMapsLoaded]);
-
-  interface AddressComponent {
-    long_name: string;
-    short_name: string;
-    types: string[];
-  }
-
-  const handleAddressSelect = async (address: string) => {
     try {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
@@ -139,7 +48,8 @@ const LocationInput = ({ onLocationChange }: PropType) => {
       );
 
       if (!response.ok) {
-        console.error("Geocoding failed:", response.statusText);
+        setErrorMessage("Geocoding mislukt: " + response.statusText);
+        setIsLoading(false);
         return;
       }
 
@@ -148,59 +58,104 @@ const LocationInput = ({ onLocationChange }: PropType) => {
       if (data.status === "OK" && data.results[0]) {
         const result = data.results[0];
         const { lat, lng } = result.geometry.location;
+        const addressComponents: AddressComponent[] = result.address_components;
 
-        // Extract the postal code
-        const postalCodeComponent = result.address_components.find(
-          (component: AddressComponent) =>
-            component.types.includes("postal_code")
-        );
+        // Extract specific address components
+        let street = addressComponents.find((comp) =>
+          comp.types.includes("route")
+        )?.long_name;
+        const houseNumber = huisnummer; // Use the input house number
+        const city =
+          addressComponents.find((comp) => comp.types.includes("locality"))
+            ?.long_name || "Onbekende stad";
+        const province =
+          addressComponents.find((comp) =>
+            comp.types.includes("administrative_area_level_1")
+          )?.long_name || "Onbekende provincie";
+        const country =
+          addressComponents.find((comp) => comp.types.includes("country"))
+            ?.long_name || "Onbekend land";
 
-        const postalCode = postalCodeComponent
-          ? postalCodeComponent.long_name
-          : "";
+        // If street is not found, make another request using lat/lng
+        if (!street) {
+          const reverseGeocodeResponse = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY}&language=nl`
+          );
 
-        // Check if the formatted_address already includes the postal code
-        const formattedAddress = result.formatted_address;
-        const fullAddress = formattedAddress.includes(postalCode)
-          ? formattedAddress
-          : `${formattedAddress}, ${postalCode}`;
+          if (reverseGeocodeResponse.ok) {
+            const reverseData = await reverseGeocodeResponse.json();
+            if (reverseData.status === "OK" && reverseData.results[0]) {
+              const reverseAddressComponents: AddressComponent[] =
+                reverseData.results[0].address_components;
+              street =
+                reverseAddressComponents.find((comp) =>
+                  comp.types.includes("route")
+                )?.long_name || "Onbekende straat";
+            }
+          }
+        }
 
-        // Pass the full address, including postal code if necessary, to the parent component
+        const formattedAddress = `${
+          street || "Onbekende straat"
+        } ${houseNumber}, ${city}, ${province}, ${country}`;
+
+        // Pass the full address to the parent component
         onLocationChange({
-          address: fullAddress,
+          address: formattedAddress,
           lat,
           lng,
         });
+
+        setFoundAddress(formattedAddress);
       } else {
-        console.error("Geocoding failed:", data.status);
+        setErrorMessage("Geen adres gevonden. Controleer de invoer.");
       }
     } catch (error) {
-      console.error("Geocoding error:", error);
+      setErrorMessage(
+        "Er is een fout opgetreden bij het ophalen van het adres."
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <ThemeProvider theme={customTheme(outerTheme)}>
-      {filterOptions.map((item: FilterOption, index: number) => (
-        <Autocomplete
-          key={index}
-          className="flex-1"
-          disablePortal
-          id={index.toString()}
-          options={item.options || []}
-          inputValue={item.inputValue}
-          onInputChange={(event, newValue) => {
-            item.setInputValue(newValue);
-          }}
-          onChange={(event, newValue) => {
-            if (newValue) {
-              handleAddressSelect(newValue);
-            }
-          }}
-          renderInput={(params) => <TextField {...params} label={item.label} />}
-          filterOptions={(x) => x}
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <TextField
+          label="Postcode"
+          value={postcode}
+          onChange={(e) => setPostcode(e.target.value)}
         />
-      ))}
+        <TextField
+          label="Huisnummer"
+          value={huisnummer}
+          onChange={(e) => setHuisnummer(e.target.value)}
+        />
+        <Button
+          variant="contained"
+          onClick={handleAddressFetch}
+          disabled={isLoading}
+          sx={{
+            backgroundColor: "rgb(238, 123, 70)",
+            "&:hover": {
+              backgroundColor: "rgb(200, 100, 60)",
+            },
+          }}
+        >
+          {isLoading ? "Zoeken..." : "Zoek adres"}
+        </Button>
+        {errorMessage && (
+          <Typography color="error" variant="body2">
+            {errorMessage}
+          </Typography>
+        )}
+        {foundAddress && (
+          <Typography color="primary" variant="body1">
+            Gevonden adres: {foundAddress}
+          </Typography>
+        )}
+      </div>
     </ThemeProvider>
   );
 };

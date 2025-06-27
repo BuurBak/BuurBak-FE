@@ -1,4 +1,4 @@
-import { nextui } from "@nextui-org/theme";
+import { heroui } from "@heroui/theme";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -6,27 +6,10 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(autocomplete|calendar|checkbox|date-picker|modal|button|ripple|spinner|input|listbox|divider|popover|scroll-shadow|date-input).js",
+    "./node_modules/@heroui/theme/dist/components/(autocomplete|calendar|checkbox|date-picker|modal|button|ripple|spinner|input|listbox|divider|popover|scroll-shadow|date-input).js",
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        "landing-background":
-          "url('/img/BuurBak_Duurzaam-Delen_Aanhanger02972022_1920_1.webp')",
-      },
-      fontSize: {
-        h1: ["56px", "61.6px"],
-        h2: ["48px", "52.8px"],
-        h3: ["40px", "44px"],
-        h4: ["32px", "35.2px"],
-        h5: ["24px", "26.4px"],
-        h6: ["20px", "22px"],
-        normal: ["20px", "100%"],
-        small: ["14px", "100%"],
-      },
       colors: {
         primary: {
           100: "#EE7B46",
@@ -60,7 +43,7 @@ const config: Config = {
     },
   },
   plugins: [
-    nextui({
+    heroui({
       themes: {
         "buurbak-light": {
           extend: "light",

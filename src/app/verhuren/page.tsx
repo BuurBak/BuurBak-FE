@@ -1,7 +1,7 @@
 "use client";
 
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
-import { Select, SelectItem } from "@nextui-org/select";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
+import { Select, SelectItem } from "@heroui/select";
 import { Check, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { hasToken } from "../../lib/cookieUtil";
 import { getImage, postImages } from "../api/Images-controller";
-import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
+import { checkStripeConnection } from "../api/Payment-controller";
 import { postTrailer } from "../api/Trailer-controller";
 import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
@@ -194,11 +194,6 @@ const Verhuren = () => {
     extractAddress(locationData.address);
   };
 
-  const connectStripe = async () => {
-    const res = await linkToStripe();
-    window.open(res?.url, "_blank");
-  };
-
   useEffect(() => {
     const checkStripe = async () => {
       let res = await checkStripeConnection();
@@ -274,7 +269,6 @@ const Verhuren = () => {
               {soortAanhanger.map((item, index) => (
                 <AutocompleteItem
                   key={index}
-                  value={item}
                   aria-label={item}
                   className="buurbak-light "
                 >
@@ -319,7 +313,7 @@ const Verhuren = () => {
                   }}
                 >
                   {accessoires.map((item) => (
-                    <SelectItem key={item} value={item}>
+                    <SelectItem key={item}>
                       {item}
                     </SelectItem>
                   ))}
@@ -367,7 +361,6 @@ const Verhuren = () => {
               {license.map((item, index) => (
                 <AutocompleteItem
                   key={index}
-                  value={item}
                   aria-label={item}
                   className="buurbak-light "
                 >

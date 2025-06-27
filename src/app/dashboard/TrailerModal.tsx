@@ -4,14 +4,15 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/modal";
-import { EuroIcon } from "lucide-react";
+} from "@heroui/modal";
+import { ChevronRight, EuroIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { deleteTrailer, getTrailers } from "../api/Trailer-controller";
 import Button from "../Components/Button";
 import { useToast } from "../hooks/use-toast";
 import { TrailerData } from "../Types/Reservation";
+import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
 
 export default function TrailerModal() {
   const [trailers, setTrailers] = useState<TrailerData[]>();
@@ -51,7 +52,9 @@ export default function TrailerModal() {
 
   return (
     <>
-      <button onClick={onOpen}>Mijn aanhangers</button>
+      <div>
+        <HeroUIBasedButton buttonVariant="profile" onPress={onOpen}>Mijn aanhangers<ChevronRight className="w-4" /></HeroUIBasedButton>
+      </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-fit">
         <ModalContent className="w-full">
           {(onClose: () => void) => (

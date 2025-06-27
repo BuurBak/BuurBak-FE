@@ -1,8 +1,8 @@
 import { getTrailerAvalibility } from "@/app/api/Trailer-controller";
 import { TrailerData } from "@/app/Types/Reservation";
 import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
-import { RangeCalendar, RangeValue } from "@nextui-org/calendar";
-import { DateRangePicker } from "@nextui-org/date-picker";
+import { RangeCalendar, RangeValue } from "@heroui/calendar";
+import { DateRangePicker } from "@heroui/date-picker";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

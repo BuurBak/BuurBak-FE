@@ -8,7 +8,6 @@ import SuccessToast from "./Components/SuccesToast";
 import { Toaster } from "./Components/ui/toaster";
 import "./globals.css";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,15 +21,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="nl">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
       <body className={inter.className}>
         <Navbar />
         {children}
         <Footer />
-         <Suspense>
-          <Toaster />
-          <SuccessToast />
-          <ErrorToast />
+        <Suspense>
+          {/* <Toaster /> */}
+          {/* <SuccessToast /> */}
+          {/* <ErrorToast /> */}
         </Suspense>
       </body>
     </html>
