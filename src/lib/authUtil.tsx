@@ -22,6 +22,7 @@ export const signIn = async (
   });
 
   if (response.error) {
+    console.debug(JSON.stringify(response));
     response.error.status === 400
       ? encodedRedirect("error", "/", "Jouw email of wachtwoord is onjuist")
       : encodedRedirect(
