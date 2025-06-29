@@ -15,31 +15,12 @@ import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import LocationInput from "../Components/LocationInput";
-import FileUpload from "../Components/UploadFile";
-import { toast } from "../hooks/use-toast";
+import TrailerImagesUpload from "../Components/TrailerImagesUpload";
 import { PostImageRes } from "../Types/Image";
 import { PostTrailer } from "../Types/TrailerType";
+import { getDayAbbreviation } from "./getDayAbbreviation";
+import { toast } from "../hooks/use-toast";
 
-const getDayAbbreviation = (day: keyof PostTrailer["availability"]) => {
-  switch (day) {
-    case "monday":
-      return "Ma";
-    case "tuesday":
-      return "Di";
-    case "wednesday":
-      return "Wo";
-    case "thursday":
-      return "Do";
-    case "friday":
-      return "Vr";
-    case "saturday":
-      return "Za";
-    case "sunday":
-      return "Zo";
-    default:
-      return "";
-  }
-};
 
 type LocationData = {
   address: string;
@@ -51,7 +32,7 @@ const Verhuren = () => {
   const [stripe, setStripe] = useState<boolean>();
   const [files, setFiles] = useState<File[]>([]);
   const [pictures, setPictures] = useState<string[]>([]);
-  const [isSignd, setIsSignd] = useState<boolean>(false);
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
 
   const form = useForm<PostTrailer>({
     defaultValues: {
@@ -97,6 +78,7 @@ const Verhuren = () => {
     reset();
   }, [isSubmitSuccessful]);
 
+  //TODO: These should be enums
   const license: string[] = ["B", "BE"];
   const soortAanhanger: string[] = [
     "Open Aanhanger",
@@ -224,14 +206,15 @@ const Verhuren = () => {
   };
 
   useEffect(() => {
-    const signInRequired = async () => {
-      if (await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token")) {
-        setIsSignd(true);
+    const checkIsSignedIn = async () => {
+      const token = await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token");
+      if (token) {
+        setIsSignedIn(true);
       }
     };
 
-    signInRequired();
-  }, []);
+    checkIsSignedIn();
+  });
 
   const onSubmit = (data: PostTrailer) => {
     const addTrailer = async () => {
@@ -241,263 +224,313 @@ const Verhuren = () => {
     addTrailer();
   };
 
-  return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full min-h-screen h-fit flex flex-col sm:flex-row pt-32 gap-5"
-      noValidate
-    >
-      <div className="w-full lg:w-2/3">
-        <h1 className="text-center text-h3 font-bold mt-2">
-          Maak jouw advertentie compleet
-        </h1>
-        <div className="flex flex-col mt-5 items-center gap-5">
-          <hr className="w-11/12 h-0.5 bg-black-200 " />
-        </div>
-        <div className="flex flex-col items-center pt-5 gap-5">
-          <div className="w-3/4 flex flex-col gap-5">
-            <p className="font-bold">
-              Kies de fotos die jouw aanhanger het beste representeren:
-            </p>
-            <FileUpload
-              onFilesChange={setFiles}
-              {...register("images", {
-                required: "Voeg 5 fotos toe",
-                validate: (fieldValue) => {
-                  return fieldValue.length === 5
-                    ? true
-                    : `Voeg ${5 - fieldValue.length} fotos toe`;
-                },
-              })}
-            />
-            <p className="text-error-100">{errors.images?.message}</p>
-          </div>
-          <div className="w-3/4 ">
-            <p className="font-bold">Kies je soort aanhanger:</p>
-            <Autocomplete
-              className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
-              placeholder="Soort..."
-              aria-label="trailer_type"
-              {...register("trailer_type", {
-                required: "Kies jouw soort aanhanger",
-              })}
+  const uploadPictures = () => {
+    return (
+      <div className="w-3/4 flex flex-col gap-5">
+        <TrailerImagesUpload
+          onFilesChange={setFiles}
+          {...register("images")}
+        />
+      </div>
+    );
+  };
+
+  const trailerType = () => {
+    return (
+      <div className="w-3/4 ">
+        <p className="font-bold">Kies je soort aanhanger:</p>
+        <Autocomplete
+          className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
+          placeholder="Soort..."
+          aria-label="trailer_type"
+          {...register("trailer_type", {
+            required: "Kies jouw soort aanhanger",
+          })}
+        >
+          {soortAanhanger.map((item, index) => (
+            <AutocompleteItem
+              key={index}
+              aria-label={item}
+              className="buurbak-light "
             >
-              {soortAanhanger.map((item, index) => (
-                <AutocompleteItem
-                  key={index}
-                  aria-label={item}
-                  className="buurbak-light "
-                >
-                  {item}
-                </AutocompleteItem>
-              ))}
-            </Autocomplete>
-            <p className="text-error-100">{errors.trailer_type?.message}</p>
-          </div>
-          <div className="w-3/4">
-            <p className="font-bold">Geef een beschrijving voor de huurder:</p>
-            <textarea
-              id="message"
-              className="flex flex-row mt-5 p-2.5 w-full h-32 rounded border-1 border-primary-100"
-              placeholder="Typ een kleine beschrijving over je aanhanger..."
-              aria-label="description"
-              {...register("description", {
-                required: "Vul een korste beschrijving in voor jouw aanhanger",
-              })}
-            />
-            <p className="text-error-100">{errors.description?.message}</p>
-          </div>
-          <div className="w-3/4">
-            <p className="font-bold">
-              Kies de accessoires die je bij je aanhanger wilt verhuren:
-            </p>
-            <Controller
-              name="accessories"
-              control={control}
-              rules={{ required: "Kies tenminste 1 accessoire" }}
-              defaultValue={[]}
-              render={({ field, fieldState: { error } }) => (
-                <Select
-                  aria-label="Kies jouw accessoires"
-                  selectionMode="multiple"
-                  placeholder="Kies jouw accessoires"
-                  className="w-full buurbak-light mt-5 border-primary-100 rounded border-1 overflow-hidden"
-                  selectedKeys={new Set(field.value)}
-                  onSelectionChange={(keys) => {
-                    const selectedValues = Array.from(keys) as string[];
-                    field.onChange(selectedValues);
-                  }}
-                >
-                  {accessoires.map((item) => (
-                    <SelectItem key={item}>
-                      {item}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
-            <p className="text-error-100">{errors.accessories?.message}</p>
-          </div>
-          <div className="w-3/4 gap-5">
-            <p className="font-bold">
-              Kies de locatie waar je je aanhanger vanaf verhuurd:
-            </p>
-            <LocationInput
-              onLocationChange={handleLocationChange}
-              {...register("location", {
-                required: "Vul jouw locatie in",
-                validate: (__fieldValue) => {
-                  return watch("location.latitude") !== undefined &&
-                    watch("location.longitude") !== undefined &&
-                    watch("address.city") !== "" &&
-                    watch("address.house_number") !== "" &&
-                    watch("address.postal_code") !== "" &&
-                    watch("address.street_name") !== ""
-                    ? true
-                    : "Vul jouw locatie in";
-                },
-              })}
-            />
-            <p className="text-error-100">{errors.location?.message}</p>
-          </div>
-          <div className="w-3/4 gap-5">
-            <p className="font-bold">
-              Kies het soort rijbewijs wat vereist is:
-            </p>
-            <Autocomplete
-              className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
-              placeholder="Rijbewijs..."
-              aria-label="car_driving_license"
-              {...register("car_driving_license", {
-                required:
-                  "Vul het rijbewijs in dat nodig is voor jouw aanhanger",
-              })}
+              {item}
+            </AutocompleteItem>
+          ))}
+        </Autocomplete>
+        <p className="text-error-100">{errors.trailer_type?.message}</p>
+      </div>
+    );
+  };
+
+  const trailerDescription = () => {
+    return (
+      <div className="w-3/4">
+        <p className="font-bold">Geef een beschrijving voor de huurder:</p>
+        <textarea
+          id="message"
+          className="flex flex-row mt-5 p-2.5 w-full h-32 rounded border-1 border-primary-100"
+          placeholder="Typ een kleine beschrijving over je aanhanger..."
+          aria-label="description"
+          {...register("description", {
+            required: "Vul een korste beschrijving in voor jouw aanhanger",
+          })}
+        />
+        <p className="text-error-100">{errors.description?.message}</p>
+      </div>
+    );
+  };
+
+  const trailerAccessories = () => {
+    return (
+      <div className="w-3/4">
+        <p className="font-bold">
+          Kies de accessoires die je bij je aanhanger wilt verhuren:
+        </p>
+        <Controller
+          name="accessories"
+          control={control}
+          rules={{ required: "Kies tenminste 1 accessoire" }}
+          defaultValue={[]}
+          render={({ field, fieldState: { error } }) => (
+            <Select
+              aria-label="Kies jouw accessoires"
+              selectionMode="multiple"
+              placeholder="Kies jouw accessoires"
+              className="w-full buurbak-light mt-5 border-primary-100 rounded border-1 overflow-hidden"
+              selectedKeys={new Set(field.value)}
+              onSelectionChange={(keys) => {
+                const selectedValues = Array.from(keys) as string[];
+                field.onChange(selectedValues);
+              }}
             >
-              {license.map((item, index) => (
-                <AutocompleteItem
-                  key={index}
-                  aria-label={item}
-                  className="buurbak-light "
-                >
+              {accessoires.map((item) => (
+                <SelectItem key={item}>
                   {item}
-                </AutocompleteItem>
+                </SelectItem>
               ))}
-            </Autocomplete>
-            <p className="text-error-100">
-              {errors.car_driving_license?.message}
-            </p>
-          </div>
-          <div className="flex flex-col w-3/4 gap-5">
-            <p className="font-bold">
-              Vul de afmetingen van je aanhanger in (cm):
-            </p>
-            <div className="flex flex-col gap-3 w-full">
-              <InputField
-                inputType="text"
-                label="Vul de lengte van je aanhanger in (cm)"
-                icon
-                iconLeft
-                type="number"
-                iconName="L"
-                outline
-                className="w-full"
-                {...register("dimensions.length", {
-                  valueAsNumber: true,
-                  required: "Vul de lengte in van jou aanhanger",
-                })}
-              />
-              <p className="text-error-100">
-                {errors.dimensions?.length?.message}
-              </p>
-              <InputField
-                inputType="text"
-                label="Vul de breedte van je aanhanger in (cm)"
-                icon
-                iconLeft
-                type="number"
-                iconName="B"
-                outline
-                className="w-full"
-                {...register("dimensions.width", {
-                  valueAsNumber: true,
-                  required: "Vul de breedte in van jou aanhanger",
-                })}
-              />
-              <p className="text-error-100">
-                {errors.dimensions?.width?.message}
-              </p>
-              <InputField
-                inputType="text"
-                label="Vul de hoogte van je aanhanger in (cm)"
-                icon
-                iconLeft
-                type="number"
-                iconName="H"
-                outline
-                className="w-full"
-                {...register("dimensions.height", {
-                  valueAsNumber: true,
-                  required: "Vul de hoogte in van jou aanhanger",
-                })}
-              />
-              <p className="text-error-100">
-                {errors.dimensions?.height?.message}
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-col w-3/4 gap-5">
-            <p className="font-bold">
-              Voor hoeveel € wil je je aanhanger verhuren:
-            </p>
-            <InputField
-              inputType="text"
-              label="Prijs... "
-              icon
-              iconLeft
-              iconName="Euro"
-              outline
-              className="w-full"
-              type="number"
-              {...register("rental_price", {
-                valueAsNumber: true,
-                required: "Vul de prijs in van jou aanhanger",
-              })}
-            />
-            <p className="text-error-100">{errors.rental_price?.message}</p>
-          </div>
-          <div className="flex flex-col gap-5 w-3/4">
-            <p className="font-bold">
-              Kies de dagen waarop je de aanhanger beschikbaar wilt maken voor
-              ophaal:
-            </p>
-            <div className="flex flex-row gap-3 w-full">
-              {(
-                Object.keys(getValues().availability) as Array<
-                  keyof PostTrailer["availability"]
-                >
-              ).map((day) => (
-                <div
-                  key={day}
-                  aria-label={day}
-                  className={`flex flex-col items-center justify-center rounded w-14 h-20 cursor-pointer ${!watch(`availability.${day}`)
-                    ? "bg-primary-100 text-white"
-                    : "bg-offWhite-100"
-                    }`}
-                  onClick={() => toggleDay(day)}
-                >
-                  <p className="font-bold">{getDayAbbreviation(day)}</p>
-                  {!watch(`availability.${day}`) ? (
-                    <Check className="h-4 w-4" />
-                  ) : (
-                    <X className="h-4 w-4" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+            </Select>
+          )}
+        />
+        <p className="text-error-100">{errors.accessories?.message}</p>
+      </div>
+    );
+  };
+
+  const trailerLocation = () => {
+    return (
+      <div className="w-3/4 gap-5">
+        <p className="font-bold">
+          Kies de locatie waar je je aanhanger vanaf verhuurd (bijv.
+          Kamperbinnenpoort 1, Utrecht, Netherlands):
+        </p>
+        <LocationInput
+          onLocationChange={handleLocationChange}
+          {...register("location", {
+            required: "Vul jouw locatie in",
+            validate: (__fieldValue) => {
+              return watch("location.latitude") !== undefined &&
+                watch("location.longitude") !== undefined &&
+                watch("address.city") !== "" &&
+                watch("address.house_number") !== "" &&
+                watch("address.postal_code") !== "" &&
+                watch("address.street_name") !== ""
+                ? true
+                : "Vul jouw locatie in";
+            },
+          })}
+        />
+        <p className="text-error-100">{errors.location?.message}</p>
+      </div>
+    );
+  };
+
+  const trailerLicenseRequirement = () => {
+    return (
+      <div className="w-3/4 gap-5">
+        <p className="font-bold">
+          Kies het soort rijbewijs wat vereist is:
+        </p>
+        <Autocomplete
+          className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
+          placeholder="Rijbewijs..."
+          aria-label="car_driving_license"
+          {...register("car_driving_license", {
+            required:
+              "Vul het rijbewijs in dat nodig is voor jouw aanhanger",
+          })}
+        >
+          {license.map((item, index) => (
+            <AutocompleteItem
+              key={index}
+              aria-label={item}
+              className="buurbak-light "
+            >
+              {item}
+            </AutocompleteItem>
+          ))}
+        </Autocomplete>
+        <p className="text-error-100">
+          {errors.car_driving_license?.message}
+        </p>
+      </div>
+    );
+  };
+
+  const trailerDimensions = () => {
+    return (
+      <div className="flex flex-col w-3/4 gap-5">
+        <p className="font-bold">
+          Vul de afmetingen van je aanhanger in (cm):
+        </p>
+        <div className="flex flex-col gap-3 w-full">
+          <InputField
+            inputType="text"
+            label="Vul de lengte van je aanhanger in (cm)"
+            icon
+            rangeMin={10}
+            rangeMax={300}
+            iconLeft
+            type="number"
+            iconName="L"
+            outline
+            className="w-full"
+            {...register("dimensions.length", {
+              valueAsNumber: true,
+              required: "Vul de lengte in van jou aanhanger",
+              min: {
+                value: 10,
+                message: "De lengte moet minimaal 10 cm zijn",
+              },
+              max: {
+                value: 300,
+                message: "De lengte mag maximaal 300 cm zijn",
+              },
+            })}
+          />
+          <p className="text-error-100">
+            {errors.dimensions?.length?.message}
+          </p>
+          <InputField
+            inputType="text"
+            label="Vul de breedte van je aanhanger in (cm)"
+            icon
+            iconLeft
+            type="number"
+            iconName="B"
+            outline
+            className="w-full"
+            {...register("dimensions.width", {
+              valueAsNumber: true,
+              required: "Vul de breedte in van jou aanhanger",
+              min: {
+                value: 10,
+                message: "De breedte moet minimaal 10 cm zijn",
+              },
+              max: {
+                value: 300,
+                message: "De breedte mag maximaal 300 cm zijn",
+              },
+            })}
+          />
+          <p className="text-error-100">
+            {errors.dimensions?.width?.message}
+          </p>
+          <InputField
+            inputType="text"
+            label="Vul de hoogte van je aanhanger in (cm)"
+            icon
+            iconLeft
+            type="number"
+            iconName="H"
+            outline
+            className="w-full"
+            {...register("dimensions.height", {
+              valueAsNumber: true,
+              required: "Vul de hoogte in van jou aanhanger",
+              min: {
+                value: 10,
+                message: "De hoogte moet minimaal 10 cm zijn",
+              },
+              max: {
+                value: 400,
+                message: "De hoogte mag maximaal 400 cm zijn",
+              },
+            })}
+          />
+          <p className="text-error-100">
+            {errors.dimensions?.height?.message}
+          </p>
         </div>
       </div>
+    );
+  };
 
+  const trailerPricePerDay = () => {
+    return (
+      <div className="flex flex-col w-3/4 gap-5">
+        <p className="font-bold">
+          Voor hoeveel € per dag wil je je aanhanger verhuren:
+        </p>
+        <InputField
+          inputType="text"
+          label="Prijs... "
+          icon
+          iconLeft
+          iconName="Euro"
+          outline
+          className="w-full"
+          type="number"
+          {...register("rental_price", {
+            valueAsNumber: true,
+            required: "Vul de prijs in van jouw aanhanger",
+            min: {
+              value: 0,
+              message: "De prijs moet minimaal 0 euro zijn",
+            },
+          })}
+        />
+        <p className="text-error-100">{errors.rental_price?.message}</p>
+      </div>
+    );
+  };
+
+  const trailerAvailability = () => {
+    return (
+      <div className="flex flex-col gap-5 w-3/4">
+        <p className="font-bold">
+          Kies de dagen waarop je de aanhanger beschikbaar wilt maken voor
+          ophaal:
+        </p>
+        <div className="flex flex-row gap-3 w-full">
+          {(
+            Object.keys(getValues().availability) as Array<
+              keyof PostTrailer["availability"]
+            >
+          ).map((day) => (
+            <div
+              key={day}
+              aria-label={day}
+              className={`flex flex-col items-center justify-center rounded w-14 h-20 cursor-pointer ${!watch(`availability.${day}`)
+                ? "bg-primary-100 text-white"
+                : "bg-offWhite-100"
+                }`}
+              onClick={() => toggleDay(day)}
+            >
+              <p className="font-bold">{getDayAbbreviation(day)}</p>
+              {!watch(`availability.${day}`) ? (
+                <Check className="h-4 w-4" />
+              ) : (
+                <X className="h-4 w-4" />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const trailerAdPreview = () => {
+    return (
       <div className="w-full lg:w-1/3 bg-offWhite-100 min-h-screen p-5">
         <div className=" bg-white w-full h-fit sm:sticky sm:top-32 p-5 rounded">
           <div className="flex flex-row gap-1">
@@ -576,7 +609,7 @@ const Verhuren = () => {
               label="Voeg jouw aanhanger toe"
               submit
               disabled={
-                isSubmitting || isSubmitSuccessful || !isSignd || !stripe
+                isSubmitting || isSubmitSuccessful || !isSignedIn || !stripe
               }
             />
             <Link
@@ -591,6 +624,33 @@ const Verhuren = () => {
           </div>
         </div>
       </div>
+    );
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full min-h-screen h-fit flex flex-col sm:flex-row pt-32 gap-5"
+      noValidate
+    >
+      <div className="w-full lg:w-2/3">
+        <h3 className="text-center text-h3 font-bold mt-2">
+          Creer jouw aanhanger advertentie
+        </h3>
+        <div className="flex flex-col items-center pt-5 gap-5">
+          {uploadPictures()}
+          {trailerType()}
+          {trailerDescription()}
+          {trailerAccessories()}
+          {trailerLocation()}
+          {trailerLicenseRequirement()}
+          {trailerDimensions()}
+          {trailerPricePerDay()}
+          {trailerAvailability()}
+        </div>
+      </div>
+
+      {trailerAdPreview()}
     </form>
   );
 };

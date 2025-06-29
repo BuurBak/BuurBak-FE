@@ -1,12 +1,12 @@
 export type TrailerType = {
   name:
-    | "Open aanhanger"
-    | "Gesloten aanhanger"
-    | "Motorfiets aanhanger"
-    | "Bagage aanhanger"
-    | "Fietsen aanhanger"
-    | "Overig"
-    | "Alle";
+  | "Open aanhanger"
+  | "Gesloten aanhanger"
+  | "Motorfiets aanhanger"
+  | "Bagage aanhanger"
+  | "Fietsen aanhanger"
+  | "Overig"
+  | "Alle";
 };
 
 export type PostTrailer = {
@@ -35,6 +35,7 @@ type Location = {
   longitude: number;
 };
 
+//TODO: Make this an enum somehow?
 type Availability = {
   monday: boolean;
   tuesday: boolean;
