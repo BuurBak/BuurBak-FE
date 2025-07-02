@@ -1,12 +1,12 @@
 "use client";
 
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
-import { Select, SelectItem } from "@heroui/select";
+import { Chip, Input, Listbox, ListboxItem, SharedSelection } from "@heroui/react";
 import { Check, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { hasToken } from "../../lib/cookieUtil";
 import { getImage, postImages } from "../api/Images-controller";
 import { checkStripeConnection } from "../api/Payment-controller";
@@ -33,6 +33,8 @@ const Verhuren = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [pictures, setPictures] = useState<string[]>([]);
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
+  const [selectedAccessoires, setSelectedAccessories] = useState<Array<string>>([]);
+  const [selectFilter, setSelectFilter] = useState<string>('');
 
   const form = useForm<PostTrailer>({
     defaultValues: {
@@ -88,17 +90,17 @@ const Verhuren = () => {
     "Fietsen Aanhanger",
     "Overig",
   ];
-  const accessoires: string[] = [
+  const accessoryDropdownValues: string[] = [
     "Disselslot",
     "Oprijplaten",
     "7 naar 13 polige adapter",
     "13 naar 7 polige adapter",
-    "Afdek Zijl",
-    "Afdek Net",
+    "Afdekzeil",
+    "Afdeknet",
     "Pionnen",
     "Kruiwagen",
-    "Lange Lading bord",
-  ];
+    "'Lange lading' bord",
+  ].sort();
 
   const toggleDay = (day: keyof PostTrailer["availability"]) => {
     setValue(`availability.${day}`, !watch(`availability.${day}`));
@@ -229,8 +231,11 @@ const Verhuren = () => {
       <div className="w-3/4 flex flex-col gap-5">
         <TrailerImagesUpload
           onFilesChange={setFiles}
-          {...register("images")}
+          {...register("images", {
+            required: "Upload 5 fotos van de aanhanger"
+          })}
         />
+        <p className="text-error-100">{errors.images?.message}</p>
       </div>
     );
   };
@@ -238,13 +243,13 @@ const Verhuren = () => {
   const trailerType = () => {
     return (
       <div className="w-3/4 ">
-        <p className="font-bold">Kies je soort aanhanger:</p>
+        <p className="font-bold">Kies je type aanhanger:</p>
         <Autocomplete
           className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
-          placeholder="Soort..."
           aria-label="trailer_type"
+          placeholder="Type aanhanger"
           {...register("trailer_type", {
-            required: "Kies jouw soort aanhanger",
+            required: "Kies jouw type aanhanger",
           })}
         >
           {soortAanhanger.map((item, index) => (
@@ -265,19 +270,37 @@ const Verhuren = () => {
   const trailerDescription = () => {
     return (
       <div className="w-3/4">
-        <p className="font-bold">Geef een beschrijving voor de huurder:</p>
+        <p className="font-bold">Geef een korte beschrijving voor de huurder:</p>
         <textarea
           id="message"
           className="flex flex-row mt-5 p-2.5 w-full h-32 rounded border-1 border-primary-100"
-          placeholder="Typ een kleine beschrijving over je aanhanger..."
+          placeholder="Deze aanhanger is ideaal voor banken verhuizen, omdat..."
           aria-label="description"
           {...register("description", {
-            required: "Vul een korste beschrijving in voor jouw aanhanger",
+            required: "Vul een korte beschrijving in voor jouw aanhanger",
           })}
         />
         <p className="text-error-100">{errors.description?.message}</p>
       </div>
     );
+  };
+
+  const handleSelectionChange = (keys: SharedSelection) => {
+    const newSelection = Array.from(keys) as Array<string>;
+    setSelectedAccessories(newSelection.sort());
+  };
+
+  const filteredAccessories = useMemo(
+    () => accessoryDropdownValues
+      .filter((accessory) => !selectedAccessoires.includes(accessory))
+      .filter((accessory) =>
+        accessory.toLowerCase().includes(selectFilter.toLowerCase())
+      ),
+    [selectFilter, selectedAccessoires]
+  );
+
+  const removeSelectedAccessory = (accessory: string) => {
+    setSelectedAccessories(selectedAccessoires.filter((selected) => selected !== accessory));
   };
 
   const trailerAccessories = () => {
@@ -286,33 +309,40 @@ const Verhuren = () => {
         <p className="font-bold">
           Kies de accessoires die je bij je aanhanger wilt verhuren:
         </p>
-        <Controller
-          name="accessories"
-          control={control}
-          rules={{ required: "Kies tenminste 1 accessoire" }}
-          defaultValue={[]}
-          render={({ field, fieldState: { error } }) => (
-            <Select
-              aria-label="Kies jouw accessoires"
-              selectionMode="multiple"
-              placeholder="Kies jouw accessoires"
-              className="w-full buurbak-light mt-5 border-primary-100 rounded border-1 overflow-hidden"
-              selectedKeys={new Set(field.value)}
-              onSelectionChange={(keys) => {
-                const selectedValues = Array.from(keys) as string[];
-                field.onChange(selectedValues);
-              }}
-            >
-              {accessoires.map((item) => (
-                <SelectItem key={item}>
-                  {item}
-                </SelectItem>
+        <Listbox
+          aria-label="Kies jouw accessoires"
+          selectionMode="multiple"
+          selectedKeys={selectedAccessoires}
+          onSelectionChange={handleSelectionChange}
+          isVirtualized
+          virtualization={{
+            maxListboxHeight: 200,
+            itemHeight: 40
+          }}
+          topContent={
+            <>
+              {selectedAccessoires.map((accessory) => (
+                <Chip onClose={() => removeSelectedAccessory(accessory)}>{accessory}</Chip>
               ))}
-            </Select>
-          )}
-        />
-        <p className="text-error-100">{errors.accessories?.message}</p>
-      </div>
+              <Input
+                value={selectFilter}
+                placeholder="Zoeken"
+                className="w-full"
+                onChange={(event) => {
+                  setSelectFilter(event.target.value);
+                }} />
+            </>
+          }
+        >
+          <>
+            {filteredAccessories.map((accessory) => (
+              <ListboxItem onPressStart={() => setSelectFilter('')} key={accessory}>
+                {accessory}
+              </ListboxItem>
+            ))}
+          </>
+        </Listbox>
+      </div >
     );
   };
 
@@ -320,8 +350,7 @@ const Verhuren = () => {
     return (
       <div className="w-3/4 gap-5">
         <p className="font-bold">
-          Kies de locatie waar je je aanhanger vanaf verhuurd (bijv.
-          Kamperbinnenpoort 1, Utrecht, Netherlands):
+          Kies de locatie waarvandaan je aanhanger opgehaald kan worden als hij gehuurd wordt:
         </p>
         <LocationInput
           onLocationChange={handleLocationChange}
@@ -348,12 +377,12 @@ const Verhuren = () => {
     return (
       <div className="w-3/4 gap-5">
         <p className="font-bold">
-          Kies het soort rijbewijs wat vereist is:
+          Kies het soort rijbewijs wat vereist is om de aanhanger te gebruiken:
         </p>
         <Autocomplete
           className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
-          placeholder="Rijbewijs..."
           aria-label="car_driving_license"
+          placeholder="Benodigd rijbewijs"
           {...register("car_driving_license", {
             required:
               "Vul het rijbewijs in dat nodig is voor jouw aanhanger",
@@ -377,17 +406,18 @@ const Verhuren = () => {
   };
 
   const trailerDimensions = () => {
+    const min = 50;
     return (
       <div className="flex flex-col w-3/4 gap-5">
         <p className="font-bold">
-          Vul de afmetingen van je aanhanger in (cm):
+          Vul de afmetingen van je aanhanger in cm:
         </p>
         <div className="flex flex-col gap-3 w-full">
           <InputField
             inputType="text"
-            label="Vul de lengte van je aanhanger in (cm)"
+            label="Vul de lengte van je aanhanger in cm"
             icon
-            rangeMin={10}
+            rangeMin={min}
             rangeMax={300}
             iconLeft
             type="number"
@@ -398,7 +428,7 @@ const Verhuren = () => {
               valueAsNumber: true,
               required: "Vul de lengte in van jou aanhanger",
               min: {
-                value: 10,
+                value: min,
                 message: "De lengte moet minimaal 10 cm zijn",
               },
               max: {
@@ -412,7 +442,7 @@ const Verhuren = () => {
           </p>
           <InputField
             inputType="text"
-            label="Vul de breedte van je aanhanger in (cm)"
+            label="Vul de breedte van je aanhanger in cm"
             icon
             iconLeft
             type="number"
@@ -423,7 +453,7 @@ const Verhuren = () => {
               valueAsNumber: true,
               required: "Vul de breedte in van jou aanhanger",
               min: {
-                value: 10,
+                value: min,
                 message: "De breedte moet minimaal 10 cm zijn",
               },
               max: {
@@ -437,7 +467,7 @@ const Verhuren = () => {
           </p>
           <InputField
             inputType="text"
-            label="Vul de hoogte van je aanhanger in (cm)"
+            label="Vul de hoogte van je aanhanger in cm"
             icon
             iconLeft
             type="number"
@@ -448,7 +478,7 @@ const Verhuren = () => {
               valueAsNumber: true,
               required: "Vul de hoogte in van jou aanhanger",
               min: {
-                value: 10,
+                value: min,
                 message: "De hoogte moet minimaal 10 cm zijn",
               },
               max: {
