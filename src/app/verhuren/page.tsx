@@ -1,7 +1,6 @@
 "use client";
 
 import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
-import { Chip, Input, Listbox, ListboxItem, SharedSelection } from "@heroui/react";
 import { Check, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,7 +18,10 @@ import TrailerImagesUpload from "../Components/TrailerImagesUpload";
 import { PostImageRes } from "../Types/Image";
 import { PostTrailer } from "../Types/TrailerType";
 import { getDayAbbreviation } from "./getDayAbbreviation";
-import { toast } from "../hooks/use-toast";
+import { SharedSelection } from "@heroui/system";
+import { Chip } from "@heroui/chip";
+import { Listbox, ListboxItem } from "@heroui/listbox";
+import { Input } from "@heroui/input";
 
 
 type LocationData = {
