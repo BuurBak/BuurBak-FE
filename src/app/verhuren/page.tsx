@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { hasToken } from "../../lib/cookieUtil";
-import { getImage, postImages } from "../api/Images-controller";
+import { getImage } from "../api/Images-controller";
 import { checkStripeConnection } from "../api/Payment-controller";
 import { postTrailer } from "../api/Trailer-controller";
 import Details from "../Components/AanbodItem/Details";
@@ -15,7 +15,6 @@ import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import LocationInput from "../Components/LocationInput";
 import TrailerImagesUpload from "../Components/TrailerImagesUpload";
-import { PostImageRes } from "../Types/Image";
 import { PostTrailer } from "../Types/TrailerType";
 import { getDayAbbreviation } from "./getDayAbbreviation";
 import { SharedSelection } from "@heroui/system";
@@ -33,7 +32,6 @@ type LocationData = {
 const Verhuren = () => {
   const [stripe, setStripe] = useState<boolean>();
   const [files, setFiles] = useState<File[]>([]);
-  const [pictures, setPictures] = useState<string[]>([]);
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
   const [selectedAccessoires, setSelectedAccessories] = useState<Array<string>>([]);
   const [selectFilter, setSelectFilter] = useState<string>('');
@@ -74,7 +72,6 @@ const Verhuren = () => {
     watch,
     getValues,
     reset,
-    control,
   } = form;
   const { errors, isSubmitSuccessful, isSubmitting } = formState;
 
@@ -115,22 +112,22 @@ const Verhuren = () => {
   useEffect(() => {
     const imageUuidArray = async () => {
       const imageUUID: string[] = [];
-      const res = await postImages(files);
+      // const res = await postImages(files);
 
-      if (res) {
-        res.forEach((item: PostImageRes) => {
-          imageUUID.push(item.uuid);
-          const prevPictures = pictures;
-          setPictures([...prevPictures, item.url]);
-        });
-        setValue("images", imageUUID);
-      }
+      // if (res) {
+      //   res.forEach((item: PostImageRes) => {
+      //     imageUUID.push(item.uuid);
+      //     const prevPictures = pictures;
+      //     setPictures([...prevPictures, item.url]);
+      //   });
+      //   setValue("images", imageUUID);
+      // }
     };
 
     if (files.length > 0) {
       imageUuidArray();
     }
-    getImageById(watch("images.0"));
+    // getImageById(watch("images.0"));
   }, [files]);
 
   const handleLocationChange = (locationData: LocationData) => {
@@ -228,7 +225,7 @@ const Verhuren = () => {
     addTrailer();
   };
 
-  const uploadPictures = () => {
+  const trailerPictures = () => {
     return (
       <div className="w-3/4 flex flex-col gap-5">
         <TrailerImagesUpload
@@ -336,13 +333,11 @@ const Verhuren = () => {
             </>
           }
         >
-          <>
-            {filteredAccessories.map((accessory) => (
-              <ListboxItem onPressStart={() => setSelectFilter('')} key={accessory}>
-                {accessory}
-              </ListboxItem>
-            ))}
-          </>
+          {filteredAccessories.map((accessory) => (
+            <ListboxItem onPressStart={() => setSelectFilter('')} key={accessory}>
+              {accessory}
+            </ListboxItem>
+          ))}
         </Listbox>
       </div >
     );
@@ -563,59 +558,36 @@ const Verhuren = () => {
 
   const trailerAdPreview = () => {
     return (
-      <div className="w-full lg:w-1/3 bg-offWhite-100 min-h-screen p-5">
+      <div hidden className="w-full lg:w-1/3 bg-offWhite-100 min-h-screen p-5">
         <div className=" bg-white w-full h-fit sm:sticky sm:top-32 p-5 rounded">
           <div className="flex flex-row gap-1">
-            {pictures[0] && (
-              <Image
-                src={pictures[0]}
-                alt=""
-                className="w-2/4 h-auto rounded-lg"
-                width={200}
-                height={200}
-              />
-            )}
+            <div className="flex flex-col">
+              {files[0] && (
+                <Image
+                  //Is this a memory leak?
+                  src={URL.createObjectURL(files[0])}
+                  alt=""
+                  className="h-auto rounded-lg"
+                  width={200}
+                  height={200}
+                />
+              )}
+            </div>
             <div className="w-2/4 flex flex-col gap-1">
-              <div className=" w-2/4 flex flex-row gap-1">
-                {pictures[1] && (
-                  <Image
-                    src={pictures[1]}
-                    alt=""
-                    className="w-full h-auto rounded-lg"
-                    width={200}
-                    height={200}
-                  />
-                )}
-                {pictures[2] && (
-                  <Image
-                    src={pictures[2]}
-                    alt=""
-                    className="w-full h-auto rounded-lg"
-                    width={200}
-                    height={200}
-                  />
-                )}
-              </div>
-              <div className="w-2/4 flex flex-row gap-1">
-                {pictures[3] && (
-                  <Image
-                    src={pictures[3]}
-                    alt=""
-                    className="w-full h-auto rounded-lg"
-                    width={200}
-                    height={200}
-                  />
-                )}
-                {pictures[4] && (
-                  <Image
-                    src={pictures[4]}
-                    alt=""
-                    className="w-full h-auto rounded-lg"
-                    width={200}
-                    height={200}
-                  />
-                )}
-              </div>
+              {files.length > 1 && files.map((file, index) => {
+                if (index > 0) {
+                  return (
+                    <Image
+                      //Is this a memory leak?
+                      src={URL.createObjectURL(file)}
+                      alt=""
+                      className="w-full h-auto rounded-lg"
+                      width={200}
+                      height={200}
+                    />
+                  );
+                }
+              })}
             </div>
           </div>
           <div className="mt-2">
@@ -662,15 +634,15 @@ const Verhuren = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full min-h-screen h-fit flex flex-col sm:flex-row pt-32 gap-5"
+      className="flex pt-8 gap-5 justify-center"
       noValidate
     >
-      <div className="w-full lg:w-2/3">
-        <h3 className="text-center text-h3 font-bold mt-2">
+      <div className="lg:w-2/3">
+        <h4 className="text-center text-h3 font-bold mt-2">
           Creer jouw aanhanger advertentie
-        </h3>
-        <div className="flex flex-col items-center pt-5 gap-5">
-          {uploadPictures()}
+        </h4>
+        <div className="flex flex-col items-center pt-8 gap-5">
+          {trailerPictures()}
           {trailerType()}
           {trailerDescription()}
           {trailerAccessories()}
