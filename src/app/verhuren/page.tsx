@@ -227,7 +227,7 @@ const Verhuren = () => {
 
   const trailerPictures = () => {
     return (
-      <div className="w-3/4 flex flex-col gap-5">
+      <div className="flex flex-col gap-5">
         <TrailerImagesUpload
           onFilesChange={setFiles}
           {...register("images", {
@@ -241,10 +241,10 @@ const Verhuren = () => {
 
   const trailerType = () => {
     return (
-      <div className="w-3/4 ">
-        <p className="font-bold">Kies je type aanhanger:</p>
+      <div>
+        <span className="font-bold">Kies je type aanhanger:</span>
         <Autocomplete
-          className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
+          className="buurbak-light border-primary-100 rounded border-1"
           aria-label="trailer_type"
           placeholder="Type aanhanger"
           {...register("trailer_type", {
@@ -268,11 +268,11 @@ const Verhuren = () => {
 
   const trailerDescription = () => {
     return (
-      <div className="w-3/4">
+      <div>
         <p className="font-bold">Geef een korte beschrijving voor de huurder:</p>
         <textarea
           id="message"
-          className="flex flex-row mt-5 p-2.5 w-full h-32 rounded border-1 border-primary-100"
+          className="flex flex-row p-2.5 w-full h-32 rounded border-1 border-primary-100"
           placeholder="Deze aanhanger is ideaal voor banken verhuizen, omdat..."
           aria-label="description"
           {...register("description", {
@@ -304,7 +304,7 @@ const Verhuren = () => {
 
   const trailerAccessories = () => {
     return (
-      <div className="w-3/4">
+      <div>
         <p className="font-bold">
           Kies de accessoires die je bij je aanhanger wilt verhuren:
         </p>
@@ -326,7 +326,6 @@ const Verhuren = () => {
               <Input
                 value={selectFilter}
                 placeholder="Zoeken"
-                className="w-full"
                 onChange={(event) => {
                   setSelectFilter(event.target.value);
                 }} />
@@ -345,7 +344,7 @@ const Verhuren = () => {
 
   const trailerLocation = () => {
     return (
-      <div className="w-3/4 gap-5">
+      <div className="gap-5">
         <p className="font-bold">
           Kies de locatie waarvandaan je aanhanger opgehaald kan worden als hij gehuurd wordt:
         </p>
@@ -372,12 +371,12 @@ const Verhuren = () => {
 
   const trailerLicenseRequirement = () => {
     return (
-      <div className="w-3/4 gap-5">
+      <div className="gap-5">
         <p className="font-bold">
           Kies het soort rijbewijs wat vereist is om de aanhanger te gebruiken:
         </p>
         <Autocomplete
-          className="w-full buurbak-light mt-5 border-primary-100 rounded border-1"
+          className="w-full buurbak-light border-primary-100 rounded border-1"
           aria-label="car_driving_license"
           placeholder="Benodigd rijbewijs"
           {...register("car_driving_license", {
@@ -405,7 +404,7 @@ const Verhuren = () => {
   const trailerDimensions = () => {
     const min = 50;
     return (
-      <div className="flex flex-col w-3/4 gap-5">
+      <div className="flex flex-col gap-5">
         <p className="font-bold">
           Vul de afmetingen van je aanhanger in cm:
         </p>
@@ -494,7 +493,7 @@ const Verhuren = () => {
 
   const trailerPricePerDay = () => {
     return (
-      <div className="flex flex-col w-3/4 gap-5">
+      <div className="flex flex-col gap-5">
         <p className="font-bold">
           Voor hoeveel € per dag wil je je aanhanger verhuren:
         </p>
@@ -523,7 +522,7 @@ const Verhuren = () => {
 
   const trailerAvailability = () => {
     return (
-      <div className="flex flex-col gap-5 w-3/4">
+      <div className="flex flex-col gap-5">
         <p className="font-bold">
           Kies de dagen waarop je de aanhanger beschikbaar wilt maken voor
           ophaal:
@@ -558,7 +557,7 @@ const Verhuren = () => {
 
   const trailerAdPreview = () => {
     return (
-      <div hidden className="w-full lg:w-1/3 bg-offWhite-100 min-h-screen p-5">
+      <div hidden className="w-full bg-offWhite-100 min-h-screen p-5">
         <div className=" bg-white w-full h-fit sm:sticky sm:top-32 p-5 rounded">
           <div className="flex flex-row gap-1">
             <div className="flex flex-col">
@@ -590,7 +589,7 @@ const Verhuren = () => {
               })}
             </div>
           </div>
-          <div className="mt-2">
+          <div>
             <h6 className="flex flex-row text-primary-100 font-bold">
               {watch("trailer_type")}
             </h6>
@@ -608,7 +607,7 @@ const Verhuren = () => {
             <hr className="w-full h-0.5 bg-black-100 "></hr>
           </div>
           <Details trailerOffer={watch()} />
-          <div className="flex flex-col mt-5 items-center">
+          <div className="flex flex-col items-center">
             <Button
               label="Voeg jouw aanhanger toe"
               submit
@@ -637,11 +636,11 @@ const Verhuren = () => {
       className="flex pt-8 gap-5 justify-center"
       noValidate
     >
-      <div className="lg:w-2/3">
-        <h4 className="text-center text-h3 font-bold mt-2">
+      <div >
+        <h4 className="text-center text-h3 font-bold">
           Creer jouw aanhanger advertentie
         </h4>
-        <div className="flex flex-col items-center pt-8 gap-5">
+        <div className="flex flex-col pt-8 gap-5">
           {trailerPictures()}
           {trailerType()}
           {trailerDescription()}
