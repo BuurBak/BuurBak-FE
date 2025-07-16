@@ -13,7 +13,6 @@ import { postTrailer } from "../api/Trailer-controller";
 import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
 import InputField from "../Components/InputField";
-import LocationInput from "../Components/LocationInput";
 import TrailerImagesUpload from "../Components/TrailerImagesUpload";
 import { PostTrailer } from "../Types/TrailerType";
 import { getDayAbbreviation } from "./getDayAbbreviation";
@@ -21,6 +20,7 @@ import { SharedSelection } from "@heroui/system";
 import { Chip } from "@heroui/chip";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Input } from "@heroui/input";
+import SearchPlaceProvider from "../Components/SearchPlaceProvider";
 
 
 type LocationData = {
@@ -348,7 +348,8 @@ const Verhuren = () => {
         <p className="font-bold">
           Kies de locatie waarvandaan je aanhanger opgehaald kan worden als hij gehuurd wordt:
         </p>
-        <LocationInput
+        <SearchPlaceProvider />
+        {/* <SearchAddress
           onLocationChange={handleLocationChange}
           {...register("location", {
             required: "Vul jouw locatie in",
@@ -363,7 +364,7 @@ const Verhuren = () => {
                 : "Vul jouw locatie in";
             },
           })}
-        />
+        /> */}
         <p className="text-error-100">{errors.location?.message}</p>
       </div>
     );
