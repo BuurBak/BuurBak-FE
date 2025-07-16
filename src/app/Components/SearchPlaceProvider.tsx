@@ -2,12 +2,16 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import SearchPlaceInput from "./SearchPlaceInput";
 
 const SearchPlaceProvider = () => {
-    const apiKey = 'AIzaSyBax4h-8c6zg6iSR4ji_uZe5-ogR5EoZp0';
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
     return (
-        <APIProvider apiKey={apiKey}>
-            <SearchPlaceInput onLocationChange={() => { }}></SearchPlaceInput>
-        </APIProvider>
+        apiKey ? (
+            <APIProvider apiKey={apiKey} >
+                <SearchPlaceInput onLocationChange={() => { }}></SearchPlaceInput>
+            </APIProvider >
+        ) : (
+            <span>API KEY NOT FOUND</span>
+        )
     );
 };
 
