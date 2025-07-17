@@ -7,7 +7,7 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
-} from "@nextui-org/modal";
+} from "@heroui/modal";
 import { Calendar, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

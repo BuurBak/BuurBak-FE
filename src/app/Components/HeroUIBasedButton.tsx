@@ -1,25 +1,26 @@
 "use client";
 
-import { Button, ButtonProps } from "@nextui-org/button";
+import { Button, ButtonProps } from "@heroui/button";
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
 export interface ExtraButtonProps extends ButtonProps {
-  buttonVariant: "primary" | "secondary" | "profile";
+  buttonVariant: 'primary' | 'secondary' | 'profile' | 'modalButton';
 }
 
 // Just an example of how we can use nextui to do a lot of the work in making components function.
 // No need to come up with a Button Component ourselves.
-export const NextUIBasedButton: React.FC<ExtraButtonProps> = ({
+export const HeroUIBasedButton: React.FC<ExtraButtonProps> = ({
   className,
   variant,
   buttonVariant,
   ...props
 }) => {
   const variantClass = {
-    primary: "bg-primary-100 hover:bg-primary-200 text-white h-12 px-7",
-    secondary: "bg-gray-200 text-black hover:bg-gray-300 h-12 px-7",
-    profile: "bg-transparant hover:text-orange-600 font-semibold",
+    primary: 'bg-primary-100 hover:bg-primary-200 text-white h-12 px-7',
+    secondary: 'bg-gray-200 text-black hover:bg-gray-300 h-12 px-7',
+    profile: 'bg-transparant hover:text-orange-600 font-semibold',
+    modalButton: 'bg-transparant text-secondary-100 h-6 p-0 min-w-0 md:text-base text-lg'
   };
 
   return (

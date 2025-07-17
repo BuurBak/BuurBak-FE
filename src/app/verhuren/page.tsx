@@ -1,7 +1,7 @@
 "use client";
 
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
-import { Select, SelectItem } from "@nextui-org/select";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
+import { Select, SelectItem } from "@heroui/select";
 import { Check, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -269,7 +269,6 @@ const Verhuren = () => {
               {soortAanhanger.map((item, index) => (
                 <AutocompleteItem
                   key={index}
-                  value={item}
                   aria-label={item}
                   className="buurbak-light "
                 >
@@ -314,7 +313,7 @@ const Verhuren = () => {
                   }}
                 >
                   {accessoires.map((item) => (
-                    <SelectItem key={item} value={item}>
+                    <SelectItem key={item}>
                       {item}
                     </SelectItem>
                   ))}
@@ -362,7 +361,6 @@ const Verhuren = () => {
               {license.map((item, index) => (
                 <AutocompleteItem
                   key={index}
-                  value={item}
                   aria-label={item}
                   className="buurbak-light "
                 >
@@ -496,11 +494,10 @@ const Verhuren = () => {
                 <div
                   key={day}
                   aria-label={day}
-                  className={`flex flex-col items-center justify-center rounded w-14 h-20 cursor-pointer ${
-                    !watch(`availability.${day}`)
-                      ? "bg-primary-100 text-white"
-                      : "bg-offWhite-100"
-                  }`}
+                  className={`flex flex-col items-center justify-center rounded w-14 h-20 cursor-pointer ${!watch(`availability.${day}`)
+                    ? "bg-primary-100 text-white"
+                    : "bg-offWhite-100"
+                    }`}
                   onClick={() => toggleDay(day)}
                 >
                   <p className="font-bold">{getDayAbbreviation(day)}</p>
