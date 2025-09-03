@@ -114,14 +114,14 @@ const ContactPage: React.FC = () => {
           Schade? Meld je schade!
         </h2>
         <div className=" flex flex-row space-x-20">
-          <Link href="/schade">
-            <button
-              type="button"
-              className="py-4 px-8 bg-white text-black font-semibold rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-opacity-50"
-            >
-              Schade melden
-            </button>
-          </Link>
+        <Link href='/schade'>
+        <button
+          type="button"
+          className="py-4 px-8 bg-white text-black font-semibold rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:ring-opacity-50"
+        >
+          Schade melden
+        </button>
+        </Link>
 
           <button
             type="button"

@@ -1,29 +1,29 @@
 "use client";
 
 import Button from "@/app/Components/Button";
-import type { PostReservations, TrailerData } from "@/app/Types/Reservation";
-import type { SupaUser } from "@/app/Types/User";
+import { PostReservations, TrailerData } from "@/app/Types/Reservation";
+import { SupaUser } from "@/app/Types/User";
 import { postReservations } from "@/app/api/Reservations-controller";
 import { getTrailer } from "@/app/api/Trailer-controller";
 import { useToast } from "@/app/hooks/use-toast";
 import { getUserSupaBase } from "@/lib/authUtil";
 import { hasToken } from "@/lib/cookieUtil";
+import type { RangeValue } from "@heroui/calendar";
+import { Checkbox } from "@heroui/checkbox";
+import { DateRangePicker } from "@heroui/date-picker";
 import {
-  type CalendarDate,
+  CalendarDate,
   fromDate,
   getLocalTimeZone,
   toCalendarDate,
 } from "@internationalized/date";
-import type { RangeValue } from "@heroui/calendar";
-import { Checkbox } from "@heroui/checkbox";
-import { DateRangePicker } from "@heroui/date-picker";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { type SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 type Inputs = {
   dateStart: string;
@@ -39,7 +39,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
 
   const [changeDate, setChangeDate] = useState<boolean>(false);
   const [changeTime, setChangeTime] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [newDate, setNewDate] = useState({
     start: searchParams.get("dateStart"),
@@ -47,6 +46,10 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   });
 
   const [trailerOffer, setTrailerOffer] = useState<TrailerData>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [reqLoading, setReqLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [checked, setChecked] = useState<boolean>(false);
   const [date, setDate] = useState<RangeValue<CalendarDate> | null>({
     start: toCalendarDate(
       fromDate(new Date(newDate.start || ""), getLocalTimeZone())
@@ -64,6 +67,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
       try {
         const data = await getTrailer(params.AanbodId);
         setTrailerOffer(data);
+        setLoading(false);
       } catch (error) {
         console.warn(error);
       }
@@ -139,7 +143,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   };
 
   const onSubmit: SubmitHandler<Inputs> = async () => {
-    setIsSubmitting(true);
     if (trailerOffer && user) {
       const startDate = new Date(getValues("dateStart"));
       const endDate = new Date(getValues("dateEnd"));
@@ -154,18 +157,16 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
         message: getValues("message"),
         pick_up_time: "14:30:00",
       };
-
       const res = await postReservations(data);
       if (res.session) {
         window.open(res.session, "_blank");
-        setTimeout(() => {
+        setTimeout(function () {
           toast({
             title: "Dit duurd wat langer dan verwacht",
             description:
               "Wij zijn bezig met het klaar zetten van de betaal link zodra deze klaar is wordt hij automatisch geopend",
           });
         }, 2000);
-        setIsSubmitting(false);
       } else {
         console.error(res.message);
         if (
@@ -176,22 +177,6 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
             title: "Deze aanhanger is helaas al gerserveerd op deze dag",
             variant: "error",
           });
-        if (
-          res.message ===
-          "Unauthorized: A valid JWT token is required to access this resource."
-        )
-          toast({
-            title:
-              "Log eerst in of maak een account aan om een trailer te reserveren",
-            variant: "error",
-          });
-        else {
-          toast({
-            title: "Er is helaas iets mis gegaan probeer het later nog eens",
-            variant: "error",
-          });
-        }
-        setIsSubmitting(false);
       }
     }
   };
@@ -333,14 +318,10 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               </p>
             </div>
             <Button
-              label={
-                isSubmitting
-                  ? "Bezig met reserveren..."
-                  : "Reserveer jouw aanhanger"
-              }
+              label="Reserveer jouw aanhanger"
               className="w-full"
               submit={true}
-              disabled={user === undefined || !terms || isSubmitting}
+              disabled={user === undefined || !terms}
             />
           </div>
         </div>
@@ -350,7 +331,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
               <div className="relative aspect-square h-32">
                 {trailerOffer?.images[0] && (
                   <Image
-                    src={trailerOffer?.images[0] || "/placeholder.svg"}
+                    src={trailerOffer?.images[0]}
                     alt="Trailer image 1"
                     fill
                     sizes="100% 100%"

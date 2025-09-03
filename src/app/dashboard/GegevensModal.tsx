@@ -6,12 +6,12 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@heroui/modal";
+import { ChevronRight } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
 import InputField from "../Components/InputField";
 import { UserDetails } from "../Types/User";
-import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
-import { ChevronRight } from "lucide-react";
 
 interface GegevensModalProps {
   user: UserDetails | undefined;
@@ -23,16 +23,12 @@ export default function GegevensModal({ user, onSubmit }: GegevensModalProps) {
 
   useEffect(() => {
     if (user) {
-      form.setValue('name', user.name);
-      form.setValue('phone_number', user.phone_number);
+      form.setValue("name", user.name);
+      form.setValue("phone_number", user.phone_number);
     }
   }, [user]);
 
-  const {
-    register,
-    handleSubmit,
-    formState,
-  } = form;
+  const { register, handleSubmit, formState } = form;
   const { errors } = formState;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -41,7 +37,10 @@ export default function GegevensModal({ user, onSubmit }: GegevensModalProps) {
       {/* TODO: This will display a small bar so it is clear which button is focused. With the current profile page it's not very useful yet
              <div className="focus-within:border-l-2 focus-within:border-orange-600"> */}
       <div>
-        <HeroUIBasedButton buttonVariant="profile" onPress={onOpen}>Wijzig gegevens<ChevronRight className="w-4" /></HeroUIBasedButton>
+        <HeroUIBasedButton buttonVariant="profile" onPress={onOpen}>
+          Wijzig gegevens
+          <ChevronRight className="w-4" />
+        </HeroUIBasedButton>
       </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
@@ -60,7 +59,7 @@ export default function GegevensModal({ user, onSubmit }: GegevensModalProps) {
                       outline
                       className="w-full"
                       {...register(`name`, {
-                        required: "Vul een nieuwe naam in"
+                        required: "Vul een nieuwe naam in",
                       })}
                     />
                     <p className="text-error-100">{errors.name?.message}</p>
@@ -75,15 +74,23 @@ export default function GegevensModal({ user, onSubmit }: GegevensModalProps) {
                       outline
                       className="w-full"
                       {...register(`phone_number`, {
-                        required: "Voer een geldig telefoonnummer in"
+                        required: "Voer een geldig telefoonnummer in",
                       })}
                     />
-                    <p className="text-error-100">{errors.phone_number?.message}</p>
+                    <p className="text-error-100">
+                      {errors.phone_number?.message}
+                    </p>
                   </div>
                 </div>
               </ModalBody>
               <ModalFooter>
-                <HeroUIBasedButton buttonVariant="primary" type="submit" onPress={onClose}>Opslaan</HeroUIBasedButton>
+                <HeroUIBasedButton
+                  buttonVariant="primary"
+                  type="submit"
+                  onPress={onClose}
+                >
+                  Opslaan
+                </HeroUIBasedButton>
               </ModalFooter>
             </form>
           )}
