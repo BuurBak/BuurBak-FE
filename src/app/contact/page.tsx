@@ -1,6 +1,5 @@
 // src/app/contact/page.tsx
 "use client";
-import Link from "next/link";
 import React, { ChangeEvent, useState } from "react";
 import { sendEmail } from "./sendEmail";
 import SuccessPopup from "./SuccesPopup";
@@ -36,7 +35,6 @@ const ContactPage: React.FC = () => {
   return (
     <main className="flex items-center justify-center min-h-screen bg-gray-50">
       {showPopup && <SuccessPopup message="E-mail succesvol verzonden!" />}
-
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
           Contacteer ons
@@ -110,7 +108,8 @@ const ContactPage: React.FC = () => {
           </button>
         </form>
       </div>
-      <div className="flex flex-col justify-evenly items-center p-8 bg-primary-100 shadow-lg w-full max-w-md mt-auto h-[35vh] rounded-lg">
+      {/* deze feature kan later worden geactiveerd als hij volledig werkt */}
+      {/* <div className="flex flex-col justify-evenly items-center p-8 bg-primary-100 shadow-lg w-full max-w-md mt-auto h-[35vh] rounded-lg">
         <h2 className="text-2xl font-semibold text-center text-white">
           Schade? Meld je schade!
         </h2>
@@ -131,7 +130,7 @@ const ContactPage: React.FC = () => {
             FAQ
           </button>
         </div>
-      </div>
+      </div> */}
     </main>
   );
 };
