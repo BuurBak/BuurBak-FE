@@ -11,7 +11,7 @@ type LocationData = {
 };
 
 type SearchAddressProperties = {
-  onLocationChange: (location: LocationData) => void;
+  onLocationChange: (location: string) => void;
 };
 
 const SearchPlaceInput = ({ onLocationChange }: SearchAddressProperties) => {
@@ -35,6 +35,11 @@ const SearchPlaceInput = ({ onLocationChange }: SearchAddressProperties) => {
 
     placeAutocomplete.addListener("place_changed", () => {
       console.log(placeAutocomplete.getPlace());
+      const address = placeAutocomplete.getPlace().formatted_address;
+      console.log(address);
+      if (address) {
+        onLocationChange(address);
+      }
     });
   }, [placeAutocomplete]);
   return <Input ref={inputRef} placeholder="Search address" />;

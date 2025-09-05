@@ -35,8 +35,17 @@ const Verhuren = () => {
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
   const [selectedAccessoires, setSelectedAccessories] = useState<Array<string>>([]);
   const [selectFilter, setSelectFilter] = useState<string>('');
+  const [trailerLocationValue, setTrailerLocationValue] = useState<string>('');
 
-  const form = useForm<PostTrailer>({
+  const {
+    register,
+    handleSubmit,
+    formState,
+    setValue,
+    watch,
+    getValues,
+    reset,
+  } = useForm<PostTrailer>({
     defaultValues: {
       accessories: [],
       address: {
@@ -64,15 +73,6 @@ const Verhuren = () => {
       trailer_type: "",
     },
   });
-  const {
-    register,
-    handleSubmit,
-    formState,
-    setValue,
-    watch,
-    getValues,
-    reset,
-  } = form;
   const { errors, isSubmitSuccessful, isSubmitting } = formState;
 
   useEffect(() => {
@@ -217,7 +217,8 @@ const Verhuren = () => {
     checkIsSignedIn();
   });
 
-  const onSubmit = (data: PostTrailer) => {
+  const onSubmit = (data: PostTrailer, event: any) => {
+    event.preventDefault();
     const addTrailer = async () => {
       await postTrailer(data);
     };
@@ -284,10 +285,6 @@ const Verhuren = () => {
     );
   };
 
-  const handleSelectionChange = (keys: SharedSelection) => {
-    const newSelection = Array.from(keys) as Array<string>;
-    setSelectedAccessories(newSelection.sort());
-  };
 
   const filteredAccessories = useMemo(
     () => accessoryDropdownValues
@@ -297,6 +294,12 @@ const Verhuren = () => {
       ),
     [selectFilter, selectedAccessoires]
   );
+
+
+  const handleSelectionChange = (keys: SharedSelection) => {
+    const newSelection = Array.from(keys) as Array<string>;
+    setSelectedAccessories(newSelection.sort());
+  };
 
   const removeSelectedAccessory = (accessory: string) => {
     setSelectedAccessories(selectedAccessoires.filter((selected) => selected !== accessory));
@@ -348,23 +351,14 @@ const Verhuren = () => {
         <p className="font-bold">
           Kies de locatie waarvandaan je aanhanger opgehaald kan worden als hij gehuurd wordt:
         </p>
-        <SearchPlaceProvider />
-        {/* <SearchAddress
-          onLocationChange={handleLocationChange}
-          {...register("location", {
-            required: "Vul jouw locatie in",
-            validate: (__fieldValue) => {
-              return watch("location.latitude") !== undefined &&
-                watch("location.longitude") !== undefined &&
-                watch("address.city") !== "" &&
-                watch("address.house_number") !== "" &&
-                watch("address.postal_code") !== "" &&
-                watch("address.street_name") !== ""
-                ? true
-                : "Vul jouw locatie in";
-            },
-          })}
-        /> */}
+        {trailerLocationValue ?
+          <Chip onClose={() => {
+            setTrailerLocationValue('');
+          }}>{trailerLocationValue}</Chip> :
+          <div>
+            <SearchPlaceProvider onLocationChange={setTrailerLocationValue} />
+          </div>
+        }
         <p className="text-error-100">{errors.location?.message}</p>
       </div>
     );
