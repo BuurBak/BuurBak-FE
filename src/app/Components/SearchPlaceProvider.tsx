@@ -1,7 +1,18 @@
-import { APIProvider } from "@vis.gl/react-google-maps";
-import SearchPlaceInput from "./SearchPlaceInput";
+import { APIProvider, useMapsLibrary } from "@vis.gl/react-google-maps";
+import { useEffect, useRef, useState } from "react";
+import { Input } from "@heroui/input";
 
-const SearchPlaceProvider = ({ onLocationChange }) => {
+export type LocationData = {
+    longName: string,
+    types: string[];
+};
+
+type SearchPlaceProps = {
+    onLocationChange: (data: LocationData[]) => void;
+};
+
+
+const SearchPlaceProvider = ({ onLocationChange }: SearchPlaceProps) => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
     return (
@@ -13,6 +24,43 @@ const SearchPlaceProvider = ({ onLocationChange }) => {
             <span>API KEY NOT FOUND</span>
         )
     );
+};
+
+const SearchPlaceInput = ({ onLocationChange }: SearchPlaceProps) => {
+    const [placeAutocomplete, setPlaceAutocomplete] =
+        useState<google.maps.places.Autocomplete | null>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const places = useMapsLibrary("places");
+
+    useEffect(() => {
+        if (!places || !inputRef.current) return;
+
+        const options = {
+            componentRestrictions: { country: 'nl' },
+            fields: ["geometry", "address_components"],
+        };
+
+        setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));
+    }, [places]);
+
+    useEffect(() => {
+        if (!placeAutocomplete) return;
+
+        placeAutocomplete.addListener("place_changed", () => {
+            const place = placeAutocomplete.getPlace();
+
+            if (place.address_components) {
+                const locationData = place.address_components.map((component) => {
+                    return {
+                        longName: component.long_name,
+                        types: component.types
+                    };
+                });
+                onLocationChange(locationData);
+            }
+        });
+    }, [placeAutocomplete]);
+    return <Input ref={inputRef} placeholder="Search address" />;
 };
 
 export default SearchPlaceProvider;

@@ -20,14 +20,8 @@ import { SharedSelection } from "@heroui/system";
 import { Chip } from "@heroui/chip";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Input } from "@heroui/input";
-import SearchPlaceProvider from "../Components/SearchPlaceProvider";
+import SearchPlaceProvider, { LocationData } from "../Components/SearchPlaceProvider";
 
-
-type LocationData = {
-  address: string;
-  lat: number;
-  lng: number;
-};
 
 const Verhuren = () => {
   const [stripe, setStripe] = useState<boolean>();
@@ -35,7 +29,7 @@ const Verhuren = () => {
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
   const [selectedAccessoires, setSelectedAccessories] = useState<Array<string>>([]);
   const [selectFilter, setSelectFilter] = useState<string>('');
-  const [trailerLocationValue, setTrailerLocationValue] = useState<string>('');
+  const [trailerLocationData, setTrailerLocationData] = useState<LocationData[]>([]);
 
   const {
     register,
@@ -129,54 +123,6 @@ const Verhuren = () => {
     }
     // getImageById(watch("images.0"));
   }, [files]);
-
-  const handleLocationChange = (locationData: LocationData) => {
-    setValue("location.latitude", locationData.lat);
-    setValue("location.longitude", locationData.lng);
-
-    const extractAddress = (input: string) => {
-      const parts = input.split(",").map((part) => part.trim());
-
-      const address = {
-        city: "",
-        house_number: "",
-        postal_code: "",
-        street_name: "",
-      };
-
-      if (parts.length >= 3) {
-        // Extract street name and house number (from the first part)
-        const streetAndNumber = parts[0].match(/(.*\D)\s(\d+[A-Za-z]?)$/);
-        if (streetAndNumber) {
-          address.street_name = streetAndNumber[1].trim();
-          address.house_number = streetAndNumber[2].trim();
-        }
-
-        // Extract postal code and city (from the second part)
-        const postalCodeCity = parts[1].trim();
-        const postalCodeMatch = postalCodeCity.match(/(\d{4}\s?[A-Za-z]{2})/i); // Added 'i' for case insensitivity
-        if (postalCodeMatch) {
-          address.postal_code = postalCodeMatch[1];
-        }
-
-        // City is whatever comes after the postal code (if any)
-        const cityMatch = postalCodeCity
-          .replace(address.postal_code, "")
-          .trim();
-        if (cityMatch) {
-          address.city = cityMatch;
-        }
-
-        // Set the values for each field
-        setValue("address.city", address.city);
-        setValue("address.house_number", address.house_number);
-        setValue("address.postal_code", address.postal_code);
-        setValue("address.street_name", address.street_name);
-      }
-    };
-
-    extractAddress(locationData.address);
-  };
 
   useEffect(() => {
     const checkStripe = async () => {
@@ -345,18 +291,29 @@ const Verhuren = () => {
     );
   };
 
+  const getLocationData = (type: string): LocationData | undefined => {
+    console.log("LocationData arrived!");
+    return trailerLocationData.find((component) => component.types.includes(type));
+  };
+
   const trailerLocation = () => {
     return (
       <div className="gap-5">
         <p className="font-bold">
           Kies de locatie waarvandaan je aanhanger opgehaald kan worden als hij gehuurd wordt:
         </p>
-        {trailerLocationValue ?
-          <Chip onClose={() => {
-            setTrailerLocationValue('');
-          }}>{trailerLocationValue}</Chip> :
+        {trailerLocationData.length > 0
+          ? (
+            <>
+              <Input value={getLocationData('country')?.longName} />
+              <Input value={getLocationData('route')?.longName} />
+              <Input value={getLocationData('street_number')?.longName} />
+              <Input value={getLocationData('postal_code')?.longName} />
+            </>
+          )
+          :
           <div>
-            <SearchPlaceProvider onLocationChange={setTrailerLocationValue} />
+            <SearchPlaceProvider onLocationChange={setTrailerLocationData} />
           </div>
         }
         <p className="text-error-100">{errors.location?.message}</p>
