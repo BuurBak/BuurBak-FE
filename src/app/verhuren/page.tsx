@@ -231,7 +231,6 @@ const Verhuren = () => {
     );
   };
 
-
   const filteredAccessories = useMemo(
     () => accessoryDropdownValues
       .filter((accessory) => !selectedAccessoires.includes(accessory))
@@ -292,9 +291,9 @@ const Verhuren = () => {
   };
 
   const getLocationData = (type: string): LocationData | undefined => {
-    console.log("LocationData arrived!");
     return trailerLocationData.find((component) => component.types.includes(type));
   };
+
 
   const trailerLocation = () => {
     return (
@@ -305,16 +304,17 @@ const Verhuren = () => {
         {trailerLocationData.length > 0
           ? (
             <>
-              <Input value={getLocationData('country')?.longName} />
-              <Input value={getLocationData('route')?.longName} />
-              <Input value={getLocationData('street_number')?.longName} />
-              <Input value={getLocationData('postal_code')?.longName} />
+              <Input placeholder="houseNumber" value={getLocationData('house_number')?.longName} />
+              <Input placeholder="postalCode" value={getLocationData('postal_code')?.longName} />
+              <Input placeholder="country" value={getLocationData('country')?.longName} />
+              <Input placeholder="route" value={getLocationData('route')?.longName} />
             </>
           )
-          :
-          <div>
-            <SearchPlaceProvider onLocationChange={setTrailerLocationData} />
-          </div>
+          : (
+            <div>
+              <SearchPlaceProvider onLocationChange={setTrailerLocationData} />
+            </div>
+          )
         }
         <p className="text-error-100">{errors.location?.message}</p>
       </div>

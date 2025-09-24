@@ -38,6 +38,7 @@ const SearchPlaceInput = ({ onLocationChange }: SearchPlaceProps) => {
         const options = {
             componentRestrictions: { country: 'nl' },
             fields: ["geometry", "address_components"],
+            language: 'nl'
         };
 
         setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options));
