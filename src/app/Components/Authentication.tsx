@@ -13,14 +13,14 @@ import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { registerAccount, signIn } from "../../lib/authUtil";
 import { hasToken } from "../../lib/cookieUtil";
+import { ProfilePicture } from "../icons/ProfilePicture";
 import {
   RegisterUserParams,
   SignInCredentials,
   UserDetails,
 } from "../Types/User";
-import InputField from "./InputField";
 import { HeroUIBasedButton } from "./HeroUIBasedButton";
-import { ProfilePicture } from "../icons/ProfilePicture";
+import InputField from "./InputField";
 
 interface AuthenticationProps {
   user: UserDetails | undefined;
@@ -110,9 +110,7 @@ const Authentication: FC<AuthenticationProps> = ({ user, onLogin }) => {
   const getSignedIn = () => {
     return (
       // TODO: Do we want to show the username in navbar? */}
-      <Link href="/dashboard">
-        {ProfilePicture()}
-      </Link>
+      <Link href="/dashboard">{ProfilePicture()}</Link>
     );
   };
 
@@ -242,7 +240,13 @@ const Authentication: FC<AuthenticationProps> = ({ user, onLogin }) => {
     return (
       <>
         {/* TODO: For some reason the login button doesn't work on first load of the Authentication component  */}
-        <HeroUIBasedButton size="lg" buttonVariant="modalButton" onPress={onOpen}>Inloggen</HeroUIBasedButton>
+        <HeroUIBasedButton
+          size="lg"
+          buttonVariant="modalButton"
+          onPress={onOpen}
+        >
+          Inloggen
+        </HeroUIBasedButton>
         <Modal isOpen={isOpen} placement={"center"} onOpenChange={onOpenChange}>
           <ModalContent>
             {(onClose) => (

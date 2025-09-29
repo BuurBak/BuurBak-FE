@@ -16,6 +16,7 @@ import Button from "../Components/Button";
 import InputField from "../Components/InputField";
 import LocationInput from "../Components/LocationInput";
 import FileUpload from "../Components/UploadFile";
+import { toast } from "../hooks/use-toast";
 import { PostImageRes } from "../Types/Image";
 import { PostTrailer } from "../Types/TrailerType";
 
@@ -197,13 +198,28 @@ const Verhuren = () => {
   useEffect(() => {
     const checkStripe = async () => {
       let res = await checkStripeConnection();
-      setStripe(res?.ready_for_payments);
+      console.log(res);
+      if (res) {
+        if (res.ready_for_payments) {
+          setStripe(res.ready_for_payments);
+        } else {
+          toast({
+            title: "Verbind eerst jouw account met stripe via het dashboard",
+            variant: "error",
+          });
+        }
+      } else {
+        toast({
+          title: "Er is helaas iets mis gegaan probeer het later opnieuw",
+          variant: "error",
+        });
+      }
     };
     checkStripe();
   }, []);
+
   const getImageById = async (id: string) => {
     const res = await getImage(id);
-    console.log("res", res);
     return res;
   };
 
@@ -215,7 +231,7 @@ const Verhuren = () => {
     };
 
     signInRequired();
-  });
+  }, []);
 
   const onSubmit = (data: PostTrailer) => {
     const addTrailer = async () => {
@@ -324,8 +340,7 @@ const Verhuren = () => {
           </div>
           <div className="w-3/4 gap-5">
             <p className="font-bold">
-              Kies de locatie waar je je aanhanger vanaf verhuurd (bijv.
-              Kamperbinnenpoort 1, Utrecht, Netherlands):
+              Kies de locatie waar je je aanhanger vanaf verhuurd:
             </p>
             <LocationInput
               onLocationChange={handleLocationChange}
@@ -381,8 +396,6 @@ const Verhuren = () => {
                 inputType="text"
                 label="Vul de lengte van je aanhanger in (cm)"
                 icon
-                rangeMin={10}
-                rangeMax={300}
                 iconLeft
                 type="number"
                 iconName="L"
@@ -391,14 +404,6 @@ const Verhuren = () => {
                 {...register("dimensions.length", {
                   valueAsNumber: true,
                   required: "Vul de lengte in van jou aanhanger",
-                  min: {
-                    value: 10,
-                    message: "De lengte moet minimaal 10 cm zijn",
-                  },
-                  max: {
-                    value: 300,
-                    message: "De lengte mag maximaal 300 cm zijn",
-                  },
                 })}
               />
               <p className="text-error-100">
@@ -416,14 +421,6 @@ const Verhuren = () => {
                 {...register("dimensions.width", {
                   valueAsNumber: true,
                   required: "Vul de breedte in van jou aanhanger",
-                  min: {
-                    value: 10,
-                    message: "De breedte moet minimaal 10 cm zijn",
-                  },
-                  max: {
-                    value: 300,
-                    message: "De breedte mag maximaal 300 cm zijn",
-                  },
                 })}
               />
               <p className="text-error-100">
@@ -441,14 +438,6 @@ const Verhuren = () => {
                 {...register("dimensions.height", {
                   valueAsNumber: true,
                   required: "Vul de hoogte in van jou aanhanger",
-                  min: {
-                    value: 10,
-                    message: "De hoogte moet minimaal 10 cm zijn",
-                  },
-                  max: {
-                    value: 400,
-                    message: "De hoogte mag maximaal 400 cm zijn",
-                  },
                 })}
               />
               <p className="text-error-100">
@@ -458,7 +447,7 @@ const Verhuren = () => {
           </div>
           <div className="flex flex-col w-3/4 gap-5">
             <p className="font-bold">
-              Voor hoeveel € per dag wil je je aanhanger verhuren:
+              Voor hoeveel € wil je je aanhanger verhuren:
             </p>
             <InputField
               inputType="text"
@@ -471,11 +460,7 @@ const Verhuren = () => {
               type="number"
               {...register("rental_price", {
                 valueAsNumber: true,
-                required: "Vul de prijs in van jouw aanhanger",
-                min: {
-                  value: 0,
-                  message: "De prijs moet minimaal 0 euro zijn",
-                },
+                required: "Vul de prijs in van jou aanhanger",
               })}
             />
             <p className="text-error-100">{errors.rental_price?.message}</p>

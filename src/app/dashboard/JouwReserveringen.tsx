@@ -1,6 +1,4 @@
 "use client";
-
-// Gereserveerde trailers door de gebruiker
 import {
   Modal,
   ModalBody,

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Car,
-  Mail,
-  Tag,
-  X,
-  Menu
-} from "lucide-react";
+import { Car, Mail, Menu, Tag, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -14,21 +8,20 @@ import LogoWhite from "../Assets/Frame.svg";
 import LogoColor from "../Assets/horizontalColorLogo.svg";
 import { PlateauTrailer } from "../icons/TrailerIcons";
 
-import Authentication from "./Authentication";
 import { LinkData } from "@/lib/interfaces/LinkData";
 import {
-  Navbar as NavbarElement,
   NavbarBrand,
   NavbarContent,
+  Navbar as NavbarElement,
   NavbarItem,
-  NavbarMenuToggle,
   NavbarMenu,
-  NavbarMenuItem
+  NavbarMenuItem,
+  NavbarMenuToggle,
 } from "@heroui/navbar";
-import { HeroUIBasedButton } from "./HeroUIBasedButton";
 import { MotionProps } from "framer-motion";
 import { UserDetails } from "../Types/User";
-
+import Authentication from "./Authentication";
+import { HeroUIBasedButton } from "./HeroUIBasedButton";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -36,64 +29,86 @@ const Navbar = () => {
   const [user, setUser] = useState<UserDetails>();
   const links: LinkData[] = [
     { name: "Aanbod", href: "/aanbod", icon: PlateauTrailer },
-    { name: "Ik wil verhuren", href: "/verhuren", icon: Tag, displayAsButton: true },
+    {
+      name: "Ik wil verhuren",
+      href: "/verhuren",
+      icon: Tag,
+      displayAsButton: true,
+    },
     { name: "Over ons", href: "/over_ons", icon: Car },
-    { name: "Contact", href: "/contact", icon: Mail }
+    { name: "Contact", href: "/contact", icon: Mail },
   ];
 
   const getNavbarLink = (linkData: LinkData) => {
     return (
       <>
-        {linkData.displayAsButton ?
-          <HeroUIBasedButton as={Link} buttonVariant="primary" size="lg" className="font-semibold p-4 h-10" href={linkData.href}>{linkData.name}</HeroUIBasedButton> :
-          <Link className="text-secondary-100" href={linkData.href}>{linkData.name}</Link>
-        }
+        {linkData.displayAsButton ? (
+          <HeroUIBasedButton
+            as={Link}
+            buttonVariant="primary"
+            size="lg"
+            className="font-semibold p-4 h-10"
+            href={linkData.href}
+          >
+            {linkData.name}
+          </HeroUIBasedButton>
+        ) : (
+          <Link className="text-secondary-100" href={linkData.href}>
+            {linkData.name}
+          </Link>
+        )}
       </>
     );
   };
 
   const getMenuIcon = () => {
-    return (
-      isMenuOpen ?
-        <X className="h-full" size={36} /> :
-        <Menu size={36} />
-    );
+    return isMenuOpen ? <X className="h-full" size={36} /> : <Menu size={36} />;
   };
 
   const menuMotionProps = {
     initial: {
-      y: '-100vh',
-      type: 'spring',
-      top: '4rem',
+      y: "-100vh",
+      type: "spring",
+      top: "4rem",
     },
     animate: {
-      y: '0vh',
+      y: "0vh",
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 400,
         damping: 40,
       },
-    }
+    },
   } satisfies MotionProps;
 
   return (
-    <NavbarElement className="bg-white h-16 border-b" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen} >
-      <NavbarMenu motionProps={menuMotionProps} className="bg-white items-center absolute inset-x-auto right-0 w-64 border-l">
+    <NavbarElement
+      className="bg-white h-16 border-b"
+      isMenuOpen={isMenuOpen}
+      onMenuOpenChange={setIsMenuOpen}
+    >
+      <NavbarMenu
+        motionProps={menuMotionProps}
+        className="bg-white items-center absolute inset-x-auto right-0 w-64 border-l"
+      >
         {links.map((linkData, index) => (
-          <NavbarMenuItem onClick={() => setIsMenuOpen(false)} key={`${linkData}-${index}`}>
+          <NavbarMenuItem
+            onClick={() => setIsMenuOpen(false)}
+            key={`${linkData}-${index}`}
+          >
             {getNavbarLink(linkData)}
           </NavbarMenuItem>
         ))}
         <NavbarMenuItem onClick={() => setIsMenuOpen(false)}>
-          <Authentication user={user} onLogin={(userToSet: UserDetails) => setUser(userToSet)} />
+          <Authentication
+            user={user}
+            onLogin={(userToSet: UserDetails) => setUser(userToSet)}
+          />
         </NavbarMenuItem>
       </NavbarMenu>
       <NavbarBrand>
         <Link href={"/"}>
-          <Image
-            alt="Buurbak logo"
-            src={isScrolled ? LogoWhite : LogoColor}
-          />
+          <Image alt="Buurbak logo" src={isScrolled ? LogoWhite : LogoColor} />
         </Link>
       </NavbarBrand>
       <NavbarContent className="md:hidden" justify="end">
@@ -111,11 +126,14 @@ const Navbar = () => {
           </NavbarItem>
         ))}
         <NavbarItem>
-          <Authentication user={user} onLogin={(userToSet: UserDetails) => setUser(userToSet)} />
+          <Authentication
+            user={user}
+            onLogin={(userToSet: UserDetails) => setUser(userToSet)}
+          />
         </NavbarItem>
       </NavbarContent>
-    </NavbarElement >
+    </NavbarElement>
   );
 };
 
-export default Navbar;;
+export default Navbar;

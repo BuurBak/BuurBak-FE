@@ -1,13 +1,13 @@
 "use server";
 import { Session } from "@supabase/supabase-js";
 import { encodedRedirect } from "../../../utils/utils";
-import { getSession } from "../../lib/authUtil";
 import {
   CancelTrailer,
   CancelTrailerRes,
   PostReservations,
   ResReservations,
 } from "../Types/Reservation";
+import { getSession } from "../../lib/authUtil";
 
 export const getReservationsRequests = async () => {
   const sessionToken: Session | null = await getSession();
@@ -51,6 +51,7 @@ export const cancelTrailer = async (trailer: CancelTrailer) => {
   }
 };
 
+// Console.log no return yet and any type of return
 export const postReservations = async (data: PostReservations) => {
   const sessionToken: Session | null = await getSession();
 

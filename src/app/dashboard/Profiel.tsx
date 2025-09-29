@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  ChevronRight,
-  DoorClosed,
-} from "lucide-react";
+import { ChevronRight, DoorClosed } from "lucide-react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { useEffect, useState } from "react";
 import {
@@ -12,13 +9,13 @@ import {
   updateUser,
 } from "../../lib/authUtil";
 import { hasToken } from "../../lib/cookieUtil";
+import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
 import { UserDetails } from "../Types/User";
 import { checkStripeConnection } from "../api/Payment-controller";
+import { ProfilePicture } from "../icons/ProfilePicture";
+import AccountVerwijderenModal from "./AccountVerwijderenModal";
 import GegevensModal from "./GegevensModal";
 import TrailerModal from "./TrailerModal";
-import { ProfilePicture } from "../icons/ProfilePicture";
-import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
-import AccountVerwijderenModal from "./AccountVerwijderenModal";
 
 export default function Profiel() {
   const [user, setUser] = useState<UserDetails>();
