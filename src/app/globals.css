@@ -24,33 +24,34 @@ body {
 }
 
 h1 {
-  font-size: 56px;
-  line-height: 61.6px;
+  font-size: 2rem;
+  line-height: 3rem;
 }
 
 h2 {
-  font-size: 48px;
-  line-height: 52.8px;
+  font-size: 1.8rem;
+  line-height: 3rem;
 }
 
 h3 {
-  font-size: 40px;
-  line-height: 44px;
+  font-size: 1.6rem;
+  line-height: 3rem;
 }
 
 h4 {
-  font-size: 32px;
-  line-height: 35.2px;
+  font-size: 1.4rem;
+  line-height: 3rem;
 }
 
 h5 {
-  font-size: 24px;
-  line-height: 26.4px;
+  font-size: 1.2rem;
+  line-height: 3rem;
 }
 
 h6 {
-  font-size: 20px;
-  line-height: 22px;
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 3rem;
 }
 
 /* Screenreader only */
