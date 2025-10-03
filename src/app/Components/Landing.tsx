@@ -19,7 +19,7 @@ export default function Landing() {
           quality={80} // Adjust quality for optimization
         />
         <div className="flex justify-center items-center flex-col w-full h-full backdrop-brightness-50">
-          <h1 className="hidden md:flex text-white w-5/12 text-center font-sans font-bold">
+          <h1 className="hidden md:flex text-white w-5/12 text-center font-sans font-bold text-6xl">
             Huur en verhuur je aanhanger via BuurBak
           </h1>
           <h3 className="flex md:hidden text-white w-full text-center font-sans font-bold">
