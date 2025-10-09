@@ -108,6 +108,12 @@ const AanbodList = () => {
 
   useEffect(() => {
     function initService(): void {
+      if (!inputValueWhere) return;
+      const g: any =
+        typeof window !== "undefined" ? (window as any).google : undefined;
+      if (!g || !g.maps || !g.maps.places) {
+        return;
+      }
       const displaySuggestions = function (
         predictions: google.maps.places.QueryAutocompletePrediction[] | null,
         status: google.maps.places.PlacesServiceStatus
@@ -128,7 +134,7 @@ const AanbodList = () => {
         setNames(namesReturn.map((item) => item.split(",")[0].trim()));
       };
 
-      const service = new window.google.maps.places.AutocompleteService();
+      const service = new g.maps.places.AutocompleteService();
 
       service.getQueryPredictions(
         { input: inputValueWhere },
@@ -146,7 +152,7 @@ const AanbodList = () => {
 
       return () => clearTimeout(timeout);
     }
-    return () => { };
+    return () => {};
   }, [dateCleared]);
 
   const filterOptions: FilterOption[] = [
@@ -231,18 +237,18 @@ const AanbodList = () => {
       <div className="w-full h-fit max-h-min overflow-auto flex flex-row justify-center md:justify-start flex-wrap gap-3">
         {TrailerArray != undefined && TrailerArray.length != 0
           ? TrailerArray?.map((item) => (
-            <Card
-              key={item.uuid}
-              img={item.images[0]}
-              title={item.trailer_type}
-              location={item.address.city}
-              price={item.rental_price.toString()}
-              href={"aanbod/" + item.uuid}
-              accessoires=""
-              distance={"2"}
-              type="overview"
-            />
-          ))
+              <Card
+                key={item.uuid}
+                img={item.images[0]}
+                title={item.trailer_type}
+                location={item.address.city}
+                price={item.rental_price.toString()}
+                href={"aanbod/" + item.uuid}
+                accessoires=""
+                distance={"2"}
+                type="overview"
+              />
+            ))
           : "Geen aanhangers gevonden"}
       </div>
     </div>
