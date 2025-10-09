@@ -60,7 +60,7 @@ const Footer = () => {
         {/* Socials en Logo */}
         <div className="flex flex-col items-center lg:items-end gap-4 min-w-[250px] order-1 lg:order-2">
           <Link className="block" href="/">
-            <Image height={40} width={160} alt="logo" src={LogoBig} />
+            <Image height={40} width={160} alt="logo" src={LogoBig} style={{ height: "auto" }} />
           </Link>
           <p className="text-sm text-primary-100">Duurzaam door te delen</p>
           <div className="flex items-center mt-2">
