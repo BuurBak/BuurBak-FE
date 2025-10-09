@@ -2,19 +2,20 @@
 import { cookies } from "next/headers";
 
 export async function deleteToken(token: string) {
-  cookies().delete(token);
+  (await cookies()).delete(token);
 }
 
 export async function hasToken(token: string) {
-  return cookies().has(token);
+  return (await cookies()).has(token);
 }
 
 export async function getToken(token: string) {
-  let cookie = cookies().get(token);
+  const cookieStore = await cookies();
+  let cookie = cookieStore.get(token);
   return cookie?.value;
 }
 
 export async function getAllTokens() {
-  let cookie = cookies().getAll();
-  return cookie;
+  const cookieStore = await cookies();
+  return cookieStore.getAll();
 }

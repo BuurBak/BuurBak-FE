@@ -21,7 +21,7 @@ import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -33,7 +33,9 @@ type Inputs = {
   terms: boolean;
 };
 
-const Page = ({ params }: { params: { AanbodId: string } }) => {
+const Page = (_: { params: Promise<{ AanbodId?: string }> }) => {
+  const routeParams = useParams();
+  const AanbodId = (routeParams?.AanbodId as string) || (routeParams?.aanbodId as string);
   const { toast } = useToast();
   const searchParams = useSearchParams();
 
@@ -65,7 +67,7 @@ const Page = ({ params }: { params: { AanbodId: string } }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getTrailer(params.AanbodId);
+        const data = await getTrailer(AanbodId);
         setTrailerOffer(data);
         setLoading(false);
       } catch (error) {
