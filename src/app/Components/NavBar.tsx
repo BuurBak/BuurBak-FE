@@ -1,6 +1,6 @@
 "use client";
 
-import { Car, Mail, Menu, Tag, X } from "lucide-react";
+import { Mail, Menu, Tag, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -35,7 +35,7 @@ const Navbar = () => {
       icon: Tag,
       displayAsButton: true,
     },
-    { name: "Over ons", href: "/over_ons", icon: Car },
+    // { name: "Over ons", href: "/over_ons", icon: Car },
     { name: "Contact", href: "/contact", icon: Mail },
   ];
 
@@ -108,7 +108,13 @@ const Navbar = () => {
       </NavbarMenu>
       <NavbarBrand>
         <Link href={"/"}>
-          <Image alt="Buurbak logo" src={isScrolled ? LogoWhite : LogoColor} width={160} height={40} priority />
+          <Image
+            alt="Buurbak logo"
+            src={isScrolled ? LogoWhite : LogoColor}
+            width={160}
+            height={40}
+            priority
+          />
         </Link>
       </NavbarBrand>
       <NavbarContent className="md:hidden" justify="end">
