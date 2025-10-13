@@ -24,9 +24,9 @@ const AanbodPreview: React.FC = () => {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((coords1.lat * Math.PI) / 180) *
-      Math.cos((coords2.lat * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+        Math.cos((coords2.lat * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     return Math.round(distance);
@@ -46,7 +46,10 @@ const AanbodPreview: React.FC = () => {
 
   const dataToRender = Array.isArray(data) ? data : [];
 
-  const calculateDistance = (nearbyLatitude: number, nearbyLongitude: number): string => {
+  const calculateDistance = (
+    nearbyLatitude: number,
+    nearbyLongitude: number
+  ): string => {
     if (!navigator.geolocation) {
       console.error("Geolocation is not supported by your browser");
       return "Locatie niet beschikbaar";
@@ -78,7 +81,7 @@ const AanbodPreview: React.FC = () => {
   };
 
   return (
-    <div className="w-full sm:px-20 py-4 flex flex-col bg-offWhite-100 justify-center items-center">
+    <div className="w-full sm:px-20 py-8 flex flex-col bg-offWhite-100 justify-center items-center">
       <div className="w-full justify-center md:justify-between items-center flex flex-row mb-4">
         <h3 className="font-bold">Aanbod</h3>
         <Link href={"/aanbod"}>

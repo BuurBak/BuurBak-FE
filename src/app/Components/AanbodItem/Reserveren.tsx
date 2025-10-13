@@ -1,8 +1,9 @@
+"use client";
+
 import { getTrailerAvalibility } from "@/app/api/Trailer-controller";
 import { TrailerData } from "@/app/Types/Reservation";
-import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 import { RangeCalendar, RangeValue } from "@heroui/calendar";
-import { DateRangePicker } from "@heroui/date-picker";
+import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -26,7 +27,9 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
     []
   );
   const [collapsed, setCollapsed] = useState(false);
-  const [date, setDate] = useState<RangeValue<CalendarDate> | null>({
+  const [mounted, setMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [date, setDate] = useState<RangeValue<CalendarDate>>({
     start: today(getLocalTimeZone()),
     end: today(getLocalTimeZone()),
   });
@@ -47,6 +50,21 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
 
     disabledRanges();
   }, [date]);
+
+  // Ensure DOM-dependent logic runs only on client
+  useEffect(() => {
+    setMounted(true);
+    const updateIsDesktop = () => {
+      if (typeof window !== "undefined") {
+        setIsDesktop(window.innerWidth > 639);
+      }
+    };
+    updateIsDesktop();
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", updateIsDesktop);
+      return () => window.removeEventListener("resize", updateIsDesktop);
+    }
+  }, []);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const URLParams = (
@@ -127,31 +145,19 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
           </div>
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
-          {(collapsed || window.innerWidth > 639) && (
+          {mounted && (collapsed || isDesktop) && (
             <div className="flex flex-col gap-4 w-full items-center">
               <X
                 onClick={() => setCollapsed(false)}
                 className="self-end w-8 h-fit sm:hidden"
               />
               <RangeCalendar
-                className="buurbak-light sm:hidden"
+                aria-label="Datum"
+                className="buurbak-light"
                 value={date}
-                onChange={setDate}
-                minValue={today(getLocalTimeZone())}
-                isDateUnavailable={(date) =>
-                  disabledRangesArray.some(
-                    (interval) =>
-                      date.compare(interval[0]) >= 0 &&
-                      date.compare(interval[1]) <= 0
-                  )
-                }
-              />
-              <DateRangePicker
-                label="Datum"
-                labelPlacement="outside"
-                className="buurbak-light hidden sm:block"
-                value={date}
-                onChange={setDate}
+                onChange={(v) => {
+                  if (v && v.start && v.end) setDate(v);
+                }}
                 minValue={today(getLocalTimeZone())}
                 isDateUnavailable={(date) =>
                   disabledRangesArray.some(
@@ -196,12 +202,10 @@ const Reserveren = ({ trailerOffer }: { trailerOffer: TrailerData }) => {
               onClick={() => setCollapsed(!collapsed)}
             />
           )}
-          {(collapsed || window.innerWidth > 639) && (
+          {mounted && (collapsed || isDesktop) && (
             <Button
               label="Reserveer nu"
-              className={`min-w-fit ${
-                (collapsed || window.innerWidth > 639) && "w-full"
-              }`}
+              className={`min-w-fit ${(collapsed || isDesktop) && "w-full"}`}
               submit={true}
             />
           )}

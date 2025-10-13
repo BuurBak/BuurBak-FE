@@ -7,6 +7,7 @@ import Navbar from "./Components/NavBar";
 import SuccessToast from "./Components/SuccesToast";
 import { Toaster } from "./Components/ui/toaster";
 import "./globals.css";
+import Providers from "./Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,14 +27,16 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className={inter.className}>
-        <Navbar />
-        {children}
-        <Footer />
-        <Suspense>
-          <Toaster />
-          <SuccessToast />
-          <ErrorToast />
-        </Suspense>
+        <Providers>
+          <Navbar />
+          {children}
+          <Footer />
+          <Suspense>
+            <Toaster />
+            <SuccessToast />
+            <ErrorToast />
+          </Suspense>
+        </Providers>
       </body>
     </html>
   );

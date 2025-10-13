@@ -108,7 +108,7 @@ const Navbar = () => {
       </NavbarMenu>
       <NavbarBrand>
         <Link href={"/"}>
-          <Image alt="Buurbak logo" src={isScrolled ? LogoWhite : LogoColor} />
+          <Image alt="Buurbak logo" src={isScrolled ? LogoWhite : LogoColor} width={160} height={40} priority />
         </Link>
       </NavbarBrand>
       <NavbarContent className="md:hidden" justify="end">
