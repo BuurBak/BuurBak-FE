@@ -35,7 +35,7 @@ const Navbar = () => {
       icon: Tag,
       displayAsButton: true,
     },
-    { name: "Over ons", href: "/over_ons", icon: Car },
+    { name: "Over ons", href: "/over-ons", icon: Car },
     { name: "Contact", href: "/contact", icon: Mail },
   ];
 

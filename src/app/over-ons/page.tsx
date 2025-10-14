@@ -30,8 +30,8 @@ const OverOns = () => {
                 We brengen mensen samen door stilstaande aanhangwagens te delen. Zo maak je slim gebruik van wat er al is, help je anderen én heb je even persoonlijk contact met je buren.
               </p>
               <ul className="">
-                <li className="mt-3">➡️ Meer delen, minder verspillen.</li>
-                <li className="mt-3">➡️ Slim, sociaal én duurzaam.</li>
+                <li className="mt-3">➡️ Meer delen, minder verspillen</li>
+                <li className="mt-3">➡️ Slim, sociaal én duurzaam</li>
               </ul>
             </div>
             <div className="mt-auto">
