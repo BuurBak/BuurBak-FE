@@ -41,7 +41,7 @@ const Authentication: FC<AuthenticationProps> = ({ user, onLogin }) => {
   const { register, handleSubmit, getValues } = form;
   const [showPassword, setShowPassword] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
-  const [showSignIn, setShowSignIn] = useState(true);
+  const [showSignIn, setShowSignIn] = useState(false);
 
   const currentRoute = usePathname();
 
