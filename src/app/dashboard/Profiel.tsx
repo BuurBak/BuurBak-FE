@@ -8,10 +8,11 @@ import {
   signOut,
   updateUser,
 } from "../../lib/authUtil";
-import { hasToken } from "../../lib/cookieUtil";
+import Button from "../Components/Button";
 import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
+import Icon from "../Components/Icon";
 import { UserDetails } from "../Types/User";
-import { checkStripeConnection } from "../api/Payment-controller";
+import { checkStripeConnection, linkToStripe } from "../api/Payment-controller";
 import { ProfilePicture } from "../icons/ProfilePicture";
 import AccountVerwijderenModal from "./AccountVerwijderenModal";
 import GegevensModal from "./GegevensModal";
@@ -20,7 +21,7 @@ import TrailerModal from "./TrailerModal";
 export default function Profiel() {
   const [user, setUser] = useState<UserDetails>();
   const [stripe, setStripe] = useState<boolean>();
-  const router = useRouter(); // Gebruik de router om te navigeren
+  const router = useRouter();
 
   const onSubmit = async (updatedUser: UserDetails) => {
     await updateUser(updatedUser);
@@ -38,12 +39,12 @@ export default function Profiel() {
     };
     fetchUser();
 
-    const checkToken = async () => {
-      if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
-        router.push("/");
-      }
-    };
-    checkToken();
+    // const checkToken = async () => {
+    //   if (!(await hasToken("sb-tnffbjgnzpqsjlaumogv-auth-token"))) {
+    //     router.push("/");
+    //   }
+    // };
+    // checkToken();
   }, []);
 
   const handleSignOut = async () => {
@@ -53,6 +54,11 @@ export default function Profiel() {
     } catch (error) {
       console.error("Error during sign-out:", error);
     }
+  };
+
+  const connectStripe = async () => {
+    const res = await linkToStripe("/dashboard");
+    window.open(res?.url, "_blank");
   };
 
   useEffect(() => {
@@ -68,17 +74,16 @@ export default function Profiel() {
       <div className="flex flex-col rounded-md items-center">
         {ProfilePicture(200)}
         <p className="text-center text-2xl font-bold m-4">{user?.name}</p>
-        {stripe ? (
-          <p className="text-success-400 text-center bg-offWhite-100 p-3 rounded">
-            Je account is verbonden met stripe
-          </p>
-        ) : (
-          <p className="text-error-100 text-center bg-offWhite-100 p-3 rounded">
-            Je account is nog niet verbonden met stripe
-          </p>
-        )}
       </div>
       <div className="flex flex-col mt-8">
+        {stripe ? (
+          <div className="bg-offWhite-100 p-3 rounded flex gap-4">
+            <Icon name="CheckCheck" className="text-success-500" />
+            <p>Stripe verbonden</p>
+          </div>
+        ) : (
+          <Button label="Verbind met stripe" onClick={() => connectStripe()} />
+        )}
         <GegevensModal user={user} onSubmit={onSubmit} />
         <TrailerModal />
         <div>
