@@ -12,7 +12,6 @@ import { checkStripeConnection } from "../api/Payment-controller";
 import { postTrailer } from "../api/Trailer-controller";
 import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
-import InputField from "../Components/InputField";
 import TrailerImagesUpload from "../Components/TrailerImagesUpload";
 import { PostTrailer } from "../Types/TrailerType";
 import { getDayAbbreviation } from "./getDayAbbreviation";
@@ -21,6 +20,7 @@ import { Chip } from "@heroui/chip";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Input } from "@heroui/input";
 import SearchPlaceProvider, { LocationData } from "../Components/SearchPlaceProvider";
+import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
 
 
 const Verhuren = () => {
@@ -104,27 +104,6 @@ const Verhuren = () => {
   }, [watch("trailer_type")]);
 
   useEffect(() => {
-    const imageUuidArray = async () => {
-      const imageUUID: string[] = [];
-      // const res = await postImages(files);
-
-      // if (res) {
-      //   res.forEach((item: PostImageRes) => {
-      //     imageUUID.push(item.uuid);
-      //     const prevPictures = pictures;
-      //     setPictures([...prevPictures, item.url]);
-      //   });
-      //   setValue("images", imageUUID);
-      // }
-    };
-
-    if (files.length > 0) {
-      imageUuidArray();
-    }
-    // getImageById(watch("images.0"));
-  }, [files]);
-
-  useEffect(() => {
     const checkStripe = async () => {
       let res = await checkStripeConnection();
       console.log(res);
@@ -146,11 +125,6 @@ const Verhuren = () => {
     };
     checkStripe();
   }, []);
-
-  const getImageById = async (id: string) => {
-    const res = await getImage(id);
-    return res;
-  };
 
   useEffect(() => {
     const checkIsSignedIn = async () => {
@@ -174,7 +148,7 @@ const Verhuren = () => {
 
   const trailerPictures = () => {
     return (
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col">
         <TrailerImagesUpload
           onFilesChange={setFiles}
           {...register("images", {
@@ -219,12 +193,9 @@ const Verhuren = () => {
         <p className="font-bold">Geef een korte beschrijving voor de huurder:</p>
         <textarea
           id="message"
-          className="flex flex-row p-2.5 w-full h-32 rounded border-1 border-primary-100"
+          className="w-full h-32 rounded border-1 border-primary-100"
           placeholder="Deze aanhanger is ideaal voor banken verhuizen, omdat..."
           aria-label="description"
-          {...register("description", {
-            required: "Vul een korte beschrijving in voor jouw aanhanger",
-          })}
         />
         <p className="text-error-100">{errors.description?.message}</p>
       </div>
@@ -294,7 +265,6 @@ const Verhuren = () => {
     return trailerLocationData.find((component) => component.types.includes(type));
   };
 
-
   const trailerLocation = () => {
     return (
       <div className="gap-5">
@@ -304,10 +274,15 @@ const Verhuren = () => {
         {trailerLocationData.length > 0
           ? (
             <>
-              <Input placeholder="houseNumber" value={getLocationData('house_number')?.longName} />
-              <Input placeholder="postalCode" value={getLocationData('postal_code')?.longName} />
-              <Input placeholder="country" value={getLocationData('country')?.longName} />
-              <Input placeholder="route" value={getLocationData('route')?.longName} />
+              <div className="grid grid-flow-col grid-rows-2 gap-2">
+                <Input className="row-span-1" label='Straatnaam' value={getLocationData('street_number')?.longName} />
+                <Input className="row-span-1" label='Postcode' value={getLocationData('postal_code')?.longName} />
+                <Input className="row-span-1" label='Huisnummer' value={getLocationData('locality')?.longName} />
+                <Input className="row-span-1" label='Plaats' value={getLocationData('route')?.longName} />
+              </div>
+              <div className="flex justify-right mt-2">
+                <HeroUIBasedButton buttonVariant="primary" onPress={() => setTrailerLocationData([])}>Zoek opnieuw</HeroUIBasedButton>
+              </div>
             </>
           )
           : (
@@ -323,7 +298,7 @@ const Verhuren = () => {
 
   const trailerLicenseRequirement = () => {
     return (
-      <div className="gap-5">
+      <div>
         <p className="font-bold">
           Kies het soort rijbewijs wat vereist is om de aanhanger te gebruiken:
         </p>
@@ -354,86 +329,26 @@ const Verhuren = () => {
   };
 
   const trailerDimensions = () => {
-    const min = 50;
     return (
-      <div className="flex flex-col gap-5">
+      <div className="wut">
         <p className="font-bold">
           Vul de afmetingen van je aanhanger in cm:
         </p>
-        <div className="flex flex-col gap-3 w-full">
-          <InputField
-            inputType="text"
-            label="Vul de lengte van je aanhanger in cm"
-            icon
-            rangeMin={min}
-            rangeMax={300}
-            iconLeft
-            type="number"
-            iconName="L"
-            outline
-            className="w-full"
-            {...register("dimensions.length", {
-              valueAsNumber: true,
-              required: "Vul de lengte in van jou aanhanger",
-              min: {
-                value: min,
-                message: "De lengte moet minimaal 10 cm zijn",
-              },
-              max: {
-                value: 300,
-                message: "De lengte mag maximaal 300 cm zijn",
-              },
-            })}
+        <div className="flex gap-2 justify-center">
+          <Input
+            label="lengte"
           />
           <p className="text-error-100">
             {errors.dimensions?.length?.message}
           </p>
-          <InputField
-            inputType="text"
-            label="Vul de breedte van je aanhanger in cm"
-            icon
-            iconLeft
-            type="number"
-            iconName="B"
-            outline
-            className="w-full"
-            {...register("dimensions.width", {
-              valueAsNumber: true,
-              required: "Vul de breedte in van jou aanhanger",
-              min: {
-                value: min,
-                message: "De breedte moet minimaal 10 cm zijn",
-              },
-              max: {
-                value: 300,
-                message: "De breedte mag maximaal 300 cm zijn",
-              },
-            })}
+          <Input
+            label="breedte"
           />
           <p className="text-error-100">
             {errors.dimensions?.width?.message}
           </p>
-          <InputField
-            inputType="text"
-            label="Vul de hoogte van je aanhanger in cm"
-            icon
-            iconLeft
-            type="number"
-            iconName="H"
-            outline
-            className="w-full"
-            {...register("dimensions.height", {
-              valueAsNumber: true,
-              required: "Vul de hoogte in van jou aanhanger",
-              min: {
-                value: min,
-                message: "De hoogte moet minimaal 10 cm zijn",
-              },
-              max: {
-                value: 400,
-                message: "De hoogte mag maximaal 400 cm zijn",
-              },
-            })}
+          <Input
+            label="hoogte"
           />
           <p className="text-error-100">
             {errors.dimensions?.height?.message}
@@ -445,27 +360,12 @@ const Verhuren = () => {
 
   const trailerPricePerDay = () => {
     return (
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col">
         <p className="font-bold">
           Voor hoeveel € per dag wil je je aanhanger verhuren:
         </p>
-        <InputField
-          inputType="text"
+        <Input
           label="Prijs... "
-          icon
-          iconLeft
-          iconName="Euro"
-          outline
-          className="w-full"
-          type="number"
-          {...register("rental_price", {
-            valueAsNumber: true,
-            required: "Vul de prijs in van jouw aanhanger",
-            min: {
-              value: 0,
-              message: "De prijs moet minimaal 0 euro zijn",
-            },
-          })}
         />
         <p className="text-error-100">{errors.rental_price?.message}</p>
       </div>
@@ -477,7 +377,7 @@ const Verhuren = () => {
       <div className="flex flex-col gap-5">
         <p className="font-bold">
           Kies de dagen waarop je de aanhanger beschikbaar wilt maken voor
-          ophaal:
+          ophalen:
         </p>
         <div className="flex flex-row gap-3 w-full">
           {(
@@ -583,30 +483,38 @@ const Verhuren = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex pt-8 gap-5 justify-center"
-      noValidate
-    >
-      <div >
-        <h4 className="text-center text-h3 font-bold">
-          Creer jouw aanhanger advertentie
-        </h4>
-        <div className="flex flex-col pt-8 gap-5">
-          {trailerPictures()}
-          {trailerType()}
-          {trailerDescription()}
-          {trailerAccessories()}
-          {trailerLocation()}
-          {trailerLicenseRequirement()}
-          {trailerDimensions()}
-          {trailerPricePerDay()}
-          {trailerAvailability()}
+    <>
+      <h4 className="text-center text-h3 font-bold my-5">
+        Creëer jouw aanhanger advertentie
+      </h4>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+      >
+        <div>
+          <div className="flex flex-col gap-5">
+            {trailerPictures()}
+            {trailerType()}
+            {trailerDescription()}
+            {trailerAccessories()}
+            {trailerLocation()}
+            {trailerLicenseRequirement()}
+            {trailerDimensions()}
+            {trailerPricePerDay()}
+            {trailerAvailability()}
+          </div>
         </div>
-      </div>
+        <Button
+          label="Voeg jouw aanhanger toe"
+          submit
+          disabled={
+            isSubmitting || isSubmitSuccessful || !isSignedIn || !stripe
+          }
+        />
 
-      {trailerAdPreview()}
-    </form>
+        {/* {trailerAdPreview()} */}
+      </form>
+    </>
   );
 };
 
