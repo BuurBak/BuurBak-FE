@@ -275,10 +275,10 @@ const Verhuren = () => {
           ? (
             <>
               <div className="grid grid-flow-col grid-rows-2 gap-2">
-                <Input className="row-span-1" label='Straatnaam' value={getLocationData('street_number')?.longName} />
+                <Input className="row-span-1" label='Straatnaam' value={getLocationData('route')?.longName} />
                 <Input className="row-span-1" label='Postcode' value={getLocationData('postal_code')?.longName} />
-                <Input className="row-span-1" label='Huisnummer' value={getLocationData('locality')?.longName} />
-                <Input className="row-span-1" label='Plaats' value={getLocationData('route')?.longName} />
+                <Input className="row-span-1" label='Huisnummer' value={getLocationData('street_number')?.longName} />
+                <Input className="row-span-1" label='Plaats' value={getLocationData('locality')?.longName} />
               </div>
               <div className="flex justify-right mt-2">
                 <HeroUIBasedButton buttonVariant="primary" onPress={() => setTrailerLocationData([])}>Zoek opnieuw</HeroUIBasedButton>
@@ -374,7 +374,7 @@ const Verhuren = () => {
 
   const trailerAvailability = () => {
     return (
-      <div className="flex flex-col gap-5">
+      <div>
         <p className="font-bold">
           Kies de dagen waarop je de aanhanger beschikbaar wilt maken voor
           ophalen:
@@ -490,21 +490,19 @@ const Verhuren = () => {
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
+        className="flex flex-col gap-5"
       >
-        <div>
-          <div className="flex flex-col gap-5">
-            {trailerPictures()}
-            {trailerType()}
-            {trailerDescription()}
-            {trailerAccessories()}
-            {trailerLocation()}
-            {trailerLicenseRequirement()}
-            {trailerDimensions()}
-            {trailerPricePerDay()}
-            {trailerAvailability()}
-          </div>
-        </div>
+        {trailerPictures()}
+        {trailerType()}
+        {trailerDescription()}
+        {trailerAccessories()}
+        {trailerLocation()}
+        {trailerLicenseRequirement()}
+        {trailerDimensions()}
+        {trailerPricePerDay()}
+        {trailerAvailability()}
         <Button
+          className="mb-2"
           label="Voeg jouw aanhanger toe"
           submit
           disabled={
