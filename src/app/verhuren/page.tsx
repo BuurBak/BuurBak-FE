@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { hasToken } from "../../lib/cookieUtil";
-import { getImage } from "../api/Images-controller";
 import { checkStripeConnection } from "../api/Payment-controller";
 import { postTrailer } from "../api/Trailer-controller";
 import Details from "../Components/AanbodItem/Details";
@@ -104,6 +103,10 @@ const Verhuren = () => {
   }, [watch("trailer_type")]);
 
   useEffect(() => {
+    setValue("accessories", selectedAccessoires);
+  }, [selectedAccessoires])
+
+  useEffect(() => {
     const checkStripe = async () => {
       let res = await checkStripeConnection();
       console.log(res);
@@ -193,9 +196,12 @@ const Verhuren = () => {
         <p className="font-bold">Geef een korte beschrijving voor de huurder:</p>
         <textarea
           id="message"
-          className="w-full h-32 rounded border-1 border-primary-100"
+          className="w-full h-32 rounded border-1 border-primary-100 px-2"
           placeholder="Deze aanhanger is ideaal voor banken verhuizen, omdat..."
           aria-label="description"
+          {...register("description", {
+            required: "Geef je aanhanger een korte omschrijving"
+          })}
         />
         <p className="text-error-100">{errors.description?.message}</p>
       </div>
@@ -214,6 +220,7 @@ const Verhuren = () => {
 
   const handleSelectionChange = (keys: SharedSelection) => {
     const newSelection = Array.from(keys) as Array<string>;
+
     setSelectedAccessories(newSelection.sort());
   };
 
@@ -265,6 +272,7 @@ const Verhuren = () => {
     return trailerLocationData.find((component) => component.types.includes(type));
   };
 
+  // This component can better be done with just some API requests to the Places API, since Americans do postcodes different.
   const trailerLocation = () => {
     return (
       <div className="gap-5">
@@ -334,21 +342,30 @@ const Verhuren = () => {
         <p className="font-bold">
           Vul de afmetingen van je aanhanger in cm:
         </p>
-        <div className="flex gap-2 justify-center">
+        <div className="flex flex-col gap-2 justify-center">
           <Input
             label="lengte"
+            {...register("dimensions.length", {
+              required: "Vul de lengte van je aanhanger in"
+            })}
           />
           <p className="text-error-100">
             {errors.dimensions?.length?.message}
           </p>
           <Input
             label="breedte"
+            {...register("dimensions.width", {
+              required: "Vul de breedte van je aanhanger in"
+            })}
           />
           <p className="text-error-100">
             {errors.dimensions?.width?.message}
           </p>
           <Input
             label="hoogte"
+            {...register("dimensions.height", {
+              required: "Vul de hoogte van je aanhanger in"
+            })}
           />
           <p className="text-error-100">
             {errors.dimensions?.height?.message}
@@ -366,6 +383,9 @@ const Verhuren = () => {
         </p>
         <Input
           label="Prijs... "
+          {...register("rental_price", {
+            required: "Vul de huurprijs per dag van je aanhanger in"
+          })}
         />
         <p className="text-error-100">{errors.rental_price?.message}</p>
       </div>
@@ -490,7 +510,7 @@ const Verhuren = () => {
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
-        className="flex flex-col gap-5"
+        className="flex flex-col gap-5 mx-5"
       >
         {trailerPictures()}
         {trailerType()}
