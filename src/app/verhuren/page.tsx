@@ -20,6 +20,7 @@ import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Input } from "@heroui/input";
 import SearchPlaceProvider, { LocationData } from "../Components/SearchPlaceProvider";
 import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
+import { toast } from "../hooks/use-toast";
 
 
 const Verhuren = () => {
@@ -140,13 +141,14 @@ const Verhuren = () => {
     checkIsSignedIn();
   });
 
-  const onSubmit = (data: PostTrailer, event: any) => {
-    event.preventDefault();
-    const addTrailer = async () => {
-      await postTrailer(data);
-    };
+  useEffect(() => {
+    setValue('images', files.map((file) => file.name))
+  }, [files])
 
-    addTrailer();
+  const onSubmit = async (data: PostTrailer, event: any) => {
+    console.log('BIg time submit success. posting data' + JSON.stringify(data))
+    event.preventDefault();
+    await postTrailer(data);
   };
 
   const trailerPictures = () => {
@@ -247,7 +249,7 @@ const Verhuren = () => {
           topContent={
             <>
               {selectedAccessoires.map((accessory) => (
-                <Chip onClose={() => removeSelectedAccessory(accessory)}>{accessory}</Chip>
+                <Chip key={accessory} onClose={() => removeSelectedAccessory(accessory)}>{accessory}</Chip>
               ))}
               <Input
                 value={selectFilter}
@@ -508,7 +510,7 @@ const Verhuren = () => {
         Creëer jouw aanhanger advertentie
       </h4>
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit, () => { console.log("Big time submit failure") })}
         noValidate
         className="flex flex-col gap-5 mx-5"
       >
@@ -532,6 +534,7 @@ const Verhuren = () => {
 
         {/* {trailerAdPreview()} */}
       </form>
+      <HeroUIBasedButton buttonVariant="primary" onPress={() => onSubmit({} as PostTrailer, { preventDefault: () => { } })}>KLICK</HeroUIBasedButton>
     </>
   );
 };
