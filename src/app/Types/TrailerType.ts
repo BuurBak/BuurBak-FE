@@ -9,7 +9,7 @@ export type TrailerType = {
   | "Alle";
 };
 
-export type PostTrailer = {
+export type Trailer = {
   title: string;
   description: string;
   address: Address;

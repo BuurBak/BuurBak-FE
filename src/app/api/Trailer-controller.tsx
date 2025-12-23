@@ -2,7 +2,7 @@
 import { Session } from "@supabase/supabase-js";
 import { encodedRedirect } from "../../../utils/utils";
 import { TrailerData } from "../Types/Reservation";
-import { PostTrailer } from "../Types/TrailerType";
+import { Trailer } from "../Types/TrailerType";
 import { getSession } from "../../lib/authUtil";
 
 export const getAllTrailers = async () => {
@@ -51,7 +51,7 @@ export const getTrailers = async () => {
 };
 
 // Console.log no return yet
-export const postTrailer = async (data: PostTrailer) => {
+export const postTrailer = async (data: Trailer) => {
   const sessionToken: Session | null = await getSession();
 
   try {

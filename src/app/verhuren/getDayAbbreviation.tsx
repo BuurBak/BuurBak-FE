@@ -1,6 +1,6 @@
-import { PostTrailer } from "../Types/TrailerType";
+import { Trailer } from "../Types/TrailerType";
 
-export const getDayAbbreviation = (day: keyof PostTrailer["availability"]) => {
+export const getDayAbbreviation = (day: keyof Trailer["availability"]) => {
     switch (day) {
         case "monday":
             return "Ma";

@@ -12,7 +12,7 @@ import { postTrailer } from "../api/Trailer-controller";
 import Details from "../Components/AanbodItem/Details";
 import Button from "../Components/Button";
 import TrailerImagesUpload from "../Components/TrailerImagesUpload";
-import { PostTrailer } from "../Types/TrailerType";
+import { Trailer } from "../Types/TrailerType";
 import { getDayAbbreviation } from "./getDayAbbreviation";
 import { SharedSelection } from "@heroui/system";
 import { Chip } from "@heroui/chip";
@@ -24,7 +24,7 @@ import { toast } from "../hooks/use-toast";
 
 
 const Verhuren = () => {
-  const [stripe, setStripe] = useState<boolean>();
+  const [hasStripe, setStripe] = useState<boolean>();
   const [files, setFiles] = useState<File[]>([]);
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
   const [selectedAccessoires, setSelectedAccessories] = useState<Array<string>>([]);
@@ -39,7 +39,7 @@ const Verhuren = () => {
     watch,
     getValues,
     reset,
-  } = useForm<PostTrailer>({
+  } = useForm<Trailer>({
     defaultValues: {
       accessories: [],
       address: {
@@ -95,7 +95,7 @@ const Verhuren = () => {
     "'Lange lading' bord",
   ].sort();
 
-  const toggleDay = (day: keyof PostTrailer["availability"]) => {
+  const toggleDay = (day: keyof Trailer["availability"]) => {
     setValue(`availability.${day}`, !watch(`availability.${day}`));
   };
 
@@ -106,7 +106,6 @@ const Verhuren = () => {
   useEffect(() => {
     const checkStripe = async () => {
       let res = await checkStripeConnection();
-      console.log(res);
       if (res) {
         if (res.ready_for_payments) {
           setStripe(res.ready_for_payments);
@@ -141,10 +140,12 @@ const Verhuren = () => {
     setValue('images', files.map((file) => file.name))
   }, [files])
 
-  const onSubmit = async (data: PostTrailer, event: any) => {
+  const onSubmit = async (data: Trailer, event: any) => {
+    // TODO: Title set here for now but can maybe just done with watches again.
+    const trailerToPost = { ...data, title: data.trailer_type }
     console.log('Submitting trailer')
     event.preventDefault();
-    await postTrailer(data);
+    await postTrailer(trailerToPost);
   };
 
   const trailerPictures = () => {
@@ -153,7 +154,7 @@ const Verhuren = () => {
         <TrailerImagesUpload
           onFilesChange={setFiles}
           {...register("images", {
-            required: "Upload 5 fotos van de aanhanger"
+            required: "Upload fotos van de aanhanger"
           })}
         />
         <p className="text-error-100">{errors.images?.message}</p>
@@ -172,7 +173,6 @@ const Verhuren = () => {
           {...register("trailer_type", {
             required: "Kies jouw type aanhanger",
           })}
-          {...register("title")}
         >
           {trailerType.map((item, index) => (
             <AutocompleteItem
@@ -401,7 +401,7 @@ const Verhuren = () => {
         <div className="flex flex-row gap-3 w-full">
           {(
             Object.keys(getValues().availability) as Array<
-              keyof PostTrailer["availability"]
+              keyof Trailer["availability"]
             >
           ).map((day) => (
             <div
@@ -483,7 +483,7 @@ const Verhuren = () => {
               label="Voeg jouw aanhanger toe"
               submit
               disabled={
-                isSubmitting || isSubmitSuccessful || !isSignedIn || !stripe
+                isSubmitting || isSubmitSuccessful || !isSignedIn || !hasStripe
               }
             />
             <Link
@@ -507,8 +507,7 @@ const Verhuren = () => {
         Creëer jouw aanhanger advertentie
       </h4>
       <form
-        onSubmit={handleSubmit(onSubmit, () => { console.log("Submitting trailer form failed") })}
-        noValidate
+        onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-5 mx-5"
       >
         {trailerPictures()}
@@ -524,14 +523,11 @@ const Verhuren = () => {
           className="mb-2"
           label="Voeg jouw aanhanger toe"
           submit
-          disabled={
-            isSubmitting || isSubmitSuccessful || !isSignedIn || !stripe
-          }
+          disabled={isSubmitting || !isSignedIn || !hasStripe}
         />
 
         {/* {trailerAdPreview()} */}
       </form>
-      <HeroUIBasedButton buttonVariant="primary" onPress={() => onSubmit({} as PostTrailer, { preventDefault: () => { } })}>KLICK</HeroUIBasedButton>
     </>
   );
 };

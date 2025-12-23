@@ -1,12 +1,12 @@
 import { TrailerData } from "@/app/Types/Reservation";
-import { PostTrailer } from "@/app/Types/TrailerType";
+import { Trailer } from "@/app/Types/TrailerType";
 import { useState } from "react";
 import Button from "../Button";
 
 const Details = ({
   trailerOffer,
 }: {
-  trailerOffer: TrailerData | PostTrailer;
+  trailerOffer: TrailerData | Trailer;
 }) => {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -25,9 +25,8 @@ const Details = ({
   return (
     <div className="relative mb-[4rem]">
       <div
-        className={`flex flex-col gap-5 overflow-hidden transition-[height] ease-in-out duration-300 ${
-          collapsed && "h-[20vh]"
-        }`}
+        className={`flex flex-col gap-5 overflow-hidden transition-[height] ease-in-out duration-300 ${collapsed && "h-[20vh]"
+          }`}
       >
         <p className="text-h5 font-bold">Details</p>
         <div className="flex flex-col gap-3">
@@ -41,15 +40,15 @@ const Details = ({
                 <p>{dutchLabel}:</p>
                 <p>
                   {trailerOffer.dimensions.height ||
-                  trailerOffer.dimensions.length ||
-                  trailerOffer.dimensions.width
+                    trailerOffer.dimensions.length ||
+                    trailerOffer.dimensions.width
                     ? convertMeterToCentimeter(
-                        trailerOffer.dimensions[
-                          dimensionLabels[
-                            dutchLabel
-                          ] as keyof TrailerData["dimensions"]
-                        ]
-                      ) + " "
+                      trailerOffer.dimensions[
+                      dimensionLabels[
+                      dutchLabel
+                      ] as keyof TrailerData["dimensions"]
+                      ]
+                    ) + " "
                     : "0 "}
                   meter
                 </p>
@@ -98,9 +97,8 @@ const Details = ({
         icon
         IconName={collapsed ? "ChevronDown" : "ChevronUp"}
         type="secondary"
-        className={`absolute ${
-          collapsed ? "bottom-[-1rem]" : "bottom-[-3.5rem]"
-        } left-0 right-0 mx-auto w-1/6 min-w-fit bg-white text-black-100 rounded-md border`}
+        className={`absolute ${collapsed ? "bottom-[-1rem]" : "bottom-[-3.5rem]"
+          } left-0 right-0 mx-auto w-1/6 min-w-fit bg-white text-black-100 rounded-md border`}
       />
     </div>
   );
