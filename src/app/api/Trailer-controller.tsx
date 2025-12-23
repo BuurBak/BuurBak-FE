@@ -64,9 +64,15 @@ export const postTrailer = async (data: PostTrailer) => {
       body: JSON.stringify(data),
     });
 
-    console.log(await response.json());
+    if (response.status != 200) {
+      const responseJson = await response.json()
+      console.error(`Backend returned an error with status ${response.status} and response ${JSON.stringify(responseJson)}`);
+      return
+    }
+
+    console.info("Submitted trailer successfully")
   } catch (error) {
-    console.warn(error);
+    console.error("Post trailer fetch failed with error: " + error);
   }
 };
 
