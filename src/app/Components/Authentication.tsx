@@ -21,6 +21,7 @@ import {
 } from "../Types/User";
 import { HeroUIBasedButton } from "./HeroUIBasedButton";
 import InputField from "./InputField";
+import { Input } from "@heroui/input";
 
 interface AuthenticationProps {
   user: UserDetails | undefined;
@@ -38,7 +39,8 @@ const Authentication: FC<AuthenticationProps> = ({ user, onLogin }) => {
       phone_number: "",
     },
   });
-  const { register, handleSubmit, getValues } = form;
+  const { register, handleSubmit, getValues, formState } = form;
+  const { errors } = formState;
   const [showPassword, setShowPassword] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showSignIn, setShowSignIn] = useState(true);
@@ -118,18 +120,13 @@ const Authentication: FC<AuthenticationProps> = ({ user, onLogin }) => {
     return (
       <div>
         <label>Wachtwoord</label>
-        <InputField
+        <Input
           type={showPassword ? "text" : "passWord"}
           className="!w-full"
           label="Wachtwoord"
-          inputType="text"
-          outline={true}
-          required={true}
-          icon={true}
-          iconName={showPassword ? "Eye" : "EyeOff"}
-          iconClick={() => setShowPassword(!showPassword)}
-          {...register("password")}
+          {...register("password", { required: "Vul je wachtwoord in" })}
         />
+        <p className="text-error-100">{errors.password?.message}</p>
       </div>
     );
   };
@@ -138,16 +135,14 @@ const Authentication: FC<AuthenticationProps> = ({ user, onLogin }) => {
     return (
       <div className="w-full">
         <label>Email</label>
-        <InputField
+        <Input
           type="email"
           className="!w-full"
           // pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
           label="Email"
-          inputType="text"
-          outline={true}
-          required={true}
-          {...register("username")}
+          {...register("username", { required: "Vul je emailadres in" })}
         />
+        <p className="text-error-100">{errors.username?.message}</p>
       </div>
     );
   };
@@ -160,41 +155,36 @@ const Authentication: FC<AuthenticationProps> = ({ user, onLogin }) => {
       >
         <div className="w-full">
           <label>Naam</label>
-          <InputField
+          <Input
             type="text"
             // pattern="^(?:[A-Z]|[a-z])[a-z ]+(?: [A-Z]?[a-z ]*)*$"
             className="!w-full"
             label="Naam"
-            inputType="text"
-            outline={true}
-            required={showRegisterForm}
-            {...register("name")}
+            {...register("name", { required: "Vul je naam in" })}
           />
+          <p className="text-error-100">{errors.name?.message}</p>
         </div>
         {getEmailFormField()}
         <div className="w-full">
           <label>Telefoon nummer</label>
-          <InputField
+          <Input
             type="tel"
             // pattern="^(06|00316|\+316|0031 6|\+31 6)(?:\s?)(?:[0-9]{2}\s?){4}$"
             className="!w-full"
             label="Telefoon nummer"
-            inputType="text"
-            outline={true}
-            required={showRegisterForm}
-            {...register("phone_number")}
+            {...register("phone_number", { required: "Vul je telefoonnummer in" })}
           />
+          <p className="text-error-100">{errors.phone_number?.message}</p>
         </div>
         {getWachtwoordFormField()}
         <HeroUIBasedButton
           buttonVariant="primary"
           type="submit"
-          onPress={onClose}
         >
           Registreer
         </HeroUIBasedButton>
         <p>
-          Heb je al een account?{" "}
+          Heb je al een account?
           <span
             className="text-primary-100"
             onClick={() => setShowRegisterForm(false)}
@@ -218,13 +208,12 @@ const Authentication: FC<AuthenticationProps> = ({ user, onLogin }) => {
           buttonVariant="primary"
           className=""
           type="submit"
-          onPress={onClose}
         >
           Login
         </HeroUIBasedButton>
         <Link href={"/wachtwoord_vergeten"}>Wachtwoord vergeten?</Link>
         <p>
-          Nog geen BuurBak account?{" "}
+          Nog geen BuurBak account?
           <span
             className="text-primary-100 cursor-pointer"
             onClick={() => setShowRegisterForm(true)}

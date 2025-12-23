@@ -99,7 +99,7 @@ const Navbar = () => {
             {getNavbarLink(linkData)}
           </NavbarMenuItem>
         ))}
-        <NavbarMenuItem onClick={() => setIsMenuOpen(false)}>
+        <NavbarMenuItem>
           <Authentication
             user={user}
             onLogin={(userToSet: UserDetails) => setUser(userToSet)}
