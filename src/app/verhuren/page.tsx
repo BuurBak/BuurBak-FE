@@ -64,7 +64,7 @@ const Verhuren = () => {
       location: { latitude: undefined, longitude: undefined },
       rental_price: undefined,
       title: "",
-      trailer_type: "",
+      trailer_type: ""
     },
   });
   const { errors, isSubmitSuccessful, isSubmitting } = formState;
@@ -75,7 +75,7 @@ const Verhuren = () => {
 
   //TODO: These should be enums
   const license: string[] = ["B", "BE"];
-  const soortAanhanger: string[] = [
+  const trailerType: string[] = [
     "Open Aanhanger",
     "Gesloten Aanhanger",
     "Motorfiets Aanhanger",
@@ -98,10 +98,6 @@ const Verhuren = () => {
   const toggleDay = (day: keyof PostTrailer["availability"]) => {
     setValue(`availability.${day}`, !watch(`availability.${day}`));
   };
-
-  useEffect(() => {
-    setValue("title", watch("trailer_type"));
-  }, [watch("trailer_type")]);
 
   useEffect(() => {
     setValue("accessories", selectedAccessoires);
@@ -146,7 +142,7 @@ const Verhuren = () => {
   }, [files])
 
   const onSubmit = async (data: PostTrailer, event: any) => {
-    console.log('BIg time submit success. posting data' + JSON.stringify(data))
+    console.log('Submitting trailer')
     event.preventDefault();
     await postTrailer(data);
   };
@@ -165,7 +161,7 @@ const Verhuren = () => {
     );
   };
 
-  const trailerType = () => {
+  const trailerTypeSelector = () => {
     return (
       <div>
         <span className="font-bold">Kies je type aanhanger:</span>
@@ -176,8 +172,9 @@ const Verhuren = () => {
           {...register("trailer_type", {
             required: "Kies jouw type aanhanger",
           })}
+          {...register("title")}
         >
-          {soortAanhanger.map((item, index) => (
+          {trailerType.map((item, index) => (
             <AutocompleteItem
               key={index}
               aria-label={item}
@@ -187,7 +184,7 @@ const Verhuren = () => {
             </AutocompleteItem>
           ))}
         </Autocomplete>
-        <p className="text-error-100">{errors.trailer_type?.message}</p>
+        <p className="text-error-100">{errors.title?.message}</p>
       </div>
     );
   };
@@ -510,12 +507,12 @@ const Verhuren = () => {
         Creëer jouw aanhanger advertentie
       </h4>
       <form
-        onSubmit={handleSubmit(onSubmit, () => { console.log("Big time submit failure") })}
+        onSubmit={handleSubmit(onSubmit, () => { console.log("Submitting trailer form failed") })}
         noValidate
         className="flex flex-col gap-5 mx-5"
       >
         {trailerPictures()}
-        {trailerType()}
+        {trailerTypeSelector()}
         {trailerDescription()}
         {trailerAccessories()}
         {trailerLocation()}
