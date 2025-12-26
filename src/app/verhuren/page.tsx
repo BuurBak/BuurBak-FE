@@ -18,10 +18,10 @@ import { SharedSelection } from "@heroui/system";
 import { Chip } from "@heroui/chip";
 import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Input } from "@heroui/input";
-import SearchPlaceProvider, { LocationData } from "../Components/SearchPlaceProvider";
+import { LocationData } from "../Types/LocationData";
 import { HeroUIBasedButton } from "../Components/HeroUIBasedButton";
 import { toast } from "../hooks/use-toast";
-
+import { AutocompleteResponse, PlaceDetailsResponse } from "../Types/GooglePlacesAPIResponseTypes";
 
 const Verhuren = () => {
   const [hasStripe, setStripe] = useState<boolean>();
@@ -30,6 +30,8 @@ const Verhuren = () => {
   const [selectedAccessoires, setSelectedAccessories] = useState<Array<string>>([]);
   const [selectFilter, setSelectFilter] = useState<string>('');
   const [trailerLocationData, setTrailerLocationData] = useState<LocationData[]>([]);
+  const [postalCode, setPostalCode] = useState<string>('');
+  const [streetNumber, setStreetNumber] = useState<string>('');
 
   const {
     register,
@@ -271,6 +273,22 @@ const Verhuren = () => {
     return trailerLocationData.find((component) => component.types.includes(type));
   };
 
+  const searchAndSetPlace = async (postalCode: string, streetNumber: string) => {
+    const place = await searchPlace(postalCode, streetNumber);
+
+    if (!place || !place.addressComponents) {
+      setTrailerLocationData([])
+      return
+    }
+
+    setTrailerLocationData(place.addressComponents.map((component) => {
+      return {
+        longName: component.longText,
+        types: component.types
+      };
+    }));
+  }
+
   // This component can better be done with just some API requests to the Places API, since Americans do postcodes different.
   const trailerLocation = () => {
     return (
@@ -288,14 +306,20 @@ const Verhuren = () => {
                 <Input className="row-span-1" label='Plaats' value={getLocationData('locality')?.longName} />
               </div>
               <div className="flex justify-right mt-2">
-                <HeroUIBasedButton buttonVariant="primary" onPress={() => setTrailerLocationData([])}>Zoek opnieuw</HeroUIBasedButton>
+                <HeroUIBasedButton buttonVariant="secondary" onPress={() => setTrailerLocationData([])}>Zoek opnieuw</HeroUIBasedButton>
               </div>
             </>
           )
           : (
-            <div>
-              <SearchPlaceProvider onLocationChange={setTrailerLocationData} />
-            </div>
+            <>
+              <div className="grid grid-flow-col grid-rows-2 gap-2">
+                <Input className="row-span-1" label='Postcode' placeholder="1234AB" onChange={(event) => setPostalCode(event.target.value)} />
+                <Input className="row-span-1" label='Straatnaam en huisnummer' placeholder="Kerkstraat 15" onChange={(event) => setStreetNumber(event.target.value)} />
+              </div>
+              <div className="flex justify-right mt-2">
+                <HeroUIBasedButton buttonVariant="primary" onPress={() => searchAndSetPlace(postalCode, streetNumber)}>Zoeken</HeroUIBasedButton>
+              </div>
+            </>
           )
         }
         <p className="text-error-100">{errors.location?.message}</p>
@@ -530,6 +554,47 @@ const Verhuren = () => {
       </form>
     </>
   );
+
 };
+
+
+const searchPlace = async (postalCode: string, streetNumber: string): Promise<PlaceDetailsResponse | undefined> => {
+  const searchQuery = `${postalCode} ${streetNumber} Netherlands`;
+
+  try {
+    const autocompleteResult = await fetch(
+      `https://places.googleapis.com/v1/places:autocomplete`,
+      {
+        method: 'POST',
+        headers: {
+          "Content-Type": 'application/json',
+          "X-Goog-Api-Key": process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
+          'X-Goog-FieldMask': '*'
+        },
+        body: JSON.stringify({
+          input: searchQuery,
+          regionCode: "NL",
+          languageCode: "nl"
+        })
+      });
+    const autocompleteJson: AutocompleteResponse = await autocompleteResult.json();
+
+    const placeDetailsResult = await fetch(
+      `https://places.googleapis.com/v1/places/${autocompleteJson.suggestions[0].placePrediction.placeId}?languageCode=nl`,
+      {
+        method: 'GET',
+        headers: {
+          "Content-Type": 'application/json',
+          "X-Goog-Api-Key": process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
+          "X-Goog-FieldMask": 'addressComponents,formattedAddress'
+        }
+      });
+
+    return await placeDetailsResult.json();
+  } catch (e) {
+    console.error(e)
+    return;
+  }
+}
 
 export default Verhuren;
