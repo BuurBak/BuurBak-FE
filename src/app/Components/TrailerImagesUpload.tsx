@@ -4,7 +4,7 @@ import { CheckCircle, ImageIcon, Upload } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Button from "./Button";
-import Dropzone from "react-dropzone";
+import Dropzone, { FileRejection } from "react-dropzone";
 
 type FileUploadProps = {
   onFilesChange: (files: File[]) => void;
@@ -13,6 +13,7 @@ type FileUploadProps = {
 export default function TrailerImagesUpload({ onFilesChange }: FileUploadProps) {
   const [files, setFiles] = useState<File[]>([]);
   const amountOfImages = 5;
+  const maxFileSize = 1024 * 1024
 
   useEffect(() => {
     onFilesChange(files);
@@ -26,10 +27,12 @@ export default function TrailerImagesUpload({ onFilesChange }: FileUploadProps) 
     setFiles((files) => files.concat(acceptedFiles));
   };
 
+  const onFileRejections = (fileRejections: FileRejection[]) => { fileRejections.map((rejection) => console.log(rejection)) }
+
   return (
     <div className="w-full">
       {files.length < amountOfImages ? (
-        <Dropzone onDrop={addFiles} maxFiles={5} accept={{ 'image/jpeg': [], 'image/png': [] }}>
+        <Dropzone onDropRejected={onFileRejections} maxSize={maxFileSize} onDrop={addFiles} maxFiles={5} accept={{ 'image/jpeg': [], 'image/png': [] }}>
           {({ getRootProps, getInputProps }) => (
             <section className={`border-2 border-dashed rounded-lg p-6 cursor-pointer transition-colors ${files.length >= amountOfImages ? "border-green-500" : ""}`}>
               <div {...getRootProps()}>
@@ -82,6 +85,7 @@ export default function TrailerImagesUpload({ onFilesChange }: FileUploadProps) 
 
       <div className="flex text-sm items-center gap-1">
         <ImageIcon className="w-4 h-4" />
+        <span>Maximale bestandsgrootte 1MB</span>
         <span>Ondersteunde formaten: JPG, PNG</span>
       </div>
     </div>
